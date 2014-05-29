@@ -24,6 +24,8 @@ package com.opennaru.khan.session.store;
 import java.io.Serializable;
 
 /**
+ * Session Store Interface
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public interface SessionStore {

@@ -57,7 +57,7 @@ public class KhanHttpSession implements HttpSession {
     private KhanSessionManager sessionManager = null;
 
     public KhanHttpSession(String sessionId, SessionStore sessionStore, String namespace, Integer timeoutMin, HttpSession session, KhanSessionManager sessionManager, String clientIp) {
-
+        // Check argument is not null
         StringUtils.isNotNull("sessionId", sessionId);
         StringUtils.isNotNull("sessionStore", sessionStore);
         StringUtils.isNotNull("namespace", namespace);
@@ -75,6 +75,7 @@ public class KhanHttpSession implements HttpSession {
             log.debug("timeoutMinutes=" + timeoutMin);
         }
 
+        // set session timeout seconds
         setMaxInactiveInterval(timeoutMin * 60);
 
         khanSessionMetadata = sessionStore.get(keyGenerator.generate(METADATA_KEY));
@@ -107,6 +108,10 @@ public class KhanHttpSession implements HttpSession {
         return keyGenerator;
     }
 
+    /**
+     * Check session is valid status
+     * @return
+     */
     public boolean isValid() {
 
         KhanSessionMetadata metadata = sessionStore.get(keyGenerator.generate(METADATA_KEY));
@@ -123,6 +128,9 @@ public class KhanHttpSession implements HttpSession {
         return isNotInvalidated && isNotExpired;
     }
 
+    /**
+     * reload attributes
+     */
     public void reloadAttributes() {
         attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
     }
@@ -131,6 +139,9 @@ public class KhanHttpSession implements HttpSession {
         return attributes;
     }
 
+    /**
+     * Save session attributes
+     */
     public void save() {
         if (isValid()) {
             saveAttributesToStore();
@@ -190,6 +201,9 @@ public class KhanHttpSession implements HttpSession {
         }
     }
 
+    /**
+     * Invalidate Session
+     */
     @Override
     public void invalidate() {
 
@@ -204,6 +218,7 @@ public class KhanHttpSession implements HttpSession {
             attributes.clear();
             khanSessionMetadata.setInvalidated(true);
             removeAttributesFromStore();
+            //
             //sessionManager.getSessionMonitor().sessionDestroyed();
         } catch (NullPointerException e) {
 
@@ -212,6 +227,10 @@ public class KhanHttpSession implements HttpSession {
         }
     }
 
+    /**
+     * remove attribute from session
+     * @param name
+     */
     @Override
     public void removeAttribute(String name) {
         reloadAttributes();
@@ -219,6 +238,11 @@ public class KhanHttpSession implements HttpSession {
         saveAttributesToStore();
     }
 
+    /**
+     * Set attribute
+     * @param name
+     * @param value
+     */
     @Override
     public void setAttribute(String name, Object value) {
 

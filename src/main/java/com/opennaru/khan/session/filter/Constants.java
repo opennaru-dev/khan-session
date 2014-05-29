@@ -31,7 +31,7 @@ public class Constants {
     public static final String GLOBAL_NAMESPACE = "KHAN";
     public static final String DEFAULT_SESSION_ID_NAME = "__KSMSID__";
 
-
+    // Configuration KEY
     public static final String NAMESPACE = "namespace";
     public static final String SESSION_ID = "sessionId";
     public static final String DOMAIN = "domain";

@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 
 /**
+ * Session Store Implementation
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class SessionStoreImpl implements SessionStore {
@@ -42,8 +44,7 @@ public class SessionStoreImpl implements SessionStore {
 //		StringWriter sw = new StringWriter();
 //		PrintWriter pw = new PrintWriter(sw);
 //		t.printStackTrace(pw);
-//		return sw.toString();		
-
+//		return sw.toString();
         return "";
     }
 

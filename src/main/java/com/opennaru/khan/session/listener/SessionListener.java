@@ -42,6 +42,10 @@ public class SessionListener implements HttpSessionListener {
 
     }
 
+    /**
+     * Session Created
+     * @param sessionEvent
+     */
     @Override
     public void sessionCreated(HttpSessionEvent sessionEvent) {
         // Get the session that was created
@@ -64,6 +68,11 @@ public class SessionListener implements HttpSessionListener {
         }
     }
 
+    /**
+     * Session Destroyed : Remove Session Id from Session Store
+     *
+     * @param sessionEvent
+     */
     @Override
     public void sessionDestroyed(HttpSessionEvent sessionEvent) {
         // Get the session that was invalidated

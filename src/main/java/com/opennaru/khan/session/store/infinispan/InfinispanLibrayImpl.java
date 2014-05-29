@@ -34,6 +34,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Session Store using Infinispan library mode
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class InfinispanLibrayImpl implements SessionCache {

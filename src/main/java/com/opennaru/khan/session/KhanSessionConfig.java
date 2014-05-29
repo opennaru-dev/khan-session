@@ -22,6 +22,8 @@
 package com.opennaru.khan.session;
 
 /**
+ * KHAN Session Configuration
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionConfig {

@@ -24,6 +24,8 @@ package com.opennaru.khan.session.util;
 import javax.servlet.http.Cookie;
 
 /**
+ * Create Cookie Header
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class CookieUtil {

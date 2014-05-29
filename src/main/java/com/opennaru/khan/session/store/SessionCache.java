@@ -24,12 +24,13 @@ package com.opennaru.khan.session.store;
 import java.io.IOException;
 
 /**
+ * Session Store to Cache Interface
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public interface SessionCache {
     public static final String DEFAULT_CACHENAME = "KHAN_SESSION";
     public static final String DEFAULT_LOGIN_CACHENAME = "KHAN_SESSION_LOGIN";
-
 
     public boolean isInitialized();
 

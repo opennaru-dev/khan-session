@@ -156,14 +156,14 @@ public abstract class KhanSessionFilter implements Filter {
 
                     if( isValidSession(createSessionRequest(req, cookie.getValue())) ) {
                         if (log.isDebugEnabled()) {
-                            log.debug("SessionId cookie is found. ("
+                            log.debug("SessionId cookie found. ("
                                     + khanSessionConfig.getSessionIdKey() + " -> "
                                     + cookie.getValue() + ")");
                         }
                         return cookie;
                     } else {
                         if (log.isDebugEnabled()) {
-                            log.debug("SessionId cookie is found but it's invalid. ("
+                            log.debug("SessionId cookie found but it's invalid. ("
                                     + khanSessionConfig.getSessionIdKey()
                                     + " -> "
                                     + cookie.getValue() + ")");
@@ -173,7 +173,7 @@ public abstract class KhanSessionFilter implements Filter {
             }
         }
         if (log.isDebugEnabled()) {
-            log.debug("SessionId cookie is not found.");
+            log.debug("SessionId cookie not found.");
         }
         return null;
     }
@@ -341,7 +341,9 @@ public abstract class KhanSessionFilter implements Filter {
 
             _request.getSession().setAttribute("khan.session.id", session.getId());
 
-            session.reloadAttributes(); // need reloading from the store to work
+            // need reloading from the store to work
+            //
+            session.reloadAttributes();
 
             session.save();
 

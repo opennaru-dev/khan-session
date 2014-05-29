@@ -25,6 +25,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * Session Meta Data
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionMetadata implements Serializable {

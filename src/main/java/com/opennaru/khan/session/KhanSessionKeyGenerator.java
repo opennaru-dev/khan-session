@@ -22,6 +22,8 @@
 package com.opennaru.khan.session;
 
 /**
+ * Session KEY generator for Cache Store's KEY
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionKeyGenerator {

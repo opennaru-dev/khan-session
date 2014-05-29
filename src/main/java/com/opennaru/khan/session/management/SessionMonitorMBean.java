@@ -125,18 +125,5 @@ public interface SessionMonitorMBean {
      */
     public long getMemorySize(String sessionId);
 
-    /**
-     * Force session to expire
-     *
-     * @param sessionId
-     *            Session to expire
-     * @return True if expired
-     */
-    //boolean expireSession(String sessionId);
-
-    /**
-     * Force all sessions to expire
-     */
-    //void expireAllSessions();
     public void shutdown();
 }

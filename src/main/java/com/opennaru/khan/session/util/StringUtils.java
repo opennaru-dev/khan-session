@@ -22,6 +22,8 @@
 package com.opennaru.khan.session.util;
 
 /**
+ * String Null Check Utility
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class StringUtils {
