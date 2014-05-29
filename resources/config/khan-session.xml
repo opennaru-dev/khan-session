@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Opennaru, Inc. http://www.opennaru.com/
+  ~
+  ~  Copyright (C) 2014 Opennaru, Inc. and/or its affiliates.
+  ~  All rights reserved by Opennaru, Inc.
+  ~
+  ~  This is free software; you can redistribute it and/or modify it
+  ~  under the terms of the GNU Lesser General Public License as
+  ~  published by the Free Software Foundation; either version 2.1 of
+  ~  the License, or (at your option) any later version.
+  ~
+  ~  This software is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~  Lesser General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU Lesser General Public
+  ~  License along with this software; if not, write to the Free
+  ~  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~  02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+
+<infinispan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="urn:infinispan:config:6.0 http://www.infinispan.org/schemas/infinispan-config-6.0.xsd"
+            xmlns="urn:infinispan:config:6.0">
+
+    <global>
+        <transport clusterName="opennaru">
+            <properties>
+                <property name="configurationFile" value="jgroups.xml"/>
+            </properties>
+        </transport>
+    </global>
+
+    <!-- *************************** -->
+    <!-- Default "template" settings -->
+    <!-- *************************** -->
+    <default>
+        <locking concurrencyLevel="1000" useLockStriping="false"/>
+
+        <unsafe unreliableReturnValues="true"/>
+
+        <clustering mode="distribution">
+            <sync replTimeout="200000"/>
+            <!-- <async/> -->
+            <hash numOwners="2" numSegments="40"/>
+            <l1 enabled="true" lifespan="60000"/>
+        </clustering>
+
+        <invocationBatching enabled="false"/>
+        <transaction transactionMode="NON_TRANSACTIONAL"/>
+    </default>
+
+
+    <!-- ************************************** -->
+    <!-- Individually configured "named" caches -->
+    <!-- ************************************** -->
+    <namedCache name="KHAN_SESSION">
+        <jmxStatistics enabled="true"/>
+    </namedCache>
+
+    <namedCache name="KHAN_SESSION_LOGIN">
+        <jmxStatistics enabled="true"/>
+    </namedCache>
+
+</infinispan>
