@@ -256,6 +256,7 @@ out.println("userid=" + loginManager.loggedInUserId(request));
 
 #### KHAN [provisioning]
 * JBoss Data Grid(Infinispan) Server는 KHAN [provisioning]을 이용하여 자동 설치할 수 있습니다.
+ * 관련자료 : http://opennaru.tistory.com/category/KHAN
 
 ### Contacts
 * Web / JBoss(WAS) 문의 및 KHAN [session manager] 문의
