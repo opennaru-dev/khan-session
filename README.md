@@ -35,7 +35,7 @@
   * JBoss Data Grid(Infinispan)을 사용하여 안정적이며 세션에 대한 확장성이 높음.
 
  * 배포본 다운로드
-  * https://github.com/nameislocus/khan-session/tree/master/dist
+  * https://github.com/opennaru-dev/khan-session/tree/master/dist
 
  * 빌드 방법
  
