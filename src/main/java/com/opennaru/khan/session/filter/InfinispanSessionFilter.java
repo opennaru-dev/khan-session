@@ -51,10 +51,16 @@ public class InfinispanSessionFilter extends KhanSessionFilter implements Filter
         return configFile;
     }
 
+    /**
+     * Initialize Session Filter
+     * @param config
+     * @throws ServletException
+     */
     @Override
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
 
+        // get infinspan config file
         String configFileName = getInfinispanConfigFile(config);
 
         String cacheName = getConfigValue(config, Constants.INFINISPAN_CACHE_KEY);

@@ -63,6 +63,11 @@ public abstract class KhanSessionFilter implements Filter {
         req.setAttribute(Constants.SESSION_STATUS, status);
     }
 
+    /**
+     * get status of HTTP Session
+     * @param req
+     * @return
+     */
     protected static SessionStatus getSessionStatus(HttpServletRequest req) {
         Object status = req.getAttribute(Constants.SESSION_STATUS);
         if (status == null) {
@@ -72,6 +77,11 @@ public abstract class KhanSessionFilter implements Filter {
         }
     }
 
+    /**
+     * Check if this request's session is valid
+     * @param req
+     * @return
+     */
     protected static boolean isValidSession(KhanSessionHttpRequest req) {
         if (getSessionStatus(req) == SessionStatus.FIXED) {
             return true;
@@ -79,6 +89,11 @@ public abstract class KhanSessionFilter implements Filter {
         return req.getSession().isValid();
     }
 
+    /**
+     * Check if Http Request is KhanHttpSession
+     * @param req
+     * @return
+     */
     protected static boolean isKhanSessionHttpRequest(HttpServletRequest req) {
         return req.getSession() instanceof KhanHttpSession;
     }
@@ -147,6 +162,11 @@ public abstract class KhanSessionFilter implements Filter {
         }
     }
 
+    /**
+     * Get Session Id Cookie
+     * @param req
+     * @return
+     */
     protected Cookie getCurrentValidSessionIdCookie(HttpServletRequest req) {
         if (req.getCookies() != null) {
             for (Cookie cookie : req.getCookies()) {
@@ -178,6 +198,11 @@ public abstract class KhanSessionFilter implements Filter {
         return null;
     }
 
+    /**
+     * Generate Session Id Cookie
+     * @param sessionIdValue
+     * @return
+     */
     protected Cookie generateSessionIdCookie(String sessionIdValue) {
 
         Cookie sessionIdCookie = new Cookie(khanSessionConfig.getSessionIdKey(), sessionIdValue);
@@ -212,6 +237,11 @@ public abstract class KhanSessionFilter implements Filter {
                 sessionStore, sessionManager);
     }
 
+    /**
+     * Initialize Session Filter
+     * @param config
+     * @throws ServletException
+     */
     @Override
     public void init(FilterConfig config) throws ServletException {
         getSessionFilterConfig(config);
@@ -227,6 +257,14 @@ public abstract class KhanSessionFilter implements Filter {
         }
     }
 
+    /**
+     * Filter main
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
@@ -360,6 +398,9 @@ public abstract class KhanSessionFilter implements Filter {
         }
     }
 
+    /**
+     * Destroy
+     */
     @Override
     public void destroy() {
         if (log.isDebugEnabled()) {

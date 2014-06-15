@@ -28,7 +28,9 @@ package com.opennaru.khan.session.filter;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class Constants {
+    // Global namespace
     public static final String GLOBAL_NAMESPACE = "KHAN";
+    // Session ID name : cookie name
     public static final String DEFAULT_SESSION_ID_NAME = "__KSMSID__";
 
     // Configuration KEY

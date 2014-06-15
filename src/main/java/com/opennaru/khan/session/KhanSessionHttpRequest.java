@@ -63,6 +63,11 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
         return session;
     }
 
+    /**
+     * Get Client's IP / Check Proxy's header
+     * @param request
+     * @return
+     */
     private String getClientIp(HttpServletRequest request) {
         String clientIp = "";
         clientIp = request.getHeader("X-Forwarded-For");
