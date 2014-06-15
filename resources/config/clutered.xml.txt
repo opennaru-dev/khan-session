@@ -1,0 +1,3 @@
+
+                <distributed-cache name="KHAN_SESSION" mode="SYNC" start="EAGER"/>
+                <distributed-cache name="KHAN_SESSION_LOGIN" mode="SYNC" start="EAGER"/>
