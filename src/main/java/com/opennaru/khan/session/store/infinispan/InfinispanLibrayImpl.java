@@ -73,7 +73,7 @@ public class InfinispanLibrayImpl implements SessionCache {
         try {
             StringUtils.isNotNull("configFile", configFile);
 
-            cacheManager = new DefaultCacheManager("khan-session.xml");
+            cacheManager = new DefaultCacheManager(configFile);
 
             this.cacheName = cacheName;
             this.loginCacheName = loginCacheName;
