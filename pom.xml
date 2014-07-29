@@ -26,7 +26,7 @@
 
     <groupId>com.opennaru.khan</groupId>
     <artifactId>khan-session</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>khan-session</name>
@@ -82,7 +82,13 @@
             <artifactId>khan-counter</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+<!--
+        <dependency>
+            <groupId>com.opennaru.khan</groupId>
+            <artifactId>khan-marshaller</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+-->
         <dependency>
             <groupId>com.github.stephenc</groupId>
             <artifactId>jamm</artifactId>
@@ -211,10 +217,10 @@
                                     <fileset dir="resources/modules.ext"/>
                                 </copy>
 
-                                <copy file="target/khan-session-1.0.0.jar"
+                                <copy file="target/khan-session-1.0.1.jar"
                                       todir="target/dist/modules.ext/com/opennaru/khan/session/main"/>
 
-                                <copy file="target/khan-session-1.0.0.jar"
+                                <copy file="target/khan-session-1.0.1.jar"
                                       todir="target/dist/lib"/>
 
                                 <copy file="../khan-counter/target/khan-counter-1.0.0.jar"
