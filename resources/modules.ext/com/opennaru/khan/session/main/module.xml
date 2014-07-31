@@ -24,7 +24,7 @@
 
 <module xmlns="urn:jboss:module:1.0" name="com.opennaru.khan.session">
 	<resources>
-		<resource-root path="khan-session-1.0.0.jar" />
+		<resource-root path="khan-session-1.0.1.jar" />
 	</resources>
 
 	<dependencies>

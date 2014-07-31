@@ -28,7 +28,6 @@ import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.Configuration;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.exceptions.HotRodClientException;
-import org.infinispan.commons.util.FileLookupFactory;
 import org.infinispan.commons.util.Util;
 import org.infinispan.util.concurrent.FutureListener;
 import org.slf4j.Logger;
@@ -92,7 +91,9 @@ public class InfinispanClientImpl implements SessionCache {
         ConfigurationBuilder builder = new ConfigurationBuilder();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         builder.classLoader(cl);
-        InputStream stream = FileLookupFactory.newInstance().lookupFile(configFile, cl);
+
+        InputStream stream = cl.getResourceAsStream(configFile);
+
         if (stream == null) {
             log.error("Can't Found configFile=" + configFile);
         } else {

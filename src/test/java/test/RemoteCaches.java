@@ -38,13 +38,13 @@ public class RemoteCaches {
 
     public void test() {
 
-        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.22:11422;192.168.0.23:11322", true);
+        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.23:11322;192.168.0.23:11422", true);
         RemoteCache<Object, Object> cache = cacheManager.getCache("KHAN_SESSION");
 
         Set<Object> keySet = cache.keySet();
 
         Iterator<Object> i = keySet.iterator();
-        System.out.println("=============");
+        System.out.println("============= KHAN_SESSION");
         while (i.hasNext()) {
             Object key = i.next();
             System.out.println("> key=" + key);
@@ -57,13 +57,13 @@ public class RemoteCaches {
 
 
     public void test2() {
-        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.22:11422;192.168.0.23:11322", true);
+        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.23:11322;192.168.0.23:11422", true);
         RemoteCache<Object, Object> cache = cacheManager.getCache("KHAN_SESSION_LOGIN");
 
         Set<Object> keySet = cache.keySet();
 
         Iterator<Object> i = keySet.iterator();
-        System.out.println("=============");
+        System.out.println("============= KHAN_SESSION_LOGIN");
         while (i.hasNext()) {
             Object key = i.next();
             System.out.println("> key=" + key);
