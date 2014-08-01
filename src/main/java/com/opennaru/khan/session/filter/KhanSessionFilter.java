@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * KhanSessionFilter
+ * KhanSessionFilter abstract 클래스
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
@@ -53,11 +53,23 @@ public abstract class KhanSessionFilter implements Filter {
         return khanSessionConfig;
     }
 
+    /**
+     * web.xml에 설정된 FilterConfig에서 설정값을 가져온다
+     *
+     * @param config
+     * @param keyName
+     * @return
+     */
     protected static String getConfigValue(FilterConfig config, String keyName) {
         String fromInitParam = config.getInitParameter(keyName);
         return fromInitParam;
     }
 
+    /**
+     * 세션 상태를 저장
+     * @param req
+     * @param status
+     */
     protected static void setSessionStatus(HttpServletRequest req,
                                            SessionStatus status) {
         req.setAttribute(Constants.SESSION_STATUS, status);
@@ -98,10 +110,20 @@ public abstract class KhanSessionFilter implements Filter {
         return req.getSession() instanceof KhanHttpSession;
     }
 
+    /**
+     * SessionStore 객체를 반환
+     *
+     * @return
+     */
     public static SessionStore getSessionStore() {
         return sessionStore;
     }
 
+    /**
+     * 세션 필터 설정
+     *
+     * @param config
+     */
     protected void getSessionFilterConfig(FilterConfig config) {
 
         khanSessionConfig = new KhanSessionConfig();
@@ -225,6 +247,13 @@ public abstract class KhanSessionFilter implements Filter {
         return sessionIdCookie;
     }
 
+    /**
+     * HttpServletRequest를 Wrapping한 KhanSessionHttpRequest 객체를 생성한다.
+     *
+     * @param request
+     * @param sessionIdValue
+     * @return
+     */
     protected KhanSessionHttpRequest createSessionRequest(
             HttpServletRequest request, String sessionIdValue) {
 
@@ -258,7 +287,8 @@ public abstract class KhanSessionFilter implements Filter {
     }
 
     /**
-     * Filter main
+     * Filter 메인 함수
+     *
      * @param request
      * @param response
      * @param chain
@@ -272,6 +302,7 @@ public abstract class KhanSessionFilter implements Filter {
         HttpServletRequest _request = (HttpServletRequest) request;
         HttpServletResponse _response = (HttpServletResponse) response;
 
+        // KHAN Request이면
         if (isKhanSessionHttpRequest(_request)) {
 
             if (log.isDebugEnabled()) {
@@ -279,6 +310,7 @@ public abstract class KhanSessionFilter implements Filter {
             }
             chain.doFilter(_request, _response);
 
+        // 제외한 요청이면
         } else if (khanSessionConfig.getExcludeRegExp() != null
                 && _request.getRequestURI().matches(khanSessionConfig.getExcludeRegExp())) {
 
@@ -287,6 +319,7 @@ public abstract class KhanSessionFilter implements Filter {
             }
             chain.doFilter(_request, _response);
 
+        // 새로운 요청
         } else {
 
             Cookie currentValidSessionIdCookie = getCurrentValidSessionIdCookie(_request);
@@ -330,15 +363,9 @@ public abstract class KhanSessionFilter implements Filter {
             boolean redirectLogoutUrl = false;
             String khan_uid = "";
 
+            // 중복 로그인을 허용하지 않는다고 설정되어 있는 경우
             if (khanSessionConfig.isAllowDuplicateLogin() == false) {
 
-//				if( khanSessionConfig.isUseAuthenticator() ) {
-//					try {
-//						khan_uid = _wrappedRequest.getUserPrincipal().getName();
-//					} catch(NullPointerException e) {
-//					}
-//				} else {
-//				}
                 khan_uid = (String) _wrappedRequest.getSession().getAttribute("khan.uid");
                 if (log.isDebugEnabled()) {
                     log.debug("$$$$$ khan_uid=" + khan_uid);
@@ -348,6 +375,7 @@ public abstract class KhanSessionFilter implements Filter {
                 if (log.isDebugEnabled()) {
                     log.debug("$$$$$ loginStatus=" + loginStatus);
                 }
+
                 if (loginStatus != null && loginStatus.equals("DUPLICATED")) {
                     redirectLogoutUrl = true;
                 } else {
@@ -358,11 +386,6 @@ public abstract class KhanSessionFilter implements Filter {
                         } catch (Exception e) {
                             log.error("login ", e);
                         }
-//						if( khanSessionConfig.isUseAuthenticator() ) {
-//							// Tomcat : Authenticator.login(request, response, username, password, rememberMe)
-//							if( _wrappedRequest.getUserPrincipal() == null )
-//								_wrappedRequest.login(khan_uid, khan_uid);
-//						}
                         if (log.isDebugEnabled()) {
                             log.debug("$$$$$ login");
                         }
@@ -380,11 +403,11 @@ public abstract class KhanSessionFilter implements Filter {
             _request.getSession().setAttribute("khan.session.id", session.getId());
 
             // need reloading from the store to work
-            //
             session.reloadAttributes();
 
             session.save();
 
+            // 중복로그인 되었을 경우 url forward
             if (redirectLogoutUrl) {
                 try {
                     request.getRequestDispatcher(khanSessionConfig.getLogoutUrl()).forward(request, response);

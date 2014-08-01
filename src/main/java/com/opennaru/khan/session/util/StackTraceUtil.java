@@ -19,32 +19,46 @@
  *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  *  02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package com.opennaru.khan.session.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
- * String Null Check Utility
+ * Stack Trace Printer utility class
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
-public class StringUtils {
+public class StackTraceUtil {
 
-    public static void isNotNull(String name, Object value) {
-        if (value == null) {
-            throw new IllegalArgumentException(name + "s Null !");
-        }
+    /**
+     * Get StackTrace String from Throwable
+     *
+     * @param t Throwable
+     * @return StackTrace String
+     */
+    public static String getStackTrace(Throwable t) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        t.printStackTrace(pw);
+        return sw.toString();
     }
 
-    public static void isNotNull(String name, String value) {
-        if (value == null || value.trim().length() == 0) {
-            throw new IllegalArgumentException("Argument " + name + " should not empty !");
-        }
-    }
+    /**
+     * Get StackTrace String from StackTraceElement Array
+     *
+     * @param trace
+     * @return StackTrace String
+     */
+    public static String getStackTrace(StackTraceElement[] trace) {
+        StringBuffer sb = new StringBuffer();
 
-    public static boolean isNullOrEmpty(String value) {
-        if (value == null || value.trim().length() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        sb.append("============================================\n");
+        for (int i = 0; i < trace.length; i++)
+            sb.append("\tat " + trace[i] + "\n");
+
+        sb.append("--------------------------------------------\n");
+        return sb.toString();
     }
 }

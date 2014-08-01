@@ -52,4 +52,6 @@ public class Constants {
     public static final String INFINISPAN_LOGIN_CACHE_KEY = "infinispanLoginCache";
     protected static final String SESSION_STATUS = "__sessionStatus__";
 
+    public static final String REDIS_CONFIGFILE_KEY = "configFile";
+
 }

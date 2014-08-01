@@ -88,13 +88,13 @@ public class InfinispanLibrayImpl implements SessionCache {
     }
 
     @Override
-    public <T> boolean contains(T key) {
+    public <T> boolean contains(String key) {
         return cache.containsKey(key);
     }
 
 
     @Override
-    public <T> void put(T key, T value, long secondsToExpire)
+    public <T> void put(String key, T value, long secondsToExpire)
             throws IOException {
         cache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
         //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
@@ -102,7 +102,7 @@ public class InfinispanLibrayImpl implements SessionCache {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void putAndEnsure(T key, T value, long secondsToExpire)
+    public <T> void putAndEnsure(String key, T value, long secondsToExpire)
             throws IOException {
 
         @SuppressWarnings("rawtypes")
@@ -125,13 +125,13 @@ public class InfinispanLibrayImpl implements SessionCache {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(T key) throws IOException {
+    public <T> T get(String key) throws IOException {
         //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
         return (T) cache.get(key);
     }
 
     @Override
-    public <T> void delete(T key) throws IOException {
+    public <T> void delete(String key) throws IOException {
         cache.remove(key);
         //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
@@ -145,24 +145,24 @@ public class InfinispanLibrayImpl implements SessionCache {
     }
 
     @Override
-    public <T> boolean loginContains(T key) throws IOException {
+    public <T> boolean loginContains(String key) throws IOException {
         return loginCache.containsKey(key);
     }
 
     @Override
-    public <T> void loginPut(T key, T value, long secondsToExpire)
+    public <T> void loginPut(String key, T value, long secondsToExpire)
             throws IOException {
         loginCache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T loginGet(T key) throws IOException {
+    public <T> T loginGet(String key) throws IOException {
         return (T) loginCache.get(key);
     }
 
     @Override
-    public <T> void loginDelete(T key) throws IOException {
+    public <T> void loginDelete(String key) throws IOException {
         loginCache.remove(key);
     }
 

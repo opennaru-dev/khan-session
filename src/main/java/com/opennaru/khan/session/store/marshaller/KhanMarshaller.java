@@ -19,32 +19,46 @@
  *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  *  02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.opennaru.khan.session.util;
+
+package com.opennaru.khan.session.store.marshaller;
+
+import java.io.IOException;
 
 /**
- * String Null Check Utility
+ * KHAN Marshaller Interface
+ * Object to Bytes, Bytes to Object Marshalling Interface
+ *
+ * System properties
+ *     khan.marshaller.compress false(default value), Snappy compress
+ *     khan.marshaller.debug false(default value)
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
-public class StringUtils {
+public interface KhanMarshaller {
 
-    public static void isNotNull(String name, Object value) {
-        if (value == null) {
-            throw new IllegalArgumentException(name + "s Null !");
-        }
-    }
+    /**
+     * Check if mashallable
+     *
+     * @param o
+     * @return
+     */
+    public boolean isMarshallable(Object o);
 
-    public static void isNotNull(String name, String value) {
-        if (value == null || value.trim().length() == 0) {
-            throw new IllegalArgumentException("Argument " + name + " should not empty !");
-        }
-    }
+    /**
+     * Get Object from byte array
+     *
+     * @param buf
+     * @return
+     * @throws IOException
+     */
+    public Object objectFromByteBuffer(byte[] buf) throws IOException;
 
-    public static boolean isNullOrEmpty(String value) {
-        if (value == null || value.trim().length() == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    /**
+     * Get byte array from Object
+     *
+     * @param o
+     * @return
+     * @throws IOException
+     */
+    public byte[] objectToBytes(Object o) throws IOException;
 }

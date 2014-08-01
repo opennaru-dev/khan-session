@@ -24,7 +24,7 @@ package com.opennaru.khan.session.store;
 import java.io.IOException;
 
 /**
- * Session Store to Cache Interface
+ * Store Interface for Session Data
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
@@ -36,27 +36,27 @@ public interface SessionCache {
 
     public void initialize(String servers, String cacheName, String loginCacheName) throws IOException;
 
-    public <T> boolean contains(T key) throws IOException;
+    public <T> boolean contains(String key) throws IOException;
 
-    public <T> void put(T key, T value, long secondsToExpire) throws IOException;
+    public <T> void put(String key, T value, long secondsToExpire) throws IOException;
 
-    public <T> void putAndEnsure(T key, T value, long secondsToExpire) throws IOException;
+    public <T> void putAndEnsure(String key, T value, long secondsToExpire) throws IOException;
 
-    public <T> T get(T key) throws IOException;
+    public <T> T get(String key) throws IOException;
 
-    public <T> void delete(T key) throws IOException;
+    public <T> void delete(String key) throws IOException;
 
     public int size() throws IOException;
 
 
     // login cache
-    public <T> boolean loginContains(T key) throws IOException;
+    public <T> boolean loginContains(String key) throws IOException;
 
-    public <T> void loginPut(T key, T value, long secondsToExpire) throws IOException;
+    public <T> void loginPut(String key, T value, long secondsToExpire) throws IOException;
 
-    public <T> T loginGet(T key) throws IOException;
+    public <T> T loginGet(String key) throws IOException;
 
-    public <T> void loginDelete(T key) throws IOException;
+    public <T> void loginDelete(String key) throws IOException;
 
     public int loginSize() throws IOException;
 

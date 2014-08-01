@@ -38,8 +38,7 @@ import javax.servlet.ServletException;
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
-@Deprecated
-public class InfinispanSessionFilter extends KhanSessionFilter implements Filter {
+public class InfinispanLibSessionFilter extends KhanSessionFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
 
@@ -55,7 +54,7 @@ public class InfinispanSessionFilter extends KhanSessionFilter implements Filter
     /**
      * Initialize Session Filter
      * @param config
-     * @throws ServletException
+     * @throws javax.servlet.ServletException
      */
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -74,19 +73,11 @@ public class InfinispanSessionFilter extends KhanSessionFilter implements Filter
             loginCacheName = SessionCache.DEFAULT_LOGIN_CACHENAME;
         }
 
-        String useLibraryMode = getConfigValue(config, Constants.USE_LIBRARY_MODE);
-
         try {
             SessionCache sessionCache = null;
 
-            // TODO :
-            if (useLibraryMode.equals("true")) {
-                sessionCache = new InfinispanLibrayImpl();
-                sessionCache.initialize(configFileName, cacheName, loginCacheName);
-            } else {
-                sessionCache = new InfinispanClientImpl();
-                sessionCache.initialize(configFileName, cacheName, loginCacheName);
-            }
+            sessionCache = new InfinispanLibrayImpl();
+            sessionCache.initialize(configFileName, cacheName, loginCacheName);
 
             sessionStore = new SessionStoreImpl(sessionCache);
         } catch (Exception e) {

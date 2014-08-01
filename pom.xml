@@ -26,7 +26,7 @@
 
     <groupId>com.opennaru.khan</groupId>
     <artifactId>khan-session</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>khan-session</name>
@@ -86,9 +86,18 @@
         <dependency>
             <groupId>com.opennaru.khan</groupId>
             <artifactId>khan-marshaller</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
 -->
+
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.0.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.github.stephenc</groupId>
             <artifactId>jamm</artifactId>
@@ -108,6 +117,15 @@
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-client-hotrod</artifactId>
             <version>${infinispan.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- redis client -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.4.2</version>
+            <type>jar</type>
             <scope>compile</scope>
         </dependency>
 
@@ -217,10 +235,10 @@
                                     <fileset dir="resources/modules.ext"/>
                                 </copy>
 
-                                <copy file="target/khan-session-1.0.1.jar"
+                                <copy file="target/khan-session-1.1.0.jar"
                                       todir="target/dist/modules.ext/com/opennaru/khan/session/main"/>
 
-                                <copy file="target/khan-session-1.0.1.jar"
+                                <copy file="target/khan-session-1.1.0.jar"
                                       todir="target/dist/lib"/>
 
                                 <copy file="../khan-counter/target/khan-counter-1.0.0.jar"
@@ -273,7 +291,7 @@
                                 <copy file="README.md"
                                       todir="target/dist"/>
 
-                                <zip destfile="target/khan-session-1.0.0.zip" basedir="target/dist"/>
+                                <zip destfile="target/khan-session-1.1.0.zip" basedir="target/dist"/>
 
                                 <!--
                                 <copy todir="${jboss.modules}/">

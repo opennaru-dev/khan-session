@@ -23,8 +23,7 @@ package com.opennaru.khan.session.filter;
 
 import com.opennaru.khan.session.store.SessionCache;
 import com.opennaru.khan.session.store.SessionStoreImpl;
-import com.opennaru.khan.session.store.infinispan.InfinispanClientImpl;
-import com.opennaru.khan.session.store.infinispan.InfinispanLibrayImpl;
+import com.opennaru.khan.session.store.redis.RedisClientImpl;
 import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,59 +33,40 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
 /**
- * InfinispanSessionFilter
+ * KHAN SessionFilter for Redis
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
-@Deprecated
-public class InfinispanSessionFilter extends KhanSessionFilter implements Filter {
+public class RedisSessionFilter extends KhanSessionFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-    protected String getInfinispanConfigFile(FilterConfig config) {
-        String configFile = getConfigValue(config, Constants.INFINISPAN_CONFIGFILE_KEY);
+    protected String getRedisConfigFile(FilterConfig config) {
+        String configFile = getConfigValue(config, Constants.REDIS_CONFIGFILE_KEY);
         if (log.isDebugEnabled()) {
             log.debug("######### configFile=" + configFile);
         }
-        StringUtils.isNotNull(Constants.INFINISPAN_CONFIGFILE_KEY, configFile);
+        StringUtils.isNotNull(Constants.REDIS_CONFIGFILE_KEY, configFile);
         return configFile;
     }
 
     /**
      * Initialize Session Filter
      * @param config
-     * @throws ServletException
+     * @throws javax.servlet.ServletException
      */
     @Override
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
 
-        // get infinspan config file
-        String configFileName = getInfinispanConfigFile(config);
-
-        String cacheName = getConfigValue(config, Constants.INFINISPAN_CACHE_KEY);
-        if (cacheName == null || cacheName.equals("")) {
-            cacheName = SessionCache.DEFAULT_CACHENAME;
-        }
-
-        String loginCacheName = getConfigValue(config, Constants.INFINISPAN_LOGIN_CACHE_KEY);
-        if (loginCacheName == null || loginCacheName.equals("")) {
-            loginCacheName = SessionCache.DEFAULT_LOGIN_CACHENAME;
-        }
-
-        String useLibraryMode = getConfigValue(config, Constants.USE_LIBRARY_MODE);
+        // get Redis config file
+        String configFileName = getRedisConfigFile(config);
 
         try {
             SessionCache sessionCache = null;
 
-            // TODO :
-            if (useLibraryMode.equals("true")) {
-                sessionCache = new InfinispanLibrayImpl();
-                sessionCache.initialize(configFileName, cacheName, loginCacheName);
-            } else {
-                sessionCache = new InfinispanClientImpl();
-                sessionCache.initialize(configFileName, cacheName, loginCacheName);
-            }
+            sessionCache = new RedisClientImpl();
+            sessionCache.initialize(configFileName, "", "");
 
             sessionStore = new SessionStoreImpl(sessionCache);
         } catch (Exception e) {
