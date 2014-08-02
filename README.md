@@ -238,15 +238,19 @@ export JAVA_OPTS=" $JAVA_OPTS -javaagent:/PATH_TO_JAMM_JAR/jamm-0.2.5.jar"
  * 로그인 성공시 아래 코드 사용
 
 ```java
-SessionLoginManager loginManager = SessionLoginManager.getInstance(); 
-loginManager.login(request, "userId");
+SessionLoginManager.getInstance().login(request, "userId");
 ```
 * 
  * 로그아웃시 아래 코드 사용
 
 ```java
-SessionLoginManager loginManager = SessionLoginManager.getInstance(); 
-out.println("userid=" + loginManager.loggedInUserId(request));
+SessionLoginManager.getInstance().logout(request);
+```
+*
+ * 로그인한 사용자 정보
+
+```java
+SessionLoginManager.getInstance().loggedInUserId(request));
 ```
 
 #### KHAN [provisioning]
