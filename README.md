@@ -1,6 +1,6 @@
 # KHAN [session manager]
 
- KHAN [session manager] is the scalable Web Session Manager for Infinispan(JBoss Data Grid).
+ KHAN [session manager] is the scalable Web Session Manager for Infinispan(JBoss Data Grid) or Redis.
 
  * Opennau, Inc. 
   * http://www.opennaru.com/
