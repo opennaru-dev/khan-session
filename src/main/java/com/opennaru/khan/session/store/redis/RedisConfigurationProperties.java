@@ -34,6 +34,7 @@ import java.util.Properties;
  */
 public class RedisConfigurationProperties {
     public static final String REDIS_SERVER_URL = "redis.client.server_url";
+    public static final String REDIS_TIMEOUT = "redis.client.timeout";
     public static final String MARSHALLER = "redis.client.marshaller";
     public static final String POOL_MAX_TOTAL = "redis.client.pool.maxTotal";
     public static final String POOL_MAX_IDLE = "redis.client.pool.maxIdle";
@@ -70,8 +71,13 @@ public class RedisConfigurationProperties {
 
         redisServer = new RedisServer();
         redisServer.parseUrl(redisServerUrl);
+        redisServer.setTimeout(getRedisTimeout());
 
         return  redisServer;
+    }
+
+    public int getRedisTimeout() {
+        return Integer.parseInt(properties.getProperty(REDIS_TIMEOUT, "5000"));
     }
 
     public String getMarshaller() {

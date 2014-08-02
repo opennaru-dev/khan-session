@@ -35,6 +35,8 @@ public class RedisServer {
     private int database = 1;
     private String password = null;
 
+    private int timeout = 5000;
+
     public RedisServer() {
 
     }
@@ -71,6 +73,14 @@ public class RedisServer {
         this.password = password;
     }
 
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
     public void parseUrl(String url) {
         URI uri = URI.create(url);
         if (uri.getScheme() != null && uri.getScheme().equals("redis")) {
@@ -92,6 +102,7 @@ public class RedisServer {
                 ", port=" + port +
                 ", database=" + database +
                 ", password='" + password + '\'' +
+                ", timeout=" + timeout +
                 '}';
     }
 }

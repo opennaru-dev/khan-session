@@ -42,6 +42,8 @@ public class RedisClientImpl implements SessionCache {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private RedisServer redisServer;
+
     private JedisPool pool = null;
 
     private KhanMarshaller marshaller;
@@ -88,11 +90,11 @@ public class RedisClientImpl implements SessionCache {
 
         if( StringUtils.isNullOrEmpty( redisServer.getPassword() ) ) {
             pool = new JedisPool(
-                jedisPoolConfig, redisServer.getHostname(), redisServer.getPort(), 5000
+                jedisPoolConfig, redisServer.getHostname(), redisServer.getPort(), redisServer.getTimeout()
             );
         } else {
             pool = new JedisPool(
-                jedisPoolConfig, redisServer.getHostname(), redisServer.getPort(), 5000,
+                jedisPoolConfig, redisServer.getHostname(), redisServer.getPort(), redisServer.getTimeout(),
                 redisServer.getPassword()
             );
         }
@@ -107,7 +109,7 @@ public class RedisClientImpl implements SessionCache {
     public <T> boolean contains(String key) {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(1);
+            jedis.select(redisServer.getDatabase());
             return jedis.exists(key);
         } finally {
             pool.returnResource(jedis);
@@ -120,7 +122,7 @@ public class RedisClientImpl implements SessionCache {
             throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(1);
+            jedis.select(redisServer.getDatabase());
 
             if (jedis.exists(key)) {
                 jedis.set(key.getBytes(), marshaller.objectToBytes(value), "XX".getBytes(), "EX".getBytes(), secondsToExpire);
@@ -166,7 +168,7 @@ public class RedisClientImpl implements SessionCache {
         Jedis jedis = pool.getResource();
         try {
 
-            jedis.select(1);
+            jedis.select(redisServer.getDatabase());
             return (T) marshaller.objectFromByteBuffer(jedis.get(key.getBytes()));
         } finally {
             pool.returnResource(jedis);
@@ -178,7 +180,7 @@ public class RedisClientImpl implements SessionCache {
     public <T> void delete(String key) throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(1);
+            jedis.select(redisServer.getDatabase());
             jedis.del(key);
         } finally {
             pool.returnResource(jedis);
@@ -191,7 +193,7 @@ public class RedisClientImpl implements SessionCache {
     public int size() throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(1);
+            jedis.select(redisServer.getDatabase());
             if (log.isDebugEnabled()) {
                 log.debug("sizeof=" + jedis.dbSize());
             }
@@ -205,7 +207,7 @@ public class RedisClientImpl implements SessionCache {
     public <T> boolean loginContains(String key) throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(2);
+            jedis.select(redisServer.getDatabase()+1);
             return jedis.exists(key);
         } finally {
             pool.returnResource(jedis);
@@ -217,7 +219,7 @@ public class RedisClientImpl implements SessionCache {
             throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(2);
+            jedis.select(redisServer.getDatabase()+1);
             if (jedis.exists(key)) {
                 jedis.set(key.getBytes(), marshaller.objectToBytes(value), "XX".getBytes(), "EX".getBytes(), secondsToExpire);
             } else {
@@ -232,7 +234,7 @@ public class RedisClientImpl implements SessionCache {
     public <T> T loginGet(String key) throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(2);
+            jedis.select(redisServer.getDatabase()+1);
             return (T) marshaller.objectFromByteBuffer(jedis.get(key.getBytes()));
         } finally {
             pool.returnResource(jedis);
@@ -243,7 +245,7 @@ public class RedisClientImpl implements SessionCache {
     public <T> void loginDelete(String key) throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(2);
+            jedis.select(redisServer.getDatabase()+1);
             jedis.del(key.getBytes());
         } finally {
             pool.returnResource(jedis);
@@ -254,7 +256,7 @@ public class RedisClientImpl implements SessionCache {
     public int loginSize() throws IOException {
         Jedis jedis = pool.getResource();
         try {
-            jedis.select(2);
+            jedis.select(redisServer.getDatabase()+1);
             if (log.isDebugEnabled()) {
                 log.debug("sizeof=" + jedis.dbSize());
             }
