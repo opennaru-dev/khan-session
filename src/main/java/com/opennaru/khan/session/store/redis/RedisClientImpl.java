@@ -42,14 +42,26 @@ public class RedisClientImpl implements SessionCache {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Redis Server 접속 정보
+     */
     private RedisServer redisServer;
 
+    /**
+     * Redis Pool
+     */
     private JedisPool pool = null;
 
+    /**
+     * Marshaller
+     */
     private KhanMarshaller marshaller;
 
     private RedisConfigurationProperties redisProp;
 
+    /**
+     * Default Constructor
+     */
     public RedisClientImpl() {
 
     }
@@ -62,12 +74,25 @@ public class RedisClientImpl implements SessionCache {
         }
     }
 
+    /**
+     * 초기화되어 있는지 체크
+     *
+     * @return
+     */
     @Override
     public boolean isInitialized() {
         return pool != null;
     }
 
 
+    /**
+     * 초기화
+     *
+     * @param configFile
+     * @param cacheName
+     * @param loginCacheName
+     * @throws IOException
+     */
     @Override
     public void initialize(String configFile, String cacheName, String loginCacheName)
             throws IOException {
@@ -134,31 +159,6 @@ public class RedisClientImpl implements SessionCache {
         }
         //cache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
         //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> void putAndEnsure(String key, T value, long secondsToExpire)
-            throws IOException {
-        put(key, value, secondsToExpire);
-/*
-        @SuppressWarnings("rawtypes")
-        FutureListener futureListener = new FutureListener() {
-
-            public void futureDone(Future future) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    // Future did not complete successfully
-                    log.debug("Future did not complete successfully!");
-                }
-            }
-        };
-
-        cache.putAsync(key, value, secondsToExpire, TimeUnit.SECONDS).attachListener(futureListener);
-*/
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
-
     }
 
     @Override

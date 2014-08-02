@@ -40,8 +40,6 @@ public interface SessionCache {
 
     public <T> void put(String key, T value, long secondsToExpire) throws IOException;
 
-    public <T> void putAndEnsure(String key, T value, long secondsToExpire) throws IOException;
-
     public <T> T get(String key) throws IOException;
 
     public <T> void delete(String key) throws IOException;

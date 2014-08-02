@@ -100,29 +100,6 @@ public class InfinispanLibrayImpl implements SessionCache {
         //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> void putAndEnsure(String key, T value, long secondsToExpire)
-            throws IOException {
-
-        @SuppressWarnings("rawtypes")
-        FutureListener futureListener = new FutureListener() {
-
-            public void futureDone(Future future) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    // Future did not complete successfully
-                    log.debug("Future did not complete successfully!");
-                }
-            }
-        };
-
-        cache.putAsync(key, value, secondsToExpire, TimeUnit.SECONDS).attachListener(futureListener);
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
-
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws IOException {
