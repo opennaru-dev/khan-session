@@ -36,6 +36,7 @@ import java.io.IOException;
 /**
  * Session Store using Jedis Client
  *
+ * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class RedisClientImpl implements SessionCache {

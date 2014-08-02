@@ -13,7 +13,7 @@
 
  * **KHAN [session manager]**
  
- KHAN [session manager]는 JBoss, Tomcat, WebLogic등 WAS의 세션 클러스터링을 위한 모듈입니다. WAS의 세션 클러스터링 기능을 In Memory Data Grid(IMDG) 제품인 JBoss Data Grid(Infinispan)을 사용하여 구축할 수 있도록 합니다.
+ KHAN [session manager]는 JBoss, Tomcat, WebLogic등 WAS의 세션 클러스터링을 위한 모듈입니다. WAS의 세션 클러스터링 기능을 In Memory Data Grid(IMDG) 제품인 JBoss Data Grid(Infinispan)이나 Redis를 사용하여 구축할 수 있도록 합니다.
  기존 애플리케이션의 변경없이 web.xml 파일에 서블릿 필터 설정만 추가하고 필요 라이브러리를 추가하면 됩니다.
  
  
@@ -23,7 +23,8 @@
   
   * **WAS내의 메모리를 사용하는 방법**
   * **별도의 서버들에 JBoss Data Grid(Infinispan)를 구성하여 세션을 Memory Grid에 저장하는 방법**
-  
+  * **별도의 Redis Server를 구성하여 세션을 저장하는 방법**
+
   
  * **KHAN [session manager]의 주요 기능**
   * Java EE 표준 Servlet Filter를 사용하여 Servlet 2.5 이상를  지원하는 WAS 서버에서 사용할 수 있음(현재 테스트 서버 : JBoss EAP 6.x, Tomcat 7.x, WebLogic 11g, 계속 테스트 중)
@@ -32,7 +33,12 @@
   * 세션에서 사용하는 메모리 사용량 모니터링
   * Active 세션 개수, 세션 생성/소멸 개수, 중복 로그인 횟수, 초당 세션 생성/소멸/중복로그인 횟수에 대한 MBean 모니터링
   * 주요 Static Contents에 대해 세션을 생성하지 않도록 필터링
-  * JBoss Data Grid(Infinispan)을 사용하여 안정적이며 세션에 대한 확장성이 높음.
+  * IMDG인 JBoss Data Grid(Infinispan)을 사용하여 안정적이며 세션에 대한 확장성이 높음.
+  * Redis에 세션 데이터를 저장할 수 있음.
+  * SessionStore의 종류
+   * Infinispan Library Mode
+   * Infinispan HotRod Mode
+   * Redis
 
  * 배포본 다운로드
   * https://github.com/opennaru-dev/khan-session/tree/master/dist
@@ -50,7 +56,11 @@
 
  * **web.xml 설정**
  
- 
+  * FilterClass의 종류
+   * com.opennaru.khan.session.filter.InfinispanLibSessionFilter
+   * com.opennaru.khan.session.filter.InfinispanHotRodSessionFilter
+   * com.opennaru.khan.session.filter.RedisSessionFilter
+
  ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
@@ -86,23 +96,8 @@
     <!-- <distributable/> -->
     <filter>
         <filter-name>KhanSessionFilter</filter-name>
-        <filter-class>com.opennaru.khan.session.filter.InfinispanSessionFilter</filter-class>
-        <!-- Infinispan Session Server -->
-        <!-- 
-        <init-param>
-            <param-name>useLibraryMode</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>configFile</param-name>
-            <param-value>hotrod.properties</param-value>
-        </init-param>
-        -->
+        <filter-class>com.opennaru.khan.session.filter.InfinispanLibSessionFilter</filter-class>
         <!-- Infinispan Library Mode -->
-        <init-param>
-            <param-name>useLibraryMode</param-name>
-            <param-value>true</param-value>
-        </init-param>
         <init-param>
             <param-name>configFile</param-name>
             <param-value>khan-session.xml</param-value>

@@ -52,8 +52,10 @@ public class SessionListener implements HttpSessionListener {
         HttpSession session = sessionEvent.getSession();
         // Store something in the session, and log a message
         try {
-            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> created sessionEvent=" + sessionEvent);
-            log.debug("Session created=" + session.getId());
+            if( log.isDebugEnabled() ) {
+                log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> created sessionEvent=" + sessionEvent);
+                log.debug("Session created=" + session.getId());
+            }
             String appName = sessionEvent.getSession().getServletContext().getContextPath();
             KhanSessionManager.getInstance(appName).getSessionMonitor().sessionCreated();
 
@@ -81,8 +83,10 @@ public class SessionListener implements HttpSessionListener {
             String sessionId = session.getId();
 
             // Log a message
-            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> destroy sessionEvent=" + sessionEvent);
-            log.debug("Session invalidated: " + sessionId);
+            if( log.isDebugEnabled() ) {
+                log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> destroy sessionEvent=" + sessionEvent);
+                log.debug("Session invalidated: " + sessionId);
+            }
             String appName = sessionEvent.getSession().getServletContext().getContextPath();
 
             KhanSessionManager.getInstance(appName).removeSessionId(session);

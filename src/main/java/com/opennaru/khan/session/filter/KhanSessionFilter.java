@@ -29,6 +29,7 @@ import com.opennaru.khan.session.listener.SessionLoginManager;
 import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.CookieUtil;
+import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,7 +135,7 @@ public abstract class KhanSessionFilter implements Filter {
 
         // namespace
         khanSessionConfig.setNamespace(getConfigValue(config, Constants.NAMESPACE));
-        if (khanSessionConfig.getNamespace() == null) {
+        if ( StringUtils.isNullOrEmpty( khanSessionConfig.getNamespace() ) ) {
             khanSessionConfig.setNamespace(Constants.GLOBAL_NAMESPACE);
         }
 
@@ -143,7 +144,7 @@ public abstract class KhanSessionFilter implements Filter {
 
         // session id
         khanSessionConfig.setSessionIdKey(getConfigValue(config, Constants.SESSION_ID));
-        if (khanSessionConfig.getSessionIdKey() == null) {
+        if ( StringUtils.isNullOrEmpty( khanSessionConfig.getSessionIdKey() ) ) {
             khanSessionConfig.setSessionIdKey(Constants.DEFAULT_SESSION_ID_NAME);
         }
 
@@ -152,7 +153,7 @@ public abstract class KhanSessionFilter implements Filter {
 
         // path
         khanSessionConfig.setPath(getConfigValue(config, Constants.PATH));
-        if (khanSessionConfig.getPath() == null) {
+        if ( StringUtils.isNullOrEmpty(khanSessionConfig.getPath() ) ) {
             khanSessionConfig.setPath("/");
         }
 
@@ -167,7 +168,7 @@ public abstract class KhanSessionFilter implements Filter {
         // session time out
         String sessionTimeout = getConfigValue(config, Constants.SESSION_TIMEOUT);
 
-        if (sessionTimeout == null) {
+        if ( StringUtils.isNullOrEmpty(sessionTimeout) ) {
             khanSessionConfig.setSessionTimeoutMin(10);
         } else {
             khanSessionConfig.setSessionTimeoutMin(Integer.valueOf(sessionTimeout));
@@ -179,7 +180,7 @@ public abstract class KhanSessionFilter implements Filter {
 
         // force logout url
         khanSessionConfig.setLogoutUrl(getConfigValue(config, Constants.LOGOUT_URL));
-        if (khanSessionConfig.getLogoutUrl() == null) {
+        if (StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl() ) ) {
             khanSessionConfig.setLogoutUrl("");
         }
     }
@@ -304,7 +305,6 @@ public abstract class KhanSessionFilter implements Filter {
 
         // KHAN Request이면
         if (isKhanSessionHttpRequest(_request)) {
-
             if (log.isDebugEnabled()) {
                 log.debug("KhanSessionHttpRequest is already applied.");
             }
@@ -364,7 +364,7 @@ public abstract class KhanSessionFilter implements Filter {
             String khan_uid = "";
 
             // 중복 로그인을 허용하지 않는다고 설정되어 있는 경우
-            if (khanSessionConfig.isAllowDuplicateLogin() == false) {
+            if ( khanSessionConfig.isAllowDuplicateLogin() == false ) {
 
                 khan_uid = (String) _wrappedRequest.getSession().getAttribute("khan.uid");
                 if (log.isDebugEnabled()) {

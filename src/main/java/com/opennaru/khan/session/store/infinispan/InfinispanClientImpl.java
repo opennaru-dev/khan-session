@@ -48,11 +48,12 @@ public class InfinispanClientImpl implements SessionCache {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    // HotRod Remote Cache Manager
     private RemoteCacheManager cacheManager;
+    // Session Cache
     private RemoteCache<Object, Object> cache;
+    // Login Session Cache
     private RemoteCache<Object, Object> loginCache;
-    //private String cacheName = SessionCache.DEFAULT_CACHENAME;
-    //private String loginCacheName = SessionCache.DEFAULT_LOGIN_CACHENAME;
 
     public InfinispanClientImpl() {
 
@@ -108,9 +109,6 @@ public class InfinispanClientImpl implements SessionCache {
 
         cacheManager = new RemoteCacheManager(configuration);
 
-        //this.cacheName = cacheName;
-        //this.loginCacheName = loginCacheName;
-
         cache = cacheManager.getCache(cacheName);
         loginCache = cacheManager.getCache(loginCacheName);
 
@@ -127,20 +125,25 @@ public class InfinispanClientImpl implements SessionCache {
     public <T> void put(String key, T value, long secondsToExpire)
             throws IOException {
         cache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( log.isDebugEnabled() )
+            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws IOException {
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( log.isDebugEnabled() )
+            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+
         return (T) cache.get(key);
     }
 
     @Override
     public <T> void delete(String key) throws IOException {
         cache.remove(key);
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+
+        if( log.isDebugEnabled() )
+            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     @Override

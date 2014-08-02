@@ -24,7 +24,6 @@ package com.opennaru.khan.session.filter;
 import com.opennaru.khan.session.store.SessionCache;
 import com.opennaru.khan.session.store.SessionStoreImpl;
 import com.opennaru.khan.session.store.infinispan.InfinispanClientImpl;
-import com.opennaru.khan.session.store.infinispan.InfinispanLibrayImpl;
 import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +33,13 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
 /**
- * InfinispanSessionFilter
+ * Session filter for Infinispan HotRod Client
  *
+ * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(this.getClass());
-
 
     protected String getInfinispanConfigFile(FilterConfig config) {
         String configFile = getConfigValue(config, Constants.INFINISPAN_CONFIGFILE_KEY);
@@ -52,7 +51,8 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
     }
 
     /**
-     * Initialize Session Filter
+     * Initialize Infinispan HotRod client Session Filter
+     *
      * @param config
      * @throws javax.servlet.ServletException
      */
@@ -64,12 +64,12 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
         String configFileName = getInfinispanConfigFile(config);
 
         String cacheName = getConfigValue(config, Constants.INFINISPAN_CACHE_KEY);
-        if (cacheName == null || cacheName.equals("")) {
+        if ( StringUtils.isNullOrEmpty(cacheName) ) {
             cacheName = SessionCache.DEFAULT_CACHENAME;
         }
 
         String loginCacheName = getConfigValue(config, Constants.INFINISPAN_LOGIN_CACHE_KEY);
-        if (loginCacheName == null || loginCacheName.equals("")) {
+        if ( StringUtils.isNullOrEmpty(loginCacheName) ) {
             loginCacheName = SessionCache.DEFAULT_LOGIN_CACHENAME;
         }
 

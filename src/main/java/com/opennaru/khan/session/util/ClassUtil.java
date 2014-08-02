@@ -27,7 +27,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * Created by jjeon on 14. 8. 1.
+ * @since 1.1.0
+ * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class ClassUtil {
 

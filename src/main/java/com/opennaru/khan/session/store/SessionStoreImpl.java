@@ -21,6 +21,7 @@
  */
 package com.opennaru.khan.session.store;
 
+import com.opennaru.khan.session.util.StackTraceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,6 @@ public class SessionStoreImpl implements SessionStore {
 
     public SessionStoreImpl(SessionCache sessionCache1) {
         this.sessionCache = sessionCache1;
-    }
-
-    private static String getStackTrace(Throwable t) {
-//		StringWriter sw = new StringWriter();
-//		PrintWriter pw = new PrintWriter(sw);
-//		t.printStackTrace(pw);
-//		return sw.toString();
-        return "";
     }
 
     @Override
@@ -67,7 +60,7 @@ public class SessionStoreImpl implements SessionStore {
             if (log.isDebugEnabled()) {
                 Throwable t = new Throwable();
                 String message = ">>> GET [" + key + " -> " + value + "]";
-                log.debug(message + getStackTrace(t));
+                log.debug(message + StackTraceUtil.getStackTrace(t));
             }
             return value;
 
@@ -84,7 +77,7 @@ public class SessionStoreImpl implements SessionStore {
             Throwable t = new Throwable();
             String message = ">>> SET (expire:" + expire + ") [" + key + " -> "
                     + value + "]";
-            log.debug(message + getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -104,7 +97,7 @@ public class SessionStoreImpl implements SessionStore {
         if (log.isDebugEnabled()) {
             Throwable t = new Throwable();
             String message = ">>> DELETE: [" + key + "]";
-            log.debug(message + getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -145,7 +138,7 @@ public class SessionStoreImpl implements SessionStore {
             if (log.isDebugEnabled()) {
                 Throwable t = new Throwable();
                 String message = ">>> GET [" + key + " -> " + value + "]";
-                log.debug(message + getStackTrace(t));
+                log.debug(message + StackTraceUtil.getStackTrace(t));
             }
             return value;
 
@@ -162,7 +155,7 @@ public class SessionStoreImpl implements SessionStore {
             Throwable t = new Throwable();
             String message = ">>> SET (expire:" + expire + ") [" + key + " -> "
                     + value + "]";
-            log.debug(message + getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -182,7 +175,7 @@ public class SessionStoreImpl implements SessionStore {
         if (log.isDebugEnabled()) {
             Throwable t = new Throwable();
             String message = ">>> DELETE: [" + key + "]";
-            log.debug(message + getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {

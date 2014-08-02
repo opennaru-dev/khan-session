@@ -28,6 +28,7 @@ import java.io.StringWriter;
 /**
  * Stack Trace Printer utility class
  *
+ * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class StackTraceUtil {

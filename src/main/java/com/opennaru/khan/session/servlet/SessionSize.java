@@ -33,11 +33,12 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 
 /**
- * SessionSize : Example... for just testing...
+ * SessionSize : Example... for just testing... 사용안함
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 //@WebServlet(name = "SessionSize", urlPatterns = "/SessionSize")
+@Deprecated
 public class SessionSize extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -51,7 +52,7 @@ public class SessionSize extends HttpServlet {
 
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.println("<h2>Session Size Servlet Example</h2>");
+        out.println("<h2>Session Size Servlet</h2>");
 
         HttpSession session = req.getSession();
         Enumeration<String> sessionNames = session.getAttributeNames();

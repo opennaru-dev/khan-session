@@ -12,8 +12,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: redis.clients:jedis:2.4.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.0" level="project" />
     <orderEntry type="module" module-name="khan-counter" />
     <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.stephenc:jamm:0.2.5" level="project" />

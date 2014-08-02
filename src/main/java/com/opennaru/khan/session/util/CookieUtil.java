@@ -30,6 +30,13 @@ import javax.servlet.http.Cookie;
  */
 public class CookieUtil {
 
+    /**
+     * Create Cookie header
+     *
+     * @param cookie
+     * @param isHttpOnly
+     * @return
+     */
     public static String createCookieHeader(Cookie cookie, boolean isHttpOnly) {
         StringBuilder sb = new StringBuilder();
         sb = sb.append(cookie.getName()).append("=").append(cookie.getValue());

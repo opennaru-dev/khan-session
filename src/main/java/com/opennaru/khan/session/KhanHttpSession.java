@@ -38,24 +38,55 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * KHAN [session manager]에서 관리하는 Session Object
+ * 세션 객체들은 SessionStore에 저장된다.
+ * Infinispan Library Mode/HotRod Client Mode나 Redis 구현체가 있음.
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 @SuppressWarnings("deprecation")
 public class KhanHttpSession implements HttpSession {
+    // Store에 저장할 Attribute Key
     public static final String ATTRIBUTES_KEY = "_ATTR_";
+    // Store에 저장할 Metadata Key
     public static final String METADATA_KEY = "_META_";
-    private final String sessionId;
-    private final SessionStore sessionStore;
-    private final HttpSession session;
-    private final KhanSessionKeyGenerator keyGenerator;
+
+    // logger
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    // Session ID
+    private final String sessionId;
+
+    // SessionStore - Interface
+    private final SessionStore sessionStore;
+
+    // HttpSession Object
+    private final HttpSession session;
+    // Khan SessionStore 저장을 위한 Key 생성기
+    private final KhanSessionKeyGenerator keyGenerator;
+    // Session Attribute를 저장할 객체
     private ConcurrentHashMap<Object, Object> attributes = new ConcurrentHashMap<Object, Object>();
+    // Session Metadata를 저장할 객체
     private KhanSessionMetadata khanSessionMetadata;
+    // 새로 생성된 세션인지
     private boolean isNewlyCreated = false;
+    // max inactive interval
     private Integer maxInactiveIntervalSeconds = null;
 
+    // Khan Session manager
     private KhanSessionManager sessionManager = null;
 
+    /**
+     * Constructor
+     *
+     * @param sessionId
+     * @param sessionStore
+     * @param namespace
+     * @param timeoutMin
+     * @param session
+     * @param sessionManager
+     * @param clientIp
+     */
     public KhanHttpSession(String sessionId, SessionStore sessionStore, String namespace, Integer timeoutMin, HttpSession session, KhanSessionManager sessionManager, String clientIp) {
         // Check argument is not null
         StringUtils.isNotNull("sessionId", sessionId);
@@ -100,10 +131,18 @@ public class KhanHttpSession implements HttpSession {
         }
     }
 
+    /**
+     * Get KhanSessionManager
+     * @return
+     */
     public KhanSessionManager getSessionManager() {
         return this.sessionManager;
     }
 
+    /**
+     * Get Session Key Generator
+     * @return
+     */
     public KhanSessionKeyGenerator getKeyGenerator() {
         return keyGenerator;
     }
@@ -154,6 +193,13 @@ public class KhanHttpSession implements HttpSession {
         }
     }
 
+    /**
+     * Returns the object bound with the specified name in this session, or
+     * <code>null</code> if no object is bound under the name.
+     *
+     * @param name		a string specifying the name of the object
+     * @return			the object with the specified name
+     */
     @Override
     public Object getAttribute(String name) {
 
@@ -171,6 +217,10 @@ public class KhanHttpSession implements HttpSession {
         return value;
     }
 
+    /**
+     * Get attibute names
+     * @return
+     */
     @Override
     public Enumeration<String> getAttributeNames() {
         if (isValid()) {
@@ -202,7 +252,8 @@ public class KhanHttpSession implements HttpSession {
     }
 
     /**
-     * Invalidate Session
+     * Invalidates this session then unbinds any objects bound
+     * to it.
      */
     @Override
     public void invalidate() {
@@ -337,6 +388,9 @@ public class KhanHttpSession implements HttpSession {
         removeAttribute(name);
     }
 
+    /**
+     * Save Attributes to SessionStore
+     */
     private void saveAttributesToStore() {
         sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
 
@@ -344,6 +398,9 @@ public class KhanHttpSession implements HttpSession {
 
     }
 
+    /**
+     * Remove attributes from SessionStore
+     */
     private void removeAttributesFromStore() {
         sessionStore.remove(keyGenerator.generate(ATTRIBUTES_KEY));
         sessionStore.remove(keyGenerator.generate(METADATA_KEY));

@@ -35,12 +35,17 @@ import javax.servlet.ServletException;
 /**
  * KHAN SessionFilter for Redis
  *
+ * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class RedisSessionFilter extends KhanSessionFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-
+    /**
+     * Get name of redis Config file from web.xml
+     * @param config
+     * @return
+     */
     protected String getRedisConfigFile(FilterConfig config) {
         String configFile = getConfigValue(config, Constants.REDIS_CONFIGFILE_KEY);
         if (log.isDebugEnabled()) {

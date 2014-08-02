@@ -76,7 +76,7 @@ public class KhanSessionManager {
     }
 
     public static KhanSessionManager getInstance(String appName) {
-        if (instances.get(appName) == null) {
+        if ( instances.get(appName) == null ) {
             System.err.println("KhanSessionManager is not initialized.");
         }
         if( log.isDebugEnabled() ) {
@@ -192,12 +192,11 @@ public class KhanSessionManager {
 
     private long getSessionMemorySize(HttpSession session) {
         long memorySize = 0;
-        MemoryMeter meter = new MemoryMeter();
-
         try {
+            MemoryMeter meter = new MemoryMeter();
             memorySize += meter.measureDeep(getSessionAttributes(session.getId()));
         } catch (Exception e) {
-            log.error("session memory size error", e);
+            log.error("Session memory size calculation error", e);
         }
         return memorySize;
     }

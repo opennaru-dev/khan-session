@@ -30,9 +30,14 @@ import java.util.Date;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionMetadata implements Serializable {
+    // 세션의 메타데이터
+    // 세션이 invalidate되었는지 정보
     private Boolean invalidated;
+    // 세션 생성 시간
     private Date creationTime;
+    // 세션 최종 접근 시간
     private Date lastAccessedTime;
+    // 접속한 클라이언트 IP
     private String clientIp = null;
 
     public KhanSessionMetadata() {
@@ -69,5 +74,15 @@ public class KhanSessionMetadata implements Serializable {
 
     public void setClientIp(String clientIp) {
         this.clientIp = clientIp;
+    }
+
+    @Override
+    public String toString() {
+        return "KhanSessionMetadata{" +
+                "invalidated=" + invalidated +
+                ", creationTime=" + creationTime +
+                ", lastAccessedTime=" + lastAccessedTime +
+                ", clientIp='" + clientIp + '\'' +
+                '}';
     }
 }

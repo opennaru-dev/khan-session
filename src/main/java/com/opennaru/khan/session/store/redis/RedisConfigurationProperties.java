@@ -30,7 +30,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Created by jjeon on 14. 8. 1.
+ *
+ * @since 1.1.0
+ * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class RedisConfigurationProperties {
     public static final String REDIS_SERVER_URL = "redis.client.server_url";

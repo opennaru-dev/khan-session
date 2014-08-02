@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 import java.io.Serializable;
 
 /**
- * SessionLoginManager
+ * SessionLoginManager / 중복로그인 관리를 위한 Manager
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
@@ -45,6 +45,10 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
     private static SessionLoginManager loginManager = null;
     private transient Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Get Singleton instance
+     * @return
+     */
     public static SessionLoginManager getInstance() {
         if (loginManager == null) {
             loginManager = new SessionLoginManager();
@@ -53,6 +57,10 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         return loginManager;
     }
 
+    /**
+     * Session value bound event / do nothing
+     * @param event
+     */
     @Override
     public void valueBound(HttpSessionBindingEvent event) {
         if( log.isDebugEnabled() ) {
@@ -64,18 +72,21 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         }
     }
 
+
+    /**
+     * Session value unbound event / do nothing
+     * @param event
+     */
     @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
         if( log.isDebugEnabled() ) {
             log.debug("******** valueUnbound=" + event.getName());
             log.debug("******** valueUnbound=" + event.getValue());
-        }
-        // Get the session that was invalidated
-        HttpSession session = event.getSession();
-        String sessionId = session.getId();
 
-        // Log a message
-        if( log.isDebugEnabled() ) {
+            // Get the session that was invalidated
+            HttpSession session = event.getSession();
+            String sessionId = session.getId();
+
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> destroy sessionEvent=" + event);
             log.debug("Session invalidated: " + sessionId);
             //String appName = event.getSession().getServletContext().getContextPath();
@@ -84,10 +95,19 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         }
     }
 
+    // TODO
     public void removeSession(String userId) {
 
     }
 
+    /**
+     * 중복로그인을 위한 login 처리
+     * khan.uid에 로그인 ID만 저장함
+     *
+     * @param request
+     * @param uid
+     * @throws Exception
+     */
     public void login(HttpServletRequest request, String uid) throws Exception {
 
         if (uid == null || uid.equals(""))
@@ -149,6 +169,13 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
 
     }
 
+    /**
+     * 중복로그인을 위한 logout 처리
+     * khan.uid를 삭제하고 Session Invalidate
+     *
+     * @param request
+     * @throws Exception
+     */
     public void logout(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         session.removeAttribute("khan.uid");
@@ -158,6 +185,12 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         session.invalidate();
     }
 
+    /**
+     * 사용자 id로 로그인한 Session ID 정보를 가져오기
+     *
+     * @param uid
+     * @return
+     */
     public String loggedInSessionId(String uid) {
         String key = KhanSessionKeyGenerator.generate("$", "UID", uid);
         String sessionId = KhanSessionFilter.getSessionStore().loginGet(key);
@@ -165,6 +198,12 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         else return sessionId;
     }
 
+    /**
+     * Request 객체로 로그인한 사용자 ID를 가져오기
+     *
+     * @param request
+     * @return
+     */
     public String loggedInUserId(HttpServletRequest request) {
         HttpSession session = request.getSession();
 

@@ -65,12 +65,12 @@ public class InfinispanSessionFilter extends KhanSessionFilter implements Filter
         String configFileName = getInfinispanConfigFile(config);
 
         String cacheName = getConfigValue(config, Constants.INFINISPAN_CACHE_KEY);
-        if (cacheName == null || cacheName.equals("")) {
+        if ( StringUtils.isNullOrEmpty(cacheName) ) {
             cacheName = SessionCache.DEFAULT_CACHENAME;
         }
 
         String loginCacheName = getConfigValue(config, Constants.INFINISPAN_LOGIN_CACHE_KEY);
-        if (loginCacheName == null || loginCacheName.equals("")) {
+        if ( StringUtils.isNullOrEmpty(loginCacheName) ) {
             loginCacheName = SessionCache.DEFAULT_LOGIN_CACHENAME;
         }
 

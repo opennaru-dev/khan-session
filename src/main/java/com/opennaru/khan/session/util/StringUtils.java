@@ -28,18 +28,33 @@ package com.opennaru.khan.session.util;
  */
 public class StringUtils {
 
+    /**
+     * 값이 Null이면 Exception을 throw
+     * @param name
+     * @param value
+     */
     public static void isNotNull(String name, Object value) {
         if (value == null) {
             throw new IllegalArgumentException(name + "s Null !");
         }
     }
 
+    /**
+     * 값이 Null이면 Exception을 throw
+     * @param name
+     * @param value
+     */
     public static void isNotNull(String name, String value) {
         if (value == null || value.trim().length() == 0) {
             throw new IllegalArgumentException("Argument " + name + " should not empty !");
         }
     }
 
+    /**
+     * 값이 Null이나 ""이면 true 반환
+     * @param value
+     * @return
+     */
     public static boolean isNullOrEmpty(String value) {
         if (value == null || value.trim().length() == 0) {
             return true;

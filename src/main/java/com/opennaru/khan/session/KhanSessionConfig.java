@@ -27,20 +27,32 @@ package com.opennaru.khan.session;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionConfig {
-
+    // if use library mode
+    @Deprecated
     private boolean useLibraryMode;
+
+    // namespace
     private String namespace;
+    // exclude regular expression
     private String excludeRegExp;
 
+    // session id key
     private String sessionIdKey;
+    // cookie domain name
     private String domain;
+    // cookie path
     private String path;
+    // cookie secure
     private boolean secure;
+    // cookie is httpOnly
     private boolean httpOnly;
+    // if allow duplicate login
     private boolean allowDuplicateLogin;
 
+    // 중복로그인 강제 logout url
     private String logoutUrl;
 
+    // Session timout minute
     private Integer sessionTimeoutMin;
 
     public boolean isUseLibraryMode() {
@@ -133,5 +145,22 @@ public class KhanSessionConfig {
 
     public void setSecure(Boolean secure) {
         this.secure = secure != null && secure;
+    }
+
+    @Override
+    public String toString() {
+        return "KhanSessionConfig{" +
+                "useLibraryMode=" + useLibraryMode +
+                ", namespace='" + namespace + '\'' +
+                ", excludeRegExp='" + excludeRegExp + '\'' +
+                ", sessionIdKey='" + sessionIdKey + '\'' +
+                ", domain='" + domain + '\'' +
+                ", path='" + path + '\'' +
+                ", secure=" + secure +
+                ", httpOnly=" + httpOnly +
+                ", allowDuplicateLogin=" + allowDuplicateLogin +
+                ", logoutUrl='" + logoutUrl + '\'' +
+                ", sessionTimeoutMin=" + sessionTimeoutMin +
+                '}';
     }
 }

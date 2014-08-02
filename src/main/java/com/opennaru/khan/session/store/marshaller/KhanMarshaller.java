@@ -32,6 +32,7 @@ import java.io.IOException;
  *     khan.marshaller.compress false(default value), Snappy compress
  *     khan.marshaller.debug false(default value)
  *
+ * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public interface KhanMarshaller {

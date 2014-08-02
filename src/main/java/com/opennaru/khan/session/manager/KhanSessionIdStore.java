@@ -29,11 +29,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionIdStore {
-    //private String namespace = "";
+    // Session ID Store
     private ConcurrentHashMap<String, Object> sessionStore = new ConcurrentHashMap<String, Object>();
 
     public KhanSessionIdStore(String namespace) {
-        //this.namespace = namespace;
         ConcurrentHashMap<String, Long> sessionIds = new ConcurrentHashMap<String, Long>();
         sessionStore.put(namespace, sessionIds);
     }

@@ -30,6 +30,9 @@ import java.util.Map;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public interface SessionMonitorMBean {
+    /**
+     * TODO : 설정에서 통계정보를 수집할 것인지 결정하도록 변경해야 함
+     */
     public static final String STATISTICS_ENABLED = "statisticsEnabled";
 
     public String getAppName();

@@ -28,7 +28,10 @@ import org.infinispan.commons.marshall.Marshaller;
 import java.io.IOException;
 
 /**
- * Created by jjeon on 14. 8. 1.
+ * Marshaller Utility
+ *
+ * @since 1.1.0
+ * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class MarshallerUtil {
 

@@ -43,7 +43,7 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
     public KhanSessionHttpRequest(HttpServletRequest request, String sessionId,
                                   String namespace, Integer timeoutMin, SessionStore store,
                                   KhanSessionManager sessionManager) {
-        super((HttpServletRequest) request);
+        super(request);
 
         this.sessionId = sessionId;
         this.namespace = namespace;

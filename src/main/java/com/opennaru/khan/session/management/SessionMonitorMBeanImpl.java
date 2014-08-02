@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * SessionMonitorMBeanImpl
+ * SessionMonitorMBeanImpl, 세션 정보에 대한 MBean 구현체
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */

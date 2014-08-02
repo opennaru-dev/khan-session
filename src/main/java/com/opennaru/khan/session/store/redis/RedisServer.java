@@ -27,7 +27,8 @@ import com.opennaru.khan.session.util.StringUtils;
 import java.net.URI;
 
 /**
- * Created by jjeon on 14. 8. 1.
+ * @since 1.1.0
+ * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class RedisServer {
     private String hostname = "localhost";
@@ -84,14 +85,16 @@ public class RedisServer {
     public void parseUrl(String url) {
         URI uri = URI.create(url);
         if (uri.getScheme() != null && uri.getScheme().equals("redis")) {
-            this.hostname = uri.getHost();
-            this.port = uri.getPort();
+            setHostname( uri.getHost() );
+            setPort( uri.getPort() );
             String passwd = uri.getUserInfo().split(":", 2)[1];
             if( StringUtils.isNullOrEmpty(passwd) ) {
-                this.password = null;
+                setPassword( null );
+            } else {
+                setPassword( passwd );
             }
 
-            this.database = Integer.parseInt(uri.getPath().split("/", 2)[1]);
+            setDatabase( Integer.parseInt(uri.getPath().split("/", 2)[1]) );
         }
     }
 

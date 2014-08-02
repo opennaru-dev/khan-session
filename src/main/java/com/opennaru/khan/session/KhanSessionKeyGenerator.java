@@ -31,17 +31,37 @@ public class KhanSessionKeyGenerator {
     private final String sessionId;
     private final String namespace;
 
+    /**
+     * Constructor
+     *
+     * @param sessionId
+     * @param namespace
+     */
     public KhanSessionKeyGenerator(String sessionId, String namespace) {
         this.sessionId = sessionId;
         this.namespace = namespace;
     }
 
+    /**
+     * Cache에 저장할 KEY 생성
+     *
+     * @param namespace
+     * @param sessionId
+     * @param name
+     * @return
+     */
     public static String generate(String namespace, String sessionId, String name) {
         String key = "KHAN_SESSION__" + sessionId + "_" + namespace + "_" + name;
         key = key.replaceAll("\\s", "_");
         return key;
     }
 
+    /**
+     * Cache에 저장할 KEY 생성
+     *
+     * @param name
+     * @return
+     */
     public String generate(String name) {
         String key = "KHAN_SESSION__" + sessionId + "_" + namespace + "_" + name;
         key = key.replaceAll("\\s", "_");

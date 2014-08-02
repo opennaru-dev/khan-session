@@ -30,24 +30,76 @@ import java.io.Serializable;
  */
 public interface SessionStore {
 
+    /**
+     * Check if Session ID is in cache
+     * @param key
+     * @return
+     */
     public boolean contains(String key);
 
+    /**
+     * Get Session ID
+     * @param key
+     * @param <V>
+     * @return
+     */
     public <V extends Serializable> V get(String key);
 
+    /**
+     * Put Session ID
+     * @param key
+     * @param value
+     * @param expire
+     * @param <V>
+     */
     public <V extends Serializable> void put(String key, V value, long expire);
 
+    /**
+     * Remove Session ID
+     * @param key
+     */
     public void remove(String key);
 
+    /**
+     * Get number of Session
+     * @return
+     */
     public int size();
 
 
+    /**
+     * Check if login session is in
+     * @param key
+     * @return
+     */
     public boolean loginContains(String key);
 
+    /**
+     * Get login session object
+     * @param key
+     * @param <V>
+     * @return
+     */
     public <V extends Serializable> V loginGet(String key);
 
+    /**
+     * Put login session object
+     * @param key
+     * @param value
+     * @param expire
+     * @param <V>
+     */
     public <V extends Serializable> void loginPut(String key, V value, long expire);
 
+    /**
+     * remove login session
+     * @param key
+     */
     public void loginRemove(String key);
 
+    /**
+     * return number of login sessions
+     * @return
+     */
     public int loginSize();
 }

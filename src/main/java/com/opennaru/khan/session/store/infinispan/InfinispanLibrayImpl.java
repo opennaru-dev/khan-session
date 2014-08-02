@@ -42,12 +42,14 @@ public class InfinispanLibrayImpl implements SessionCache {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    // library mode cache manager
     private DefaultCacheManager cacheManager;
+    // Session cache
     private Cache<Object, Object> cache;
+    // login session cache
     private Cache<Object, Object> loginCache;
-    @SuppressWarnings("unused")
+
     private String cacheName = SessionCache.DEFAULT_CACHENAME;
-    @SuppressWarnings("unused")
     private String loginCacheName = SessionCache.DEFAULT_LOGIN_CACHENAME;
 
     public InfinispanLibrayImpl() {
@@ -97,20 +99,26 @@ public class InfinispanLibrayImpl implements SessionCache {
     public <T> void put(String key, T value, long secondsToExpire)
             throws IOException {
         cache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+
+        if( log.isDebugEnabled() )
+            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws IOException {
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( log.isDebugEnabled() )
+            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+
         return (T) cache.get(key);
     }
 
     @Override
     public <T> void delete(String key) throws IOException {
         cache.remove(key);
-        //logger.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+
+        if( log.isDebugEnabled() )
+            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     @Override

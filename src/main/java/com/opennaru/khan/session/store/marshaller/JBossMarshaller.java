@@ -25,20 +25,27 @@ package com.opennaru.khan.session.store.marshaller;
 import com.opennaru.khan.session.util.ClassUtil;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import org.infinispan.commons.marshall.Marshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Created by jjeon on 14. 7. 31.
+ * JBoss marshalling-rivier marshaller for Object from/to byte array
+ * KHAN [session manager]의 기본 marshaller
+ *
+ * @since 1.1.0
+ * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class JBossMarshaller implements KhanMarshaller {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static boolean DEBUG = false;
     private Marshaller marshaller;
     private boolean USE_SNAPPY_COMPRESSION = false;
-
 
 
     public JBossMarshaller() {
@@ -49,7 +56,11 @@ public class JBossMarshaller implements KhanMarshaller {
         if( System.getProperty("khan.marshaller.debug", "false").equals("true") ) {
             DEBUG = true;
         }
+        if( log.isDebugEnabled() ) {
+            DEBUG = true;
+        }
 
+        // 기본 Marshaller
         marshaller = ClassUtil.getInstance("org.infinispan.commons.marshall.jboss.GenericJBossMarshaller",
                 this.getClass().getClassLoader());
     }
@@ -64,19 +75,20 @@ public class JBossMarshaller implements KhanMarshaller {
         ByteArrayInputStream bais = null;
         Object o = null;
 
-//        System.out.println(StackTraceUtil.getStackTrace(Thread.currentThread().getStackTrace()) );
+        if( DEBUG )
+            log.debug(StackTraceUtil.getStackTrace(Thread.currentThread().getStackTrace()) );
 
         try {
             if (USE_SNAPPY_COMPRESSION) {
                 uncompressBuf = Snappy.uncompress(buf);
                 if (DEBUG) {
-                    System.out.println("KhanFSTMarshaller/toObject/SIZE=" + buf.length + "/UNCOMPRESS=" + uncompressBuf.length);
+                    log.debug("KhanFSTMarshaller/toObject/SIZE=" + buf.length + "/UNCOMPRESS=" + uncompressBuf.length);
                 }
 
                 return MarshallerUtil.bytes2obj(marshaller, uncompressBuf);
             } else {
                 if (DEBUG) {
-                    System.out.println("KhanFSTMarshaller/toObject/SIZE=" + buf.length);
+                    log.debug("KhanFSTMarshaller/toObject/SIZE=" + buf.length);
                 }
                 return MarshallerUtil.bytes2obj(marshaller, buf);
             }
@@ -92,17 +104,18 @@ public class JBossMarshaller implements KhanMarshaller {
         try {
             byte[] bytes = MarshallerUtil.obj2bytes(marshaller, o);
 
-//            System.out.println(StackTraceUtil.getStackTrace(Thread.currentThread().getStackTrace()) );
+            if( DEBUG )
+                log.debug( StackTraceUtil.getStackTrace(Thread.currentThread().getStackTrace()) );
 
             if( USE_SNAPPY_COMPRESSION ) {
                 byte[] compressBuf = Snappy.compress(bytes);
                 if( DEBUG ) {
-                    System.out.println("KhanGridMarshaller/SIZE=" + bytes.length + "/COMPRESS=" + compressBuf.length);
+                    log.debug("KhanGridMarshaller/SIZE=" + bytes.length + "/COMPRESS=" + compressBuf.length);
                 }
                 return compressBuf;
             } else {
                 if( DEBUG ) {
-                    System.out.println("KhanGridMarshaller/SIZE=" + bytes.length );
+                    log.debug("KhanGridMarshaller/SIZE=" + bytes.length );
                 }
                 return bytes;
             }
