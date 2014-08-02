@@ -86,7 +86,7 @@ public class RedisClientImpl implements SessionCache {
 
         // URL : redis://:foobared@localhost:6380/1
 //        pool = new JedisPool("redis://:password@localhost:6379/1");
-        RedisServer redisServer = redisProp.getRedisServer();
+        redisServer = redisProp.getRedisServer();
 
         if( StringUtils.isNullOrEmpty( redisServer.getPassword() ) ) {
             pool = new JedisPool(
