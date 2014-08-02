@@ -240,13 +240,11 @@ export JAVA_OPTS=" $JAVA_OPTS -javaagent:/PATH_TO_JAMM_JAR/jamm-0.2.5.jar"
 ```java
 SessionLoginManager.getInstance().login(request, "userId");
 ```
-* 
  * 로그아웃시 아래 코드 사용
 
 ```java
 SessionLoginManager.getInstance().logout(request);
 ```
-*
  * 로그인한 사용자 정보
 
 ```java
