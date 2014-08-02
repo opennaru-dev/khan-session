@@ -89,6 +89,7 @@ public class InfinispanSessionFilter extends KhanSessionFilter implements Filter
             }
 
             sessionStore = new SessionStoreImpl(sessionCache);
+            sessionManager.setSessionStore(sessionStore);
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }

@@ -48,7 +48,7 @@ public abstract class KhanSessionFilter implements Filter {
     public static KhanSessionConfig khanSessionConfig = null;
     protected static SessionStore sessionStore;
     private Logger log = LoggerFactory.getLogger(this.getClass());
-    private KhanSessionManager sessionManager = null;
+    protected KhanSessionManager sessionManager = null;
 
     public static KhanSessionConfig getKhanSessionConfig() {
         return khanSessionConfig;
@@ -286,7 +286,7 @@ public abstract class KhanSessionFilter implements Filter {
         getSessionFilterConfig(config);
 
         if (sessionManager == null) {
-            sessionManager = new KhanSessionManager(config.getServletContext().getContextPath(), sessionStore);
+            sessionManager = new KhanSessionManager(config.getServletContext().getContextPath());
             if (log.isDebugEnabled()) {
                 log.debug("***** init filter");
                 log.debug("***** sessionManager=" + sessionManager);

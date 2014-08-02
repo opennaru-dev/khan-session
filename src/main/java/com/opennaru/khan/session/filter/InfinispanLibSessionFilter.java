@@ -81,6 +81,7 @@ public class InfinispanLibSessionFilter extends KhanSessionFilter implements Fil
             sessionCache.initialize(configFileName, cacheName, loginCacheName);
 
             sessionStore = new SessionStoreImpl(sessionCache);
+            sessionManager.setSessionStore(sessionStore);
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }

@@ -80,6 +80,7 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
             sessionCache.initialize(configFileName, cacheName, loginCacheName);
 
             sessionStore = new SessionStoreImpl(sessionCache);
+            sessionManager.setSessionStore(sessionStore);
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }

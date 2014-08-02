@@ -73,11 +73,9 @@ public class KhanSessionManager {
      * Constructor
      *
      * @param appName
-     * @param store
      */
-    public KhanSessionManager(String appName, SessionStore store) {
+    public KhanSessionManager(String appName) {
         this.appName = appName;
-        this.sessionStore = store;
         this.khanSessionConfig = KhanSessionFilter.getKhanSessionConfig();
         this.sessionIdStore = new KhanSessionIdStore(appName);
 
@@ -91,6 +89,10 @@ public class KhanSessionManager {
             log.debug(">>>>>>>>>> KhanSessionManager=" + this);
             log.debug(">>>>>>>>>> appName=" + appName);
         }
+    }
+
+    public void setSessionStore(SessionStore sessionStore) {
+        this.sessionStore = sessionStore;
     }
 
     /**
@@ -223,14 +225,16 @@ public class KhanSessionManager {
     public Map<String, Object> getSessionAttributes(String sessionId) {
         ConcurrentHashMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
         try {
-            String key = KhanSessionKeyGenerator.generate(khanSessionConfig.getNamespace(), sessionId, KhanHttpSession.ATTRIBUTES_KEY);
-            //log.debug( ">>>>>>>>>>>>>>>>>>> sessionStore=" + sessionStore);
-            //log.debug( ">>>>>>>>>>>>>>>>>>> key=" + key);
-            attributes = sessionStore.get(key);
-            //log.debug( ">>>>>>>>>>>>>>>>>>> attrs=" + attributes);
+            if( !StringUtils.isNullOrEmpty(sessionId) ) {
+                String key = KhanSessionKeyGenerator.generate(khanSessionConfig.getNamespace(), sessionId, KhanHttpSession.ATTRIBUTES_KEY);
+//                System.out.println( ">>>>>>>>>>>>>>>>>>> sessionStore=" + sessionStore);
+//                System.out.println( ">>>>>>>>>>>>>>>>>>> key=" + key);
+                attributes = sessionStore.get(key);
+//                System.out.println( ">>>>>>>>>>>>>>>>>>> attrs=" + attributes);
+            }
         } catch (Exception e) {
             //e.printStackTrace();
-            log.error("Exception=" + e.getMessage());
+            log.error("Exception=" + e.getMessage(), e);
         }
         return attributes;
     }

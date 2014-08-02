@@ -74,6 +74,7 @@ public class RedisSessionFilter extends KhanSessionFilter implements Filter {
             sessionCache.initialize(configFileName, "", "");
 
             sessionStore = new SessionStoreImpl(sessionCache);
+            sessionManager.setSessionStore(sessionStore);
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }
