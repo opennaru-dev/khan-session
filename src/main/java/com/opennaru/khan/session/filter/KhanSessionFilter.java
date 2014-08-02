@@ -183,6 +183,15 @@ public abstract class KhanSessionFilter implements Filter {
         if (StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl() ) ) {
             khanSessionConfig.setLogoutUrl("");
         }
+
+        // enableStatistics
+        boolean enableStatistics = true;
+        if( getConfigValue(config, Constants.ENABLE_STATISTICS) != null &&
+            getConfigValue(config, Constants.ENABLE_STATISTICS).equals("false") ) {
+            enableStatistics = false;
+        }
+        khanSessionConfig.setEnableStatistics(enableStatistics);
+
     }
 
     /**

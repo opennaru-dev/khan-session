@@ -55,6 +55,8 @@ public class KhanSessionConfig {
     // Session timout minute
     private Integer sessionTimeoutMin;
 
+    private boolean enableStatistics;
+
     public boolean isUseLibraryMode() {
         return useLibraryMode;
     }
@@ -147,6 +149,14 @@ public class KhanSessionConfig {
         this.secure = secure != null && secure;
     }
 
+    public boolean isEnableStatistics() {
+        return enableStatistics;
+    }
+
+    public void setEnableStatistics(boolean enableStatistics) {
+        this.enableStatistics = enableStatistics;
+    }
+
     @Override
     public String toString() {
         return "KhanSessionConfig{" +
@@ -161,6 +171,7 @@ public class KhanSessionConfig {
                 ", allowDuplicateLogin=" + allowDuplicateLogin +
                 ", logoutUrl='" + logoutUrl + '\'' +
                 ", sessionTimeoutMin=" + sessionTimeoutMin +
+                ", enableStatistics=" + enableStatistics +
                 '}';
     }
 }

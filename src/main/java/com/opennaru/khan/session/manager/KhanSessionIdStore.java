@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * KhanSessionIdStore : Manage SessionIds
+ * 세션 ID에 대한 그 메모리 크기를 저장
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */

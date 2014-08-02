@@ -72,4 +72,6 @@ public class Constants {
     // name of redis configuration file
     public static final String REDIS_CONFIGFILE_KEY = "configFile";
 
+    // enable statistics
+    public static final String ENABLE_STATISTICS = "enableStatistics";
 }
