@@ -35,7 +35,7 @@
     <!-- ######################## KHAN Session Manager ############################## -->
     <filter>
         <filter-name>KhanSessionFilter</filter-name>
-        <filter-class>com.opennaru.khan.session.filter.InfinispanSessionFilter</filter-class>
+        <filter-class>com.opennaru.khan.session.filter.InfinispanHotRodSessionFilter</filter-class>
 
         <!--  HotRod SessionCache mode를 사용할 때   -->
         <init-param>

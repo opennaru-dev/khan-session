@@ -46,13 +46,40 @@
  * 빌드 방법
  
  ```
- $ mvn package
+ $ mvn install
  ```
 
- * **배포 방법**
- 
- 빌드후 target/dist/lib의 jar 파일들을 WEB-INF/lib 디렉터리에 복사하여 사용
+ * **사용 방법**
 
+ * Infinispan Library Mode
+ ```xml
+<dependency>
+    <groupId>com.opennaru.khan</groupId>
+    <artifactId>khan-session-infinispan</artifactId>
+    <version>1.2.0</version>
+</dependency>
+ ```
+ * Filter Class : com.opennaru.khan.session.filter.InfinispanLibSessionFilter
+
+ * Infinispan HotRod Mode
+ ```xml
+<dependency>
+    <groupId>com.opennaru.khan</groupId>
+    <artifactId>khan-session-hotrod</artifactId>
+    <version>1.2.0</version>
+</dependency>
+ ```
+ * Filter Class : com.opennaru.khan.session.filter.InfinispanHotRodSessionFilter
+
+ * Redis Mode
+ ```xml
+<dependency>
+    <groupId>com.opennaru.khan</groupId>
+    <artifactId>khan-session-redis</artifactId>
+    <version>1.2.0</version>
+</dependency>
+ ```
+ * Filter Class : com.opennaru.khan.session.filter.RedisSessionFilter
 
  * **web.xml 설정**
  
@@ -165,14 +192,6 @@
 ```
 ```
 
- * **Hotrod 클라이언트/서버 모드를 사용할 때 설정**
-  * hotrod.properties 파일에서 Infinispan 서버의 IP:PORT 설정
-  * JBoss Data Grid(Infinispan) Server는 KHAN [provisioning]을 이용하여 자동 설치할 수 있습니다.
-
-```java
-infinispan.client.hotrod.server_list = 192.168.0.11:11222
-```
-
  * **Library 모드를 사용할 때 설정**
   * khan-session.xml 파일에서 설정
 
@@ -214,8 +233,22 @@ infinispan.client.hotrod.server_list = 192.168.0.11:11222
 	</namedCache>
 
 </infinispan>
-
 ```
+
+ * **Hotrod 클라이언트/서버 모드를 사용할 때 설정**
+  * hotrod.properties 파일에서 Infinispan 서버의 IP:PORT 설정
+  * JBoss Data Grid(Infinispan) Server는 KHAN [provisioning]을 이용하여 자동 설치할 수 있습니다.
+
+```java
+infinispan.client.hotrod.server_list = 192.168.0.11:11222
+```
+
+ * **Redis 모드를 사용할 때 설정**
+  * redis.properties 파일에서 Redis 서버의 URL 설정
+```java
+redis.client.server_url=redis://:@localhost:6379/1
+```
+
 
  * 메모리 모니터링을 위한 설정
   * JBoss EAP 6.x는 아래 설정이 필요함(다른 WAS는 필요 없음)
