@@ -40,9 +40,6 @@
    * Infinispan HotRod Mode
    * Redis
 
- * 배포본 다운로드
-  * https://github.com/opennaru-dev/khan-session/tree/master/dist
-
  * 빌드 방법
  
  ```
