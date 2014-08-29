@@ -104,6 +104,11 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
         return statisticsEnabled;
     }
 
+    /**
+     * Set Statistics Enabled
+     *
+     * @param enabled
+     */
     public void setStatisticsEnabled(boolean enabled) {
         boolean oldValue = isStatisticsEnabled();
         if (oldValue != enabled) {
@@ -116,6 +121,9 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
         }
     }
 
+    /**
+     * Increase Duplicate Login Count
+     */
     public void duplicatedLogin() {
         if (isStatisticsEnabled()) {
             synchronized (this) {
@@ -125,35 +133,69 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
         }
     }
 
+    /**
+     * Get duplicate login count
+     * @return
+     */
     public long getDuplicatedLoginCount() {
         return duplicatedLogin.get();
     }
 
+    /**
+     * Duplicated Login count sampling
+     * @return
+     */
     public long getDuplicatedLoginRateMostRecentSample() {
         return duplicatedLoginSampled.getMostRecentSample().getValue();
     }
 
-
+    /**
+     * Get created Session count
+     * @return
+     */
     public long getCreatedSessionCount() {
         return sessionsCreated.get();
     }
 
+    /**
+     * Get created session count sampling
+     * @return
+     */
     public long getCreatedSessionRateMostRecentSample() {
         return sessionsCreatedSampled.getMostRecentSample().getValue();
     }
 
+    /**
+     * Get destroyed session count
+     * @return
+     */
     public long getDestroyedSessionCount() {
         return sessionsDestroyed.get();
     }
 
+    /**
+     * Get destroyed session count sampling
+     * @return
+     */
     public long getDestroyedSessionRateMostRecentSample() {
         return sessionsDestroyedSampled.getMostRecentSample().getValue();
     }
 
+    /**
+     * Get active session count
+     * @return
+     */
     public synchronized long getActiveSessionCount() {
         return sessionManager.getSessionIdCount();
     }
 
+    /**
+     * Get sampling data :
+     *      Session created count per seconds
+     *      Session destroyed count per seconds
+     *      Duplicated login count per seconds
+     * @return
+     */
     public Map<String, Long> getPerformanceMetrics() {
         Map<String, Long> result = new HashMap<String, Long>();
         result.put("SessionsCreatedPerSecond",
@@ -166,6 +208,9 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
         return result;
     }
 
+    /**
+     * Reset all statistics
+     */
     public synchronized void reset() {
         sessionsCreatedStatistic.getAndReset();
         sessionsCreated.set(0);
@@ -176,6 +221,9 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
 
     }
 
+    /**
+     * Increase session created count
+     */
     public void sessionCreated() {
         if (isStatisticsEnabled()) {
             synchronized (this) {
@@ -185,6 +233,9 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
         }
     }
 
+    /**
+     * Increase session destroyed count
+     */
     public void sessionDestroyed() {
         if (isStatisticsEnabled()) {
             synchronized (this) {
@@ -194,22 +245,45 @@ public class SessionMonitorMBeanImpl extends StandardMBean implements
         }
     }
 
+    /**
+     * Get list of session id
+     * @param batchSize
+     * @return
+     */
     public ArrayList<String> getSessionIds(int batchSize) {
         return sessionManager.getSessionIds(batchSize);
     }
 
+    /**
+     * get session attributes
+     * @param sessionId
+     * @return
+     */
     public Map<String, Object> getSessionAttributes(String sessionId) {
         return sessionManager.getSessionAttributes(sessionId);
     }
 
+    /**
+     * get session id count
+     * @return
+     */
     public long getSessionIdCount() {
         return sessionManager.getSessionIdCount();
     }
 
+    /**
+     * get memory size of sessions
+     * @return
+     */
     public long getMemorySize() {
         return sessionManager.getSessionMemorySize();
     }
 
+    /**
+     * Get occupied memory size of sessionId
+     * @param sessionId
+     * @return
+     */
     public long getMemorySize(String sessionId) {
         return sessionManager.getSessionMemorySize(sessionId);
     }

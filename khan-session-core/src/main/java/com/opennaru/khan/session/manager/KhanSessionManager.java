@@ -47,26 +47,46 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * KhanSessionManager
+ * KhanSessionManager MBean을 관리하는 클래스
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionManager {
     private static Logger log = LoggerFactory.getLogger("KhanSessionManager");
 
-    // 애플리케이션 별로 SessionManager를 보관
+    /**
+     * 애플리케이션 별로 SessionManager를 보관
+     */
     private static ConcurrentHashMap<String, KhanSessionManager> instances = new ConcurrentHashMap<String, KhanSessionManager>();
-    // 세션 모니터링 MBean
+
+    /**
+     * 세션 모니터링 MBean
+     */
     private SessionMonitorMBean sessionMonitor;
-    // WebApp의 이름
+
+    /**
+     *  WebApp의 이름
+     */
     private String appName = "";
-    // 세션 저장소
+
+    /**
+     * 세션 저장소
+     */
     private SessionStore sessionStore = null;
-    // KHAN 세션 설정
+
+    /**
+     * KHAN 세션 설정
+     */
     private KhanSessionConfig khanSessionConfig = null;
-    // 통계 정보 수집 여부
+
+    /**
+     * 통계 정보 수집 여부
+     */
     private boolean statsEnabled = true;
-    // 세션 ID 저장소
+
+    /**
+     * 세션 ID 저장소
+     */
     private KhanSessionIdStore sessionIdStore = null;
 
     /**
@@ -91,6 +111,10 @@ public class KhanSessionManager {
         }
     }
 
+    /**
+     * set SessionStore
+     * @param sessionStore
+     */
     public void setSessionStore(SessionStore sessionStore) {
         this.sessionStore = sessionStore;
     }
@@ -111,18 +135,38 @@ public class KhanSessionManager {
         return instances.get(appName);
     }
 
+    /**
+     * get SessionMonitorMBean
+     *
+     * @return
+     */
     public SessionMonitorMBean getSessionMonitor() {
         return this.sessionMonitor;
     }
 
+    /**
+     * Returen name of application(webapp)
+     *
+     * @return
+     */
     public String getAppName() {
         return this.appName;
     }
 
+    /**
+     * Set name of application(webapp)
+     *
+     * @param appName
+     */
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
+    /**
+     * return number of sessions
+     *
+     * @return
+     */
     public long getSessionIdCount() {
         if( statsEnabled ) {
             if (log.isDebugEnabled()) {
@@ -134,6 +178,10 @@ public class KhanSessionManager {
         }
     }
 
+    /**
+     * Cleanup all sessions
+     *
+     */
     public void cleanup() {
         ConcurrentHashMap<String, Long> sessionIds = sessionIdStore.getSessionStore(appName);
         Enumeration<String> keys = sessionIds.keys();

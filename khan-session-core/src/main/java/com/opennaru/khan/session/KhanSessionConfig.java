@@ -55,6 +55,7 @@ public class KhanSessionConfig {
     // Session timout minute
     private Integer sessionTimeoutMin;
 
+    // enable MBean statistics
     private boolean enableStatistics;
 
     public boolean isUseLibraryMode() {

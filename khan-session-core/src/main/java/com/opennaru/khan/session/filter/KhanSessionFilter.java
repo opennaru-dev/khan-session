@@ -40,14 +40,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * KhanSessionFilter abstract 클래스
+ * Servlet Filter를 구현한 KhanSessionFilter abstract 클래스
+ * 구현체는 InfinispanLibSessionFilter, InfinispanHotRodSessionFilter,
+ *         RedisSessionFilter가 있음
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public abstract class KhanSessionFilter implements Filter {
+    /**
+     * KHAN Session Manager 세션 설정
+     */
     public static KhanSessionConfig khanSessionConfig = null;
+
+    /**
+     * 세션 저장소
+     */
     protected static SessionStore sessionStore;
+
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     * 세션 모니터링
+     */
     protected KhanSessionManager sessionManager = null;
 
     public static KhanSessionConfig getKhanSessionConfig() {

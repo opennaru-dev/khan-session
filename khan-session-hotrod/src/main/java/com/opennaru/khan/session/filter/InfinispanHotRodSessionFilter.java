@@ -41,6 +41,11 @@ import javax.servlet.ServletException;
 public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Return Infinispan config file
+     * @param config
+     * @return
+     */
     protected String getInfinispanConfigFile(FilterConfig config) {
         String configFile = getConfigValue(config, Constants.INFINISPAN_CONFIGFILE_KEY);
         if (log.isDebugEnabled()) {

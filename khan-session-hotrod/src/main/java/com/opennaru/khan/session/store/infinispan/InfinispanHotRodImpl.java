@@ -46,17 +46,29 @@ public class InfinispanHotRodImpl implements SessionCache {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    // HotRod Remote Cache Manager
+    /**
+     * HotRod Remote Cache Manager
+     */
     private RemoteCacheManager cacheManager;
-    // Session Cache
+    /**
+     * Session Cache
+     */
     private RemoteCache<Object, Object> cache;
-    // Login Session Cache
+    /**
+     * Login Session Cache
+     */
     private RemoteCache<Object, Object> loginCache;
 
+    /**
+     * 생성자
+     */
     public InfinispanHotRodImpl() {
 
     }
 
+    /**
+     * Wait
+     */
     void waitForConnectionReady() {
         try {
             Thread.sleep(100L);
@@ -65,12 +77,21 @@ public class InfinispanHotRodImpl implements SessionCache {
         }
     }
 
+    /**
+     * 초기화되었는지 체크한다
+     * @return
+     */
     @Override
     public boolean isInitialized() {
         return cacheManager != null;
     }
 
-
+    /**
+     * InputStream에서 properties 파일을 읽는다.
+     *
+     * @param stream
+     * @return
+     */
     private Properties loadFromStream(InputStream stream) {
         Properties properties = new Properties();
         try {
@@ -81,6 +102,14 @@ public class InfinispanHotRodImpl implements SessionCache {
         return properties;
     }
 
+    /**
+     * 초기화 함수, 설정파일을 읽어서 캐시를 초기화한다.
+     *
+     * @param configFile
+     * @param cacheName
+     * @param loginCacheName
+     * @throws IOException
+     */
     @Override
     public void initialize(String configFile, String cacheName, String loginCacheName)
             throws IOException {
@@ -113,12 +142,25 @@ public class InfinispanHotRodImpl implements SessionCache {
         waitForConnectionReady();
     }
 
+    /**
+     * 캐시에 포함하고 있는지 체크
+     * @param key
+     * @param <T>
+     * @return
+     */
     @Override
     public <T> boolean contains(String key) {
         return cache.containsKey(key);
     }
 
-
+    /**
+     * 캐시에 값을 저장
+     * @param key
+     * @param value
+     * @param secondsToExpire
+     * @param <T>
+     * @throws IOException
+     */
     @Override
     public <T> void put(String key, T value, long secondsToExpire)
             throws IOException {
@@ -127,6 +169,13 @@ public class InfinispanHotRodImpl implements SessionCache {
             log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
+    /**
+     * 캐시에서 값을 가져온다
+     * @param key
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws IOException {
@@ -136,6 +185,12 @@ public class InfinispanHotRodImpl implements SessionCache {
         return (T) cache.get(key);
     }
 
+    /**
+     * 캐시에서 값을 삭제한다.
+     * @param key
+     * @param <T>
+     * @throws IOException
+     */
     @Override
     public <T> void delete(String key) throws IOException {
         cache.remove(key);
@@ -144,6 +199,11 @@ public class InfinispanHotRodImpl implements SessionCache {
             log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
+    /**
+     * 캐시의 데이터 크기를 반환
+     * @return
+     * @throws IOException
+     */
     @Override
     public int size() throws IOException {
         if (log.isDebugEnabled()) {
@@ -152,27 +212,60 @@ public class InfinispanHotRodImpl implements SessionCache {
         return cache.size();
     }
 
+    /**
+     * 캐시에 로그인 정보를 포함하고 있는지 체크
+     * @param key
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     @Override
     public <T> boolean loginContains(String key) throws IOException {
         return loginCache.containsKey(key);
     }
 
+    /**
+     * 캐시에 로그인 정보를 저장
+     * @param key
+     * @param value
+     * @param secondsToExpire
+     * @param <T>
+     * @throws IOException
+     */
     @Override
     public <T> void loginPut(String key, T value, long secondsToExpire)
             throws IOException {
         loginCache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
     }
 
+    /**
+     * 캐시에서 로그인 정보를 가져온다
+     * @param key
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     @Override
     public <T> T loginGet(String key) throws IOException {
         return (T) loginCache.get(key);
     }
 
+    /**
+     * 캐시에서 로그인 정보를 삭제
+     * @param key
+     * @param <T>
+     * @throws IOException
+     */
     @Override
     public <T> void loginDelete(String key) throws IOException {
         loginCache.remove(key);
     }
 
+    /**
+     * 로그인 정보의 갯수
+     * @return
+     * @throws IOException
+     */
     @Override
     public int loginSize() throws IOException {
         if (log.isDebugEnabled()) {

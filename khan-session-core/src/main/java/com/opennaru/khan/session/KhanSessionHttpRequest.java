@@ -40,6 +40,16 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
     private final String sessionId;
     private final SessionStore store;
 
+    /**
+     * Consturctor
+     *
+     * @param request
+     * @param sessionId
+     * @param namespace
+     * @param timeoutMin
+     * @param store
+     * @param sessionManager
+     */
     public KhanSessionHttpRequest(HttpServletRequest request, String sessionId,
                                   String namespace, Integer timeoutMin, SessionStore store,
                                   KhanSessionManager sessionManager) {

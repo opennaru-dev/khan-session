@@ -33,7 +33,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
 /**
- * InfinispanSessionFilter
+ * Abstract KhanSessionFilter를 구현한 InfinispanLibSessionFilter
+ * Infinispan Library Mode는 WAS 인스턴스들 간의 세션 공유에 사용된다.
  *
  * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
@@ -41,7 +42,12 @@ import javax.servlet.ServletException;
 public class InfinispanLibSessionFilter extends KhanSessionFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-
+    /**
+     * web.xml의 필터 설정에서 infinispan library mode의 설정파일이름을 가져온다.
+     *
+     * @param config
+     * @return
+     */
     protected String getInfinispanConfigFile(FilterConfig config) {
         String configFile = getConfigValue(config, Constants.INFINISPAN_CONFIGFILE_KEY);
         if (log.isDebugEnabled()) {

@@ -44,10 +44,18 @@ public class KhanSessionMetadata implements Serializable {
 
     }
 
+    /**
+     * 세션이 invalidate되었는지 정보
+     * @return
+     */
     public Boolean getInvalidated() {
         return invalidated;
     }
 
+    /**
+     * 세션이 invalidate되었는지 정보 설정
+     * @param invalidated
+     */
     public void setInvalidated(Boolean invalidated) {
         this.invalidated = invalidated;
     }

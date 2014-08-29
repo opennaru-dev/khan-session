@@ -34,6 +34,13 @@ import java.io.IOException;
  */
 public class MarshallerUtil {
 
+    /**
+     * Byte Array를 객체로 변환
+     * @param marshaller
+     * @param bytes
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static <T> T bytes2obj(Marshaller marshaller, byte[] bytes) {
         if (bytes == null) return null;
@@ -48,6 +55,13 @@ public class MarshallerUtil {
         return (T) object;
     }
 
+    /**
+     * 객체를 byte array로 변환
+     *
+     * @param marshaller
+     * @param o
+     * @return
+     */
     public static byte[] obj2bytes(Marshaller marshaller, Object o) {
         try {
             return marshaller.objectToByteBuffer(o);

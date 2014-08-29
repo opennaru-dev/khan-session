@@ -41,6 +41,11 @@ public class SessionStoreImpl implements SessionStore {
         this.sessionCache = sessionCache1;
     }
 
+    /**
+     * Check if Session ID is in cache
+     * @param key
+     * @return
+     */
     @Override
     public boolean contains(String key) {
         try {
@@ -51,6 +56,12 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     * Get Session ID
+     * @param key
+     * @param <V>
+     * @return
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <V extends Serializable> V get(String key) {
@@ -70,6 +81,13 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     *  Put Session ID
+     * @param key
+     * @param value
+     * @param expire
+     * @param <V>
+     */
     @Override
     public <V extends Serializable> void put(String key, V value, long expire) {
 
@@ -91,6 +109,10 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     * Remove Session ID
+     * @param key
+     */
     @Override
     public void remove(String key) {
 
@@ -107,6 +129,10 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     * Get number of Session
+     * @return
+     */
     @Override
     public int size() {
         int size = 0;
@@ -118,7 +144,11 @@ public class SessionStoreImpl implements SessionStore {
         return size;
     }
 
-
+    /**
+     * Check if login session is in
+     * @param key
+     * @return
+     */
     @Override
     public boolean loginContains(String key) {
         try {
@@ -129,6 +159,12 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     * Get login session object
+     * @param key
+     * @param <V>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <V extends Serializable> V loginGet(String key) {
@@ -148,6 +184,13 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     *  Put login session object
+     * @param key
+     * @param value
+     * @param expire
+     * @param <V>
+     */
     @Override
     public <V extends Serializable> void loginPut(String key, V value,
                                                   long expire) {
@@ -170,6 +213,10 @@ public class SessionStoreImpl implements SessionStore {
 
     }
 
+    /**
+     *  remove login session
+     * @param key
+     */
     @Override
     public void loginRemove(String key) {
         if (log.isDebugEnabled()) {
@@ -185,6 +232,10 @@ public class SessionStoreImpl implements SessionStore {
         }
     }
 
+    /**
+     * return number of login sessions
+     * @return
+     */
     @Override
     public int loginSize() {
         int size = 0;

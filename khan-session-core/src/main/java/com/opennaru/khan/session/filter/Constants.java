@@ -23,55 +23,104 @@
 package com.opennaru.khan.session.filter;
 
 /**
- * Constants
+ * KHAN [session manager]에서 사용하는 상수(Constants)
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class Constants {
-    // Global namespace
+    /**
+     * Global namespace
+     */
     public static final String GLOBAL_NAMESPACE = "KHAN";
-    // Session ID name : cookie name
+
+    /**
+     *  기본 Session ID name : cookie name
+     */
     public static final String DEFAULT_SESSION_ID_NAME = "__KSMSID__";
 
-    // Configuration KEY
-    // namespace KEY
+    /**
+     * namespace KEY
+     */
     public static final String NAMESPACE = "namespace";
-    // session id key
+
+    /**
+     *  session id key
+     */
     public static final String SESSION_ID = "sessionId";
-    // cookie domain key
+
+    /**
+     * cookie domain key
+     */
     public static final String DOMAIN = "domain";
-    // cookie path key
+
+    /**
+     * cookie path key
+     */
     public static final String PATH = "path";
-    // cookie secure key
+
+    /**
+     * cookie secure key
+     */
     public static final String SECURE = "secure";
-    // cookie httpOnly key
+
+    /**
+     * cookie httpOnly key
+     */
     public static final String HTTP_ONLY = "httpOnly";
-    // session timeout key
+
+    /**
+     * session timeout key
+     */
     public static final String SESSION_TIMEOUT = "sessionTimeout";
-    // session check exclude regular expression
+
+    /**
+     * session check exclude regular expression
+     */
     public static final String EXCLUDE_REG_EXP = "excludeRegExp";
-    // duplicate login key
+
+    /**
+     * duplicate login key
+     */
     public static final String ALLOW_DUPLICATE_LOGIN = "allowDuplicateLogin";
 
-    // logout url
+    /**
+     * logout url
+     */
     public static final String LOGOUT_URL = "logoutUrl";
 
-    // library mode key
+    /**
+     * library mode key
+     */
     @Deprecated
     public static final String USE_LIBRARY_MODE = "useLibraryMode";
 
-    // name of configuration file
+    /**
+     * name of configuration file
+     */
     public static final String INFINISPAN_CONFIGFILE_KEY = "configFile";
-    // name of infinispan cache
+
+    /**
+     * name of infinispan cache
+     */
     public static final String INFINISPAN_CACHE_KEY = "infinispanCache";
-    // name of infinispan login cache
+
+    /**
+     * name of infinispan login cache
+     */
     public static final String INFINISPAN_LOGIN_CACHE_KEY = "infinispanLoginCache";
-    // session status
+
+    /**
+     *  session status
+     */
     protected static final String SESSION_STATUS = "__sessionStatus__";
 
-    // name of redis configuration file
+    /**
+     * name of redis configuration file
+     */
     public static final String REDIS_CONFIGFILE_KEY = "configFile";
 
-    // enable statistics
+    /**
+     * enable statistics
+     */
     public static final String ENABLE_STATISTICS = "enableStatistics";
 }

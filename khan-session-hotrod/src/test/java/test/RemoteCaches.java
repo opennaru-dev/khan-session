@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * Remote Cache 데이터 조회 테스트
+ *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class RemoteCaches {

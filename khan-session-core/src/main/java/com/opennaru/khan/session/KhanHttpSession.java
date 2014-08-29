@@ -46,34 +46,58 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings("deprecation")
 public class KhanHttpSession implements HttpSession {
-    // Store에 저장할 Attribute Key
+    /**
+     *  Store에 저장할 Attribute Key
+     */
     public static final String ATTRIBUTES_KEY = "_ATTR_";
-    // Store에 저장할 Metadata Key
+    /**
+     *  Store에 저장할 Metadata Key
+     */
     public static final String METADATA_KEY = "_META_";
 
-    // logger
+    /**
+     *  logger
+     */
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    // Session ID
+    /**
+     *  Session ID
+     */
     private final String sessionId;
 
-    // SessionStore - Interface
+    /**
+     *  SessionStore - Interface
+     */
     private final SessionStore sessionStore;
 
-    // HttpSession Object
+    /**
+     *  HttpSession Object
+     */
     private final HttpSession session;
-    // Khan SessionStore 저장을 위한 Key 생성기
+    /**
+     *  Khan SessionStore 저장을 위한 Key 생성기
+     */
     private final KhanSessionKeyGenerator keyGenerator;
-    // Session Attribute를 저장할 객체
+    /**
+     * Session Attribute를 저장할 객체
+     */
     private ConcurrentHashMap<Object, Object> attributes = new ConcurrentHashMap<Object, Object>();
-    // Session Metadata를 저장할 객체
+    /**
+     * Session Metadata를 저장할 객체
+     */
     private KhanSessionMetadata khanSessionMetadata;
-    // 새로 생성된 세션인지
+    /**
+     *  새로 생성된 세션인지
+     */
     private boolean isNewlyCreated = false;
-    // max inactive interval
+    /**
+     *  max inactive interval
+     */
     private Integer maxInactiveIntervalSeconds = null;
 
-    // Khan Session manager
+    /**
+     *  Khan Session manager
+     */
     private KhanSessionManager sessionManager = null;
 
     /**
@@ -317,11 +341,20 @@ public class KhanHttpSession implements HttpSession {
         }
     }
 
+    /**
+     * get value
+     * @param name
+     * @return
+     */
     @Override
     public Object getValue(String name) {
         return getAttribute(name);
     }
 
+    /**
+     * return value names as String array
+     * @return
+     */
     @Override
     public String[] getValueNames() {
         Enumeration<String> names = (Enumeration<String>) getAttributeNames();

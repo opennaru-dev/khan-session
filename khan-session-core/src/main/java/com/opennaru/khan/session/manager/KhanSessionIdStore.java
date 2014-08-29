@@ -30,14 +30,25 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionIdStore {
-    // Session ID Store
+    /**
+     * Session ID Store, 세션의 ID만 저장된다.
+     */
     private ConcurrentHashMap<String, Object> sessionStore = new ConcurrentHashMap<String, Object>();
 
+    /**
+     * Constructor
+     * @param namespace
+     */
     public KhanSessionIdStore(String namespace) {
         ConcurrentHashMap<String, Long> sessionIds = new ConcurrentHashMap<String, Long>();
         sessionStore.put(namespace, sessionIds);
     }
 
+    /**
+     * SessionStore를 반환
+     * @param namespace
+     * @return
+     */
     public ConcurrentHashMap<String, Long> getSessionStore(String namespace) {
         return (ConcurrentHashMap<String, Long>) sessionStore.get(namespace);
     }

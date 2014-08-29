@@ -31,13 +31,16 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * SessionListener
+ * SessionListener for destroy KHAN Session
  *
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class SessionListener implements HttpSessionListener {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Default Constructor
+     */
     public SessionListener() {
 
     }
@@ -71,7 +74,7 @@ public class SessionListener implements HttpSessionListener {
     }
 
     /**
-     * Session Destroyed : Remove Session Id from Session Store
+     * Session Destroyed : Remove Session Id from KHAN Session Store
      *
      * @param sessionEvent
      */

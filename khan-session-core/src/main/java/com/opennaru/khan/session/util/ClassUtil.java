@@ -27,11 +27,21 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
+ * ClassLoader Utility
+ *
  * @since 1.1.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class ClassUtil {
 
+    /**
+     * Load Class
+     * @param classname
+     * @param userClassLoader
+     * @param <T>
+     * @return
+     * @throws ClassNotFoundException
+     */
     public static <T> Class<T> loadClass(String classname, ClassLoader userClassLoader) throws ClassNotFoundException {
         ClassLoader[] cls = getClassLoaders(userClassLoader);
         ClassNotFoundException e = null;
@@ -59,6 +69,15 @@ public class ClassUtil {
         }
     }
 
+    /**
+     * create instance with class
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
     public static <T> T getInstance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
         // first look for a getInstance() constructor
         T instance = null;
@@ -76,6 +95,14 @@ public class ClassUtil {
         return instance;
     }
 
+    /**
+     * create instance with classname string
+     *
+     * @param classname
+     * @param cl
+     * @param <T>
+     * @return
+     */
     public static <T> T getInstance(String classname, ClassLoader cl) {
         if (classname == null) throw new IllegalArgumentException("Cannot load null class!");
         try {
@@ -91,6 +118,13 @@ public class ClassUtil {
         return null;
     }
 
+    /**
+     * return resource as stream
+     *
+     * @param resourcePath
+     * @param userClassLoader
+     * @return
+     */
     public static InputStream getResourceAsStream(String resourcePath, ClassLoader userClassLoader) {
         if (resourcePath.startsWith("/")) {
             resourcePath = resourcePath.substring(1);
@@ -107,6 +141,12 @@ public class ClassUtil {
         return is;
     }
 
+    /**
+     * return classloaders
+     *
+     * @param appClassLoader
+     * @return
+     */
     public static ClassLoader[] getClassLoaders(ClassLoader appClassLoader) {
         return new ClassLoader[]{
                 appClassLoader,
@@ -116,6 +156,12 @@ public class ClassUtil {
         };
     }
 
+    /**
+     * get factory method
+     *
+     * @param c
+     * @return
+     */
     private static Method getFactoryMethod(Class<?> c) {
         for (Method m : c.getMethods()) {
             if (m.getName().equals("getInstance") && m.getParameterTypes().length == 0 && Modifier.isStatic(m.getModifiers()))
