@@ -22,6 +22,7 @@
 package com.opennaru.khan.session;
 
 import com.opennaru.khan.session.manager.KhanSessionManager;
+import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
@@ -125,6 +126,7 @@ public class KhanHttpSession implements HttpSession {
         this.keyGenerator = new KhanSessionKeyGenerator(sessionId, namespace);
         this.sessionManager = sessionManager;
 
+
         if( log.isDebugEnabled() ) {
             log.debug("session.getMaxInactiveInterval()=" + session.getMaxInactiveInterval());
             log.debug("timeoutMinutes=" + timeoutMin);
@@ -145,6 +147,11 @@ public class KhanHttpSession implements HttpSession {
         }
 
         attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
+
+        if( log.isDebugEnabled() ) {
+            log.debug("keyGenerator.generate(ATTRIBUTES_KEY)=" + keyGenerator.generate(ATTRIBUTES_KEY));
+            log.debug("KhanHttpSession.attributes=" + attributes);
+        }
 
         //session.setAttribute("khansid", sessionId);
         //KhanSessionManager.getInstance().addSessionId(sessionId);

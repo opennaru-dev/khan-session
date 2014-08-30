@@ -195,9 +195,9 @@ public class RedisClientImpl implements SessionCache {
         Jedis jedis = pool.getResource();
         try {
             jedis.select(redisServer.getDatabase());
-            if (log.isDebugEnabled()) {
-                log.debug("sizeof=" + jedis.dbSize());
-            }
+            if( log.isTraceEnabled() )
+                log.trace("sizeof=" + jedis.dbSize());
+
             return (jedis.dbSize()).intValue();
         } finally {
             pool.returnResource(jedis);
@@ -258,9 +258,9 @@ public class RedisClientImpl implements SessionCache {
         Jedis jedis = pool.getResource();
         try {
             jedis.select(redisServer.getDatabase()+1);
-            if (log.isDebugEnabled()) {
-                log.debug("sizeof=" + jedis.dbSize());
-            }
+            if( log.isTraceEnabled() )
+                log.trace("sizeof=" + jedis.dbSize());
+
             return (jedis.dbSize()).intValue();
         } finally {
             pool.returnResource(jedis);

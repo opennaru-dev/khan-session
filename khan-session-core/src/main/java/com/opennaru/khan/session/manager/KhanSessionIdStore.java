@@ -52,4 +52,5 @@ public class KhanSessionIdStore {
     public ConcurrentHashMap<String, Long> getSessionStore(String namespace) {
         return (ConcurrentHashMap<String, Long>) sessionStore.get(namespace);
     }
+
 }

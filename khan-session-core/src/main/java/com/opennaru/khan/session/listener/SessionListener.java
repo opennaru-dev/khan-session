@@ -23,6 +23,8 @@ package com.opennaru.khan.session.listener;
 
 import com.opennaru.khan.session.filter.KhanSessionFilter;
 import com.opennaru.khan.session.manager.KhanSessionManager;
+import com.opennaru.khan.session.store.SessionId;
+import com.opennaru.khan.session.store.SessionIdThreadStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,14 +64,19 @@ public class SessionListener implements HttpSessionListener {
             String appName = sessionEvent.getSession().getServletContext().getContextPath();
             KhanSessionManager.getInstance(appName).getSessionMonitor().sessionCreated();
 
+            SessionId.setKhanSessionId(session.getId(), SessionIdThreadStore.get());
+//            SessionId.setKhanSessionId(session.getId(), (String)session.getAttribute("khan.session.id"));
+            SessionIdThreadStore.remove();
+
             if (KhanSessionFilter.getKhanSessionConfig().isAllowDuplicateLogin() == false) {
-                session.setAttribute("khan.uid", SessionLoginManager.getInstance());
+//                session.setAttribute("khan.uid", SessionLoginManager.getInstance());
+                session.setAttribute("khan.uid", null);
             }
             //KhanSessionManager.getInstance(appName).putSessionId(session);
 
         } catch (Exception e) {
             log.error("Error in setting session attribute: "
-                    + e.getMessage());
+                    + e.getMessage(), e);
         }
     }
 
@@ -85,6 +92,7 @@ public class SessionListener implements HttpSessionListener {
             HttpSession session = sessionEvent.getSession();
             String sessionId = session.getId();
 
+            SessionId.removeKhanSessionId(sessionId);
             // Log a message
             if( log.isDebugEnabled() ) {
                 log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> destroy sessionEvent=" + sessionEvent);
@@ -94,6 +102,8 @@ public class SessionListener implements HttpSessionListener {
 
             KhanSessionManager.getInstance(appName).removeSessionId(session);
             KhanSessionManager.getInstance(appName).getSessionMonitor().sessionDestroyed();
+
+            SessionId.removeKhanSessionId(sessionId);
 
             session.invalidate();
         } catch (Exception e) {

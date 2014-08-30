@@ -182,7 +182,7 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         String sidKey = KhanSessionKeyGenerator.generate("$", "SID", session.getId());
         KhanSessionFilter.getSessionStore().loginRemove(sidKey);
 
-        session.invalidate();
+//        session.invalidate();
     }
 
     /**
@@ -206,8 +206,9 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
      */
     public String loggedInUserId(HttpServletRequest request) {
         HttpSession session = request.getSession();
+        return (String)session.getAttribute("khan.uid");
+//        SessionLoginManager sessionLoginManager = (SessionLoginManager) session.getAttribute("khan.uid");
 
-        return (String) session.getAttribute("khan.uid");
     }
 
 }

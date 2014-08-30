@@ -24,16 +24,21 @@ package com.opennaru.khan.session.filter;
 
 import com.opennaru.khan.session.KhanHttpSession;
 import com.opennaru.khan.session.KhanSessionKeyGenerator;
+import com.opennaru.khan.session.KhanSessionMetadata;
 import com.opennaru.khan.session.store.SessionId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by jjeon on 14. 8. 30.
  */
 public class KhanSessionStore {
+    private static Logger log = LoggerFactory.getLogger(KhanSessionStore.class);
 
     public static <V extends Serializable> void setAttribute(HttpSession session, String name, V value) throws Exception {
         String khanSessionId = SessionId.getKhanSessionId(session.getId());
@@ -41,23 +46,63 @@ public class KhanSessionStore {
         String nameSpace = KhanSessionFilter.getKhanSessionConfig().getNamespace();
 
         String sidKey = KhanSessionKeyGenerator.generate(nameSpace, khanSessionId, KhanHttpSession.ATTRIBUTES_KEY);
-        Integer timeout = KhanSessionFilter.getKhanSessionConfig().getSessionTimeoutMin();
+        Integer timeoutMin = KhanSessionFilter.getKhanSessionConfig().getSessionTimeoutMin();
+        long timeoutSecond = (long) (timeoutMin * 60);
 
-        System.out.println("sidKey=" + sidKey);
+        if( log.isDebugEnabled() ) {
+            log.debug("sidKey=" + sidKey);
+        }
         ConcurrentHashMap<Object, Object> attributes = null;
 
         attributes = KhanSessionFilter.getSessionStore().get(sidKey);
-        System.out.println("attributes=" + attributes);
+        if( log.isDebugEnabled() ) {
+            log.debug("attributes=" + attributes);
+        }
         if( attributes == null ) {
             attributes = new ConcurrentHashMap<Object, Object>();
+
+            String metadataKey = KhanSessionKeyGenerator.generate(nameSpace, khanSessionId, KhanHttpSession.METADATA_KEY);
+
+            KhanSessionMetadata khanSessionMetadata = KhanSessionFilter.getSessionStore().get(metadataKey);
+            if (khanSessionMetadata == null) {
+                khanSessionMetadata = new KhanSessionMetadata();
+                khanSessionMetadata.setInvalidated(false);
+                khanSessionMetadata.setCreationTime(new Date());
+                KhanSessionFilter.getSessionStore().put(metadataKey, khanSessionMetadata, timeoutSecond);
+            }
         }
         attributes.put(name, value);
-        System.out.println("attributes=" + attributes);
-        KhanSessionFilter.getSessionStore().put(sidKey, attributes, (long) (timeout * 60) );
+        if( log.isDebugEnabled() ) {
+            log.debug("attributes=" + attributes);
+        }
+        KhanSessionFilter.getSessionStore().put(sidKey, attributes, timeoutSecond);
 
-        ConcurrentHashMap<Object, Object> att = KhanSessionFilter.getSessionStore().get(sidKey);
-        System.out.println("att=" + att);
+//        ConcurrentHashMap<Object, Object> att = KhanSessionFilter.getSessionStore().get(sidKey);
+//        System.out.println("att=" + att);
 
+    }
+
+    public static Object getAttribute(HttpSession session, String name) throws Exception {
+        String khanSessionId = SessionId.getKhanSessionId(session.getId());
+
+        String nameSpace = KhanSessionFilter.getKhanSessionConfig().getNamespace();
+
+        String sidKey = KhanSessionKeyGenerator.generate(nameSpace, khanSessionId, KhanHttpSession.ATTRIBUTES_KEY);
+
+        if( log.isDebugEnabled() ) {
+            log.debug("sidKey=" + sidKey);
+        }
+        ConcurrentHashMap<Object, Object> attributes = null;
+
+        attributes = KhanSessionFilter.getSessionStore().get(sidKey);
+        if( log.isDebugEnabled() ) {
+            log.debug("attributes=" + attributes);
+        }
+        if( attributes == null ) {
+            return null;
+        }
+
+        return attributes.get(name);
     }
 
 }

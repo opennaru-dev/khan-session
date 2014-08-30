@@ -329,12 +329,13 @@ public class KhanSessionManager {
         if( statsEnabled == false )
             return 0;
 
+        // TODO : agent를 설정하지 않을 경우를 체크해야 함
         long memorySize = 0;
         try {
             MemoryMeter meter = new MemoryMeter();
             memorySize += meter.measureDeep(getSessionAttributes(session.getId()));
         } catch (Exception e) {
-            log.error("Session memory size calculation error", e);
+            log.error("Session memory size calculation error");
         }
         return memorySize;
     }

@@ -22,10 +22,13 @@
 package com.opennaru.khan.session;
 
 import com.opennaru.khan.session.manager.KhanSessionManager;
+import com.opennaru.khan.session.store.SessionId;
+import com.opennaru.khan.session.store.SessionIdThreadStore;
 import com.opennaru.khan.session.store.SessionStore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpSession;
 
 /**
  * Extends HttpServletRequestWrapper class
@@ -59,8 +62,13 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
         this.namespace = namespace;
         this.store = store;
         String clientIp = getClientIp(request);
+
+        SessionIdThreadStore.set(sessionId);
+        HttpSession session = super.getSession();
+//        SessionId.setKhanSessionId(session.getId(), sessionId);
+
         this.session = new KhanHttpSession(sessionId, store, namespace,
-                timeoutMin, super.getSession(), sessionManager, clientIp);
+                timeoutMin, session, sessionManager, clientIp);
     }
 
     @Override

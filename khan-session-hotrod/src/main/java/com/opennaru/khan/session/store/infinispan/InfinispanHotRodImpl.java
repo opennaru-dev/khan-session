@@ -164,9 +164,9 @@ public class InfinispanHotRodImpl implements SessionCache {
     @Override
     public <T> void put(String key, T value, long secondsToExpire)
             throws IOException {
-        cache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
-        if( log.isDebugEnabled() )
-            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        cache.put(key, value, secondsToExpire, TimeUnit.SECONDS, secondsToExpire, TimeUnit.SECONDS);
+        if( log.isTraceEnabled() )
+            log.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     /**
@@ -179,8 +179,8 @@ public class InfinispanHotRodImpl implements SessionCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws IOException {
-        if( log.isDebugEnabled() )
-            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( log.isTraceEnabled() )
+            log.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
 
         return (T) cache.get(key);
     }
@@ -195,8 +195,8 @@ public class InfinispanHotRodImpl implements SessionCache {
     public <T> void delete(String key) throws IOException {
         cache.remove(key);
 
-        if( log.isDebugEnabled() )
-            log.debug("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( log.isTraceEnabled() )
+            log.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     /**
@@ -206,8 +206,8 @@ public class InfinispanHotRodImpl implements SessionCache {
      */
     @Override
     public int size() throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("sizeof=" + cache.size());
+        if( log.isTraceEnabled() ) {
+            log.trace("sizeof=" + cache.size());
         }
         return cache.size();
     }
@@ -235,7 +235,7 @@ public class InfinispanHotRodImpl implements SessionCache {
     @Override
     public <T> void loginPut(String key, T value, long secondsToExpire)
             throws IOException {
-        loginCache.put(key, value, secondsToExpire, TimeUnit.SECONDS);
+        loginCache.put(key, value, secondsToExpire, TimeUnit.SECONDS, secondsToExpire, TimeUnit.SECONDS);
     }
 
     /**
@@ -268,8 +268,8 @@ public class InfinispanHotRodImpl implements SessionCache {
      */
     @Override
     public int loginSize() throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("sizeof=" + loginCache.size());
+        if( log.isTraceEnabled() ) {
+            log.trace("sizeof=" + loginCache.size());
         }
         return loginCache.size();
     }
