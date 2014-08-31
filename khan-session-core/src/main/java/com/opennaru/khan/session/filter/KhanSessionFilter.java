@@ -211,6 +211,13 @@ public abstract class KhanSessionFilter implements Filter {
         }
         khanSessionConfig.setEnableStatistics(enableStatistics);
 
+        // enableStatistics
+        boolean enableMemoryStatistics = false;
+        if( getConfigValue(config, Constants.ENABLE_MEMORY_STATISTICS) != null &&
+                getConfigValue(config, Constants.ENABLE_MEMORY_STATISTICS).equals("true") ) {
+            enableMemoryStatistics = true;
+        }
+        khanSessionConfig.setEnableMemoryStatistics(enableMemoryStatistics);
     }
 
     /**

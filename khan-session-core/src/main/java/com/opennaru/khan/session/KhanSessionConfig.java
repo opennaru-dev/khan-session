@@ -58,6 +58,9 @@ public class KhanSessionConfig {
     // enable MBean statistics
     private boolean enableStatistics;
 
+    // enable Memory statistics
+    private boolean enableMemoryStatistics;
+
     public boolean isUseLibraryMode() {
         return useLibraryMode;
     }
@@ -158,6 +161,14 @@ public class KhanSessionConfig {
         this.enableStatistics = enableStatistics;
     }
 
+    public boolean isEnableMemoryStatistics() {
+        return enableMemoryStatistics;
+    }
+
+    public void setEnableMemoryStatistics(boolean enableMemoryStatistics) {
+        this.enableMemoryStatistics = enableMemoryStatistics;
+    }
+
     @Override
     public String toString() {
         return "KhanSessionConfig{" +
@@ -173,6 +184,7 @@ public class KhanSessionConfig {
                 ", logoutUrl='" + logoutUrl + '\'' +
                 ", sessionTimeoutMin=" + sessionTimeoutMin +
                 ", enableStatistics=" + enableStatistics +
+                ", enableMemoryStatistics=" + enableMemoryStatistics +
                 '}';
     }
 }

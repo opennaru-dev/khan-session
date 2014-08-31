@@ -123,4 +123,10 @@ public class Constants {
      * enable statistics
      */
     public static final String ENABLE_STATISTICS = "enableStatistics";
+
+    /**
+     * enable memory statistics
+     */
+    public static final String ENABLE_MEMORY_STATISTICS = "enableMemoryStatistics";
+
 }

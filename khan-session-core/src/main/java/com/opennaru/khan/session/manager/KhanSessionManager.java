@@ -328,6 +328,8 @@ public class KhanSessionManager {
     private long getSessionMemorySize(HttpSession session) {
         if( statsEnabled == false )
             return 0;
+        else if( khanSessionConfig.isEnableMemoryStatistics() == false )
+            return 0;
 
         // TODO : agent를 설정하지 않을 경우를 체크해야 함
         long memorySize = 0;
