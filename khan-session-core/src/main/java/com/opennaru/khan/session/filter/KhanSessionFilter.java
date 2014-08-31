@@ -471,9 +471,7 @@ public abstract class KhanSessionFilter implements Filter {
                 KhanHttpSession session = _wrappedRequest.getSession(false);
 
                 HttpSession httpSession = _request.getSession(false);
-                if( httpSession == null ) {
-                    return;
-                } else {
+                if( httpSession != null ) {
                     httpSession.setAttribute("khan.session.id", session.getId());
                 }
 
