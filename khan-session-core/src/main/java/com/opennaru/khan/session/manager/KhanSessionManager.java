@@ -105,6 +105,8 @@ public class KhanSessionManager {
 
         instances.put(appName, this);
 
+        log.info("KHAN [session manager] initialized.");
+
         if( log.isDebugEnabled() ) {
             log.debug(">>>>>>>>>> KhanSessionManager=" + this);
             log.debug(">>>>>>>>>> appName=" + appName);

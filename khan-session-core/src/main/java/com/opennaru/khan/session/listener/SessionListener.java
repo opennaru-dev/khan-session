@@ -22,6 +22,7 @@
 package com.opennaru.khan.session.listener;
 
 import com.opennaru.khan.session.filter.KhanSessionFilter;
+import com.opennaru.khan.session.management.SessionMonitorMBean;
 import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionIdThreadStore;
@@ -62,7 +63,9 @@ public class SessionListener implements HttpSessionListener {
                 log.debug("Session created=" + session.getId());
             }
             String appName = sessionEvent.getSession().getServletContext().getContextPath();
-            KhanSessionManager.getInstance(appName).getSessionMonitor().sessionCreated();
+            SessionMonitorMBean sessionMonitorMBean = KhanSessionManager.getInstance(appName).getSessionMonitor();
+            if( sessionMonitorMBean != null )
+                sessionMonitorMBean.sessionCreated();
 
             SessionId.setKhanSessionId(session.getId(), SessionIdThreadStore.get());
 //            SessionId.setKhanSessionId(session.getId(), (String)session.getAttribute("khan.session.id"));
@@ -101,7 +104,10 @@ public class SessionListener implements HttpSessionListener {
             String appName = sessionEvent.getSession().getServletContext().getContextPath();
 
             KhanSessionManager.getInstance(appName).removeSessionId(session);
-            KhanSessionManager.getInstance(appName).getSessionMonitor().sessionDestroyed();
+
+            SessionMonitorMBean sessionMonitorMBean = KhanSessionManager.getInstance(appName).getSessionMonitor();
+            if ( sessionMonitorMBean != null )
+                sessionMonitorMBean.sessionDestroyed();
 
             SessionId.removeKhanSessionId(sessionId);
 

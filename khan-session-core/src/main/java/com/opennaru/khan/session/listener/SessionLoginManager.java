@@ -25,6 +25,7 @@ import com.opennaru.khan.session.KhanHttpSession;
 import com.opennaru.khan.session.KhanSessionKeyGenerator;
 import com.opennaru.khan.session.KhanSessionMetadata;
 import com.opennaru.khan.session.filter.KhanSessionFilter;
+import com.opennaru.khan.session.management.SessionMonitorMBean;
 import com.opennaru.khan.session.manager.KhanSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +131,9 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
             }
 
             String appName = request.getContextPath();
-            KhanSessionManager.getInstance(appName).getSessionMonitor().duplicatedLogin();
+            SessionMonitorMBean sessionMonitorMBean = KhanSessionManager.getInstance(appName).getSessionMonitor();
+            if( sessionMonitorMBean != null )
+                sessionMonitorMBean.duplicatedLogin();
 
             String sidKey = KhanSessionKeyGenerator.generate("$", "SID", previousSessionId);
             KhanSessionFilter.getSessionStore().loginPut(sidKey, "DUPLICATED", session.getMaxInactiveInterval());
