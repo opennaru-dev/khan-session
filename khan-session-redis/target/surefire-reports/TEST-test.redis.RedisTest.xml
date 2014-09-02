@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.081" errors="0" skipped="0" tests="5" name="test.redis.RedisTest">
+<testsuite failures="0" time="0.066" errors="0" skipped="0" tests="5" name="test.redis.RedisTest">
   <properties>
     <property name="idea.version" value="13.1.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -11,8 +11,8 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7533"/>
-    <property name="user.country" value="KR"/>
+    <property name="idea.launcher.port" value="7539"/>
+    <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
@@ -32,7 +32,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="50.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="os.version" value="3.15.10-200.fc20.x86_64"/>
+    <property name="os.version" value="3.15.10-201.fc20.x86_64"/>
     <property name="user.home" value="/home/jjeon"/>
     <property name="user.timezone" value="Asia/Seoul"/>
     <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
@@ -46,7 +46,7 @@
     <property name="java.home" value="/usr/java/jdk1.6.0_45/jre"/>
     <property name="sun.java.command" value="com.intellij.rt.execution.application.AppMain org.codehaus.classworlds.Launcher -Didea.version=13.1.4 clean install"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
-    <property name="user.language" value="ko"/>
+    <property name="user.language" value="en"/>
     <property name="java.vm.info" value="mixed mode"/>
     <property name="java.version" value="1.6.0_45"/>
     <property name="java.ext.dirs" value="/usr/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext"/>
@@ -61,9 +61,9 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.034" classname="test.redis.RedisTest" name="testSetKey"/>
+  <testcase time="0.031" classname="test.redis.RedisTest" name="testSetKey"/>
   <testcase time="0" classname="test.redis.RedisTest" name="testSetUpdateKey"/>
-  <testcase time="0" classname="test.redis.RedisTest" name="testGetKey"/>
-  <testcase time="0" classname="test.redis.RedisTest" name="testDelKey"/>
+  <testcase time="0.001" classname="test.redis.RedisTest" name="testGetKey"/>
+  <testcase time="0.001" classname="test.redis.RedisTest" name="testDelKey"/>
   <testcase time="0.001" classname="test.redis.RedisTest" name="testURL"/>
 </testsuite>

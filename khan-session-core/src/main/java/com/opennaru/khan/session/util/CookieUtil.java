@@ -41,13 +41,13 @@ public class CookieUtil {
         StringBuilder sb = new StringBuilder();
         sb = sb.append(cookie.getName()).append("=").append(cookie.getValue());
 
-        if (cookie.getDomain() != null) {
+        if (cookie.getDomain() != null && !cookie.getDomain().equals("") ) {
             sb.append(";Domain=").append(cookie.getDomain());
         }
-        if (cookie.getPath() != null) {
+        if (cookie.getPath() != null && !cookie.getPath().equals("")) {
             sb.append(";Path=").append(cookie.getPath());
         }
-        if (cookie.getComment() != null) {
+        if (cookie.getComment() != null && !cookie.getComment().equals("")) {
             sb.append(";Comment=").append(cookie.getComment());
         }
         if (cookie.getMaxAge() > -1) {
