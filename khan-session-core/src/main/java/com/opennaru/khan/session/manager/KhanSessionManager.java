@@ -369,6 +369,9 @@ public class KhanSessionManager {
             String appNameStr = appName.replaceAll(":|=|\n", ".");
             appNameStr = appNameStr.replaceAll("/", "");
 
+            if( appNameStr.equals("") )
+                appNameStr = "ROOT";
+
             StringBuilder sb = new StringBuilder(
                     "com.opennaru.khan.session:type=SessionMonitor").append(",appName=")
                     .append(appNameStr);

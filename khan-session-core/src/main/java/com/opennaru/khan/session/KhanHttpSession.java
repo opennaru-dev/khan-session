@@ -24,6 +24,7 @@ package com.opennaru.khan.session;
 import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionStore;
+import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -64,7 +62,9 @@ public class KhanHttpSession implements HttpSession {
     /**
      *  Session ID
      */
-    private final String sessionId;
+    private String sessionId;
+
+    private String namespace;
 
     /**
      *  SessionStore - Interface
@@ -78,7 +78,7 @@ public class KhanHttpSession implements HttpSession {
     /**
      *  Khan SessionStore 저장을 위한 Key 생성기
      */
-    private final KhanSessionKeyGenerator keyGenerator;
+    private KhanSessionKeyGenerator keyGenerator;
     /**
      * Session Attribute를 저장할 객체
      */
@@ -91,6 +91,7 @@ public class KhanHttpSession implements HttpSession {
      *  새로 생성된 세션인지
      */
     private boolean isNewlyCreated = false;
+
     /**
      *  max inactive interval
      */
@@ -122,10 +123,10 @@ public class KhanHttpSession implements HttpSession {
 
         this.sessionId = sessionId;
         this.sessionStore = sessionStore;
+        this.namespace = namespace;
         this.session = session;
         this.keyGenerator = new KhanSessionKeyGenerator(sessionId, namespace);
         this.sessionManager = sessionManager;
-
 
         if( log.isDebugEnabled() ) {
             log.debug("session.getMaxInactiveInterval()=" + session.getMaxInactiveInterval());
@@ -184,12 +185,28 @@ public class KhanHttpSession implements HttpSession {
      */
     public boolean isValid() {
 
-        KhanSessionMetadata metadata = sessionStore.get(keyGenerator.generate(METADATA_KEY));
-        boolean isNotInvalidated = metadata != null &&
-                metadata.getInvalidated() != null &&
-                metadata.getInvalidated() == false;
+        if (log.isDebugEnabled()) {
+            log.debug(">>>isValid/ metadata=" + khanSessionMetadata + ",attribute=" + attributes);
+            if( khanSessionMetadata == null ) {
+                log.debug("isValid called. ");
 
-        boolean isNotExpired = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY)) != null;
+                Throwable t = new Throwable();
+                String message = ">>> isValid called !!";
+                log.debug(message + StackTraceUtil.getStackTrace(t));
+            }
+        }
+
+//        if( khanSessionMetadata == null && attributes == null ) {
+//            createSessionStore();
+//        }
+
+        //KhanSessionMetadata khanSessionMetadata = sessionStore.get(keyGenerator.generate(METADATA_KEY));
+        boolean isNotInvalidated = khanSessionMetadata != null &&
+                khanSessionMetadata.getInvalidated() != null &&
+                khanSessionMetadata.getInvalidated() == false;
+
+//        boolean isNotExpired = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY)) != null;
+        boolean isNotExpired = attributes != null;
 
         if (log.isDebugEnabled()) {
             log.debug("isValid is called. (isNotInvalidated: " + isNotInvalidated + ", isNotExpired: " + isNotExpired + ")");
@@ -291,6 +308,10 @@ public class KhanHttpSession implements HttpSession {
 
         if (log.isDebugEnabled()) {
             log.debug("invalidate called. (sessionId: " + sessionId + ")");
+
+            Throwable t = new Throwable();
+            String message = ">>> Invalidate !!";
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -300,12 +321,16 @@ public class KhanHttpSession implements HttpSession {
             attributes.clear();
             khanSessionMetadata.setInvalidated(true);
             removeAttributesFromStore();
+
+            this.khanSessionMetadata = null;
+            this.attributes = null;
+
             //
             //sessionManager.getSessionMonitor().sessionDestroyed();
         } catch (NullPointerException e) {
-
+            log.debug("invalidate." + e.getMessage() );
         } catch (IllegalStateException ise) {
-
+            log.debug("invalidate." + ise.getMessage() );
         }
     }
 
@@ -337,6 +362,10 @@ public class KhanHttpSession implements HttpSession {
         }
         if (value instanceof Serializable) {
             try {
+                if( !isValid() ) {
+                    throw new IllegalStateException("Invalid Session");
+                }
+
                 reloadAttributes();
                 attributes.put(name, (Serializable) value);
                 saveAttributesToStore();

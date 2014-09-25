@@ -25,10 +25,15 @@ import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionIdThreadStore;
 import com.opennaru.khan.session.store.SessionStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Extends HttpServletRequestWrapper class
@@ -36,12 +41,17 @@ import javax.servlet.http.HttpSession;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
+    private static Logger log = LoggerFactory.getLogger("KhanSessionHttpRequest");
 
-    private final KhanHttpSession session;
+    private KhanHttpSession session;
 
     private final String namespace;
-    private final String sessionId;
+    private String sessionId;
     private final SessionStore store;
+
+    private Integer timeoutMin;
+    private KhanSessionManager sessionManager;
+    private String clientIp;
 
     /**
      * Consturctor
@@ -61,7 +71,10 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
         this.sessionId = sessionId;
         this.namespace = namespace;
         this.store = store;
-        String clientIp = getClientIp(request);
+        clientIp = getClientIp(request);
+
+        this.timeoutMin = timeoutMin;
+        this.sessionManager = sessionManager;
 
         SessionIdThreadStore.set(sessionId);
         HttpSession session = super.getSession();
@@ -73,12 +86,37 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
 
     @Override
     public KhanHttpSession getSession() {
+        if( session == null ) {
+            session = getSession(true);
+        }
+
         return session;
     }
 
     @Override
     public KhanHttpSession getSession(boolean create) {
-        return session;
+        if( create ) {
+//            this.sessionId = UUID.randomUUID().toString();
+//            SessionIdThreadStore.set(sessionId);
+
+            log.debug("khan.session.getSession.create=" + System.getProperty("khan.session.getSession.create"));
+
+            if( System.getProperty("khan.session.getSession.create", "true").equals("true") ) {
+                log.debug("***** >> SessionIdThreadStore.get()=" + SessionIdThreadStore.get());
+                HttpSession _session = super.getSession(true);
+
+                store.put(
+                        session.getKeyGenerator().generate(KhanHttpSession.ATTRIBUTES_KEY),
+                        new ConcurrentHashMap<Object, Object>(),
+                        timeoutMin
+                );
+
+                this.session = new KhanHttpSession(sessionId, store, namespace,
+                        timeoutMin, _session, sessionManager, clientIp);
+            }
+        }
+
+        return this.session;
     }
 
     /**

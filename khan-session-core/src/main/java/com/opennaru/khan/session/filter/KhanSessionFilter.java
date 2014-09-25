@@ -27,6 +27,7 @@ import com.opennaru.khan.session.KhanSessionHttpRequest;
 import com.opennaru.khan.session.KhanSessionKeyGenerator;
 import com.opennaru.khan.session.listener.SessionLoginManager;
 import com.opennaru.khan.session.manager.KhanSessionManager;
+import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionIdThreadStore;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.CookieUtil;
@@ -336,7 +337,7 @@ public abstract class KhanSessionFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
 
         if (log.isDebugEnabled()) {
-            log.debug("*************************************************************************************");
+            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         }
         if (log.isTraceEnabled()) {
             Throwable t = new Throwable();
@@ -349,19 +350,24 @@ public abstract class KhanSessionFilter implements Filter {
 
         if (_request instanceof HttpServletRequest) {
 
+//            String currentSessionId = _request.getSession(false).getId();
+//            if (!currentSessionId.equals(sessionIdValue)) {
             // KHAN Request이면
             Cookie cookie = getCurrentValidSessionIdCookie(_request);
+            log.debug( SessionIdThreadStore.get() );
+            HttpSession s = _request.getSession(false);
+            log.debug( s + "" );
+
             if( log.isDebugEnabled() )
                 log.debug(">>>>> cookie=" + cookie);
 
-            if (isKhanSessionHttpRequest(_request) && getCurrentValidSessionIdCookie(_request) != null) {
+            if (isKhanSessionHttpRequest(_request) ) {
                 //        if ( _request.getRequestedSessionId() != null ) {
                 //        if ( getCurrentValidSessionIdCookie(_request) != null) {
                 if (log.isDebugEnabled()) {
-                    log.debug("KhanSessionHttpRequest is already applied.");
+                    log.debug("******* KhanSessionHttpRequest is already applied.");
                     log.debug("requestedSessionId=" + _request.getRequestedSessionId());
                 }
-                //            if ( isValidSession((KhanSessionHttpRequest)_request))
                 chain.doFilter(_request, _response);
 
                 // 제외한 요청이면
@@ -369,42 +375,37 @@ public abstract class KhanSessionFilter implements Filter {
                     && _request.getRequestURI().matches(khanSessionConfig.getExcludeRegExp())) {
 
                 if (log.isDebugEnabled()) {
-                    log.debug("This URI is excluded. (URI: " + _request.getRequestURI() + ")");
+                    log.debug("******* This URI is excluded. (URI: " + _request.getRequestURI() + ")");
                 }
                 chain.doFilter(_request, _response);
 
                 // 새로운 요청
             } else {
                 // doFilter with the request wrapper
-
-//                if( _request.getSession(false) == null )
-//                    return;
-
-                Cookie currentValidSessionIdCookie = getCurrentValidSessionIdCookie(_request);
-
                 String sessionIdValue = null;
-                if (currentValidSessionIdCookie == null) {
-                    //                if( _request.getSession().isNew() ) {
-                    //                    sessionIdValue = UUID.randomUUID().toString();
-                    //                } else {
-                    // copy JSESSIONID value to original session
+
+                log.debug("******* new request");
+                log.debug("*************** SessionIdThreadStore.get()=" + SessionIdThreadStore.get() );
+
+                if ( SessionIdThreadStore.get() != null ) {
+                    sessionIdValue = SessionIdThreadStore.get();
+                } else if (cookie == null) {
                     HttpSession session = _request.getSession(false);
-                    if (session == null) {
+                    if (session == null || session.isNew()) {
                         sessionIdValue = UUID.randomUUID().toString();
                     } else {
+                        // copy JSESSIONID value to original session
                         sessionIdValue = session.getId();
                     }
-                    //                }
                 } else {
-                    //System.out.println(">> current session cookie=" + currentValidSessionIdCookie.getValue() );
-                    //System.out.println(">> session id=" + _request.getSession().getId());
+                    if (log.isDebugEnabled()) {
+                        log.debug(">> current session cookie=" + cookie.getValue());
+                        log.debug(">> session id=" + _request.getSession().getId());
+                    }
                     //if( currentValidSessionIdCookie.getValue().equals())
                     // current session is valid
-                    sessionIdValue = currentValidSessionIdCookie.getValue();
+                    sessionIdValue = cookie.getValue();
                 }
-
-//                SessionId.setKhanSessionId(_request.getSession(false).getId(), sessionIdValue);
-//                SessionIdThreadStore.set(sessionIdValue);
 
                 //if( currentValidSessionIdCookie != null )
                 //    System.out.println("currentValidSessionIdCookie.getValue()=" + currentValidSessionIdCookie.getValue());
@@ -412,8 +413,10 @@ public abstract class KhanSessionFilter implements Filter {
                     log.debug("*****[[[[[ sessionIdValue=" + sessionIdValue + "]]]]]*****");
                 }
 
-                if (currentValidSessionIdCookie == null) {
+                if (cookie == null || SessionIdThreadStore.get() != null ) {
                     Cookie newSessionIdCookie = generateSessionIdCookie(sessionIdValue);
+                    cookie = newSessionIdCookie;
+
                     // httpOnly 는 Servlet 2.x에서 지원하지 않음.
                     // addCookie대신 addHeader를 사용
                     String setCookie = CookieUtil.createCookieHeader(newSessionIdCookie, khanSessionConfig.isHttpOnly());
@@ -427,9 +430,46 @@ public abstract class KhanSessionFilter implements Filter {
 
                 //_request.getSession().setAttribute("__khan.session.id__", sessionIdValue);
 
-                // doFilter with the request wrapper
-                KhanSessionHttpRequest _wrappedRequest = createSessionRequest(_request, sessionIdValue);
+                if (log.isDebugEnabled()) {
+                    try {
+                        log.debug(">>>>> current session cookie=" + cookie.getValue());
+                        log.debug(">>>>> khan session id=" + SessionId.getKhanSessionId(_request.getSession(false).getId()));
+                        log.debug(">>>>> jsession id=" + _request.getSession(false).getId());
+                    } catch (Exception e) {}
+                }
 
+                // doFilter with the request wrapper
+                KhanSessionHttpRequest _wrappedRequest = null;
+//                try {
+                _wrappedRequest = createSessionRequest(_request, sessionIdValue);
+
+////                    if( _request.getSession(false) == null ) {
+//                    log.debug( "== _wrappedRequest.getSession().getId()=" + _wrappedRequest.getSession().getId());
+//                    log.debug( "== _request.getSession()=" + _request.getSession(false).getId());
+//
+//                    log.debug( "== sessionIdValue=" + sessionIdValue );
+//                    if( _wrappedRequest.getSession().isSessionIdChanged() ) {
+//                        sessionIdValue = _wrappedRequest.getSession().getKhanSessionId();
+//                        Cookie newSessionIdCookie = generateSessionIdCookie(sessionIdValue);
+//                        // httpOnly 는 Servlet 2.x에서 지원하지 않음.
+//                        // addCookie대신 addHeader를 사용
+//                        String setCookie = CookieUtil.createCookieHeader(newSessionIdCookie, khanSessionConfig.isHttpOnly());
+//                        _response.addHeader("Set-Cookie", setCookie);
+//                        setSessionStatus(_request, SessionStatus.FIXED);
+//
+//                        if (log.isDebugEnabled()) {
+//                            log.debug("SessionId cookie is updated. (" + sessionIdValue + ")");
+//                        }
+//                    }
+
+                if (log.isDebugEnabled()) {
+                    log.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + _request.getSession(false).getId());
+                    log.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + _wrappedRequest.getSession(false).getId());
+                    log.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + _wrappedRequest.getSession(false).isValid());
+                }
+//                } catch (Exception e ) {
+//                    e.printStackTrace();
+//                }
                 boolean redirectLogoutUrl = false;
                 String khan_uid = "";
 
@@ -463,29 +503,45 @@ public abstract class KhanSessionFilter implements Filter {
                     }
                 }
 
+
+
                 // do KHAN Session filter
                 chain.doFilter(_wrappedRequest, _response);
                 // after KHAN Session filter
+
+                String currentSessionId = _wrappedRequest.getSession(false).getId();
+                if (!currentSessionId.equals(sessionIdValue)) {
+                    Cookie newSessionIdCookie = generateSessionIdCookie(currentSessionId);
+                    // httpOnly 는 Servlet 2.x에서 지원하지 않음.
+                    // addCookie대신 addHeader를 사용
+                    String setCookie = CookieUtil.createCookieHeader(newSessionIdCookie, khanSessionConfig.isHttpOnly());
+                    _response.addHeader("Set-Cookie", setCookie);
+                    setSessionStatus(_request, SessionStatus.FIXED);
+                    log.debug("########### new session id=" + currentSessionId);
+                }
 
                 // update attributes, expiration
                 KhanHttpSession session = _wrappedRequest.getSession(false);
 
                 HttpSession httpSession = _request.getSession(false);
-                if( httpSession != null ) {
+                if (httpSession != null) {
                     httpSession.setAttribute("khan.session.id", session.getId());
                 }
 
+
                 // TEST
                 if (log.isDebugEnabled()) {
-                    log.debug("Session ID=" + _request.getSession(false).getId());
-                    Enumeration<String> e = _request.getSession(false).getAttributeNames();
-                    while (e.hasMoreElements()) {
-                        String key = e.nextElement();
-                        log.debug("KEY/VALUE=" + key + "/" + _request.getSession(false).getAttribute(key));
+                    HttpSession debugSession = _request.getSession(false);
+                    if( debugSession != null ) {
+                        log.debug("Session ID=" + debugSession.getId());
+                        Enumeration<String> e = debugSession.getAttributeNames();
+                        while (e.hasMoreElements()) {
+                            String key = e.nextElement();
+                            log.debug("KEY/VALUE=" + key + "/" + debugSession.getAttribute(key));
+                        }
                     }
                 }
                 // END
-
 
                 if (log.isDebugEnabled()) {
                     log.debug("*****[[[[[ session.getId()=" + session.getId() + "]]]]]*****");
@@ -505,13 +561,15 @@ public abstract class KhanSessionFilter implements Filter {
                 }
 
                 if (log.isDebugEnabled())
-                    log.debug("*************************************************************************************");
+                    log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+
+                SessionIdThreadStore.remove();
             }
-        } else {
-            chain.doFilter(_request, _response);
+
+//        } else {
+//            chain.doFilter(_request, _response);
         }
 
-        SessionIdThreadStore.remove();
     }
 
     /**
