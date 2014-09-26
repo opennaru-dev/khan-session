@@ -27,7 +27,7 @@
 
     <groupId>com.opennaru.khan</groupId>
     <artifactId>khan-session-core</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -41,7 +41,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jboss.version>3.0.0.Final</jboss.version>
         <infinispan.version>6.0.2.Final</infinispan.version>
-        <khan.session.version>1.2.0</khan.session.version>
+        <khan.session.version>1.3.0</khan.session.version>
     </properties>
 
     <dependencyManagement>

@@ -40,7 +40,7 @@ public class RemoteCaches {
 
     public void test() {
 
-        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.23:11322;192.168.0.23:11422", true);
+        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.58:11322;192.168.0.58:11422", true);
         RemoteCache<Object, Object> cache = cacheManager.getCache("KHAN_SESSION");
 
         Set<Object> keySet = cache.keySet();
@@ -59,7 +59,7 @@ public class RemoteCaches {
 
 
     public void test2() {
-        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.23:11322;192.168.0.23:11422", true);
+        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.58:11322;192.168.0.58:11422", true);
         RemoteCache<Object, Object> cache = cacheManager.getCache("KHAN_SESSION_LOGIN");
 
         Set<Object> keySet = cache.keySet();
@@ -77,7 +77,7 @@ public class RemoteCaches {
     }
 
     public void testRemoteCache() {
-        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.22:11422;192.168.0.23:11322", true);
+        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.58:11422;192.168.0.58:11322", true);
         RemoteCache<Object, Object> cache = cacheManager.getCache("KHAN_SESSION_REMOTE");
 
         Set<Object> keySet = cache.keySet();
@@ -95,7 +95,7 @@ public class RemoteCaches {
     }
 
     public void testRemoteLoginCache() {
-        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.22:11422;192.168.0.23:11322", true);
+        RemoteCacheManager cacheManager = new RemoteCacheManager("192.168.0.58:11422;192.168.0.58:11322", true);
         RemoteCache<Object, Object> cache = cacheManager.getCache("KHAN_SESSION_LOGIN_REMOTE");
 
         Set<Object> keySet = cache.keySet();
