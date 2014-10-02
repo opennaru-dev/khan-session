@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 @SuppressWarnings("deprecation")
-public class KhanHttpSession implements HttpSession {
+public class KhanHttpSession implements HttpSession, Serializable {
     /**
      *  Store에 저장할 Attribute Key
      */
