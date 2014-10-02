@@ -90,7 +90,8 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
             throw new IllegalStateException("Failed", e);
         }
 
-        super.init(config);
+        log.info("KHAN [session manager] Infinispan Hotrod filter initialized.");
+
     }
 
 }

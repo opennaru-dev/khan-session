@@ -79,7 +79,7 @@ public class RedisSessionFilter extends KhanSessionFilter implements Filter {
             throw new IllegalStateException("Failed", e);
         }
 
-        super.init(config);
+        log.info("KHAN [session manager] Redis filter initialized.");
     }
 
 }

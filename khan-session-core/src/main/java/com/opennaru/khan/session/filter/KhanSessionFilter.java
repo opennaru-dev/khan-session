@@ -310,6 +310,7 @@ public abstract class KhanSessionFilter implements Filter {
      */
     @Override
     public void init(FilterConfig config) throws ServletException {
+        log.info("KHAN [session manager] starting.");
         getSessionFilterConfig(config);
 
         if (sessionManager == null) {
