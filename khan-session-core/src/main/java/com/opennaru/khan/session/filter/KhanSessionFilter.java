@@ -350,35 +350,34 @@ public abstract class KhanSessionFilter implements Filter {
 
         if (_request instanceof HttpServletRequest) {
 
-            // KHAN Request이면
-            Cookie cookie = getCurrentValidSessionIdCookie(_request);
-            log.debug( SessionIdThreadStore.get() );
-            HttpSession s = _request.getSession(false);
-            log.debug( s + "" );
-
-            if( log.isDebugEnabled() )
-                log.debug(">>>>> cookie=" + cookie);
-
-            if (isKhanSessionHttpRequest(_request) ) {
-                if (log.isDebugEnabled()) {
-                    log.debug("******* KhanSessionHttpRequest is already applied.");
-                    log.debug("requestedSessionId=" + _request.getRequestedSessionId());
-                }
-                chain.doFilter(_request, _response);
-
-                // 제외한 요청이면
-            } else if (khanSessionConfig.getExcludeRegExp() != null
+            // 제외한 요청이면
+            if (khanSessionConfig.getExcludeRegExp() != null
                     && _request.getRequestURI().matches(khanSessionConfig.getExcludeRegExp())) {
 
                 if (log.isDebugEnabled()) {
                     log.debug("******* This URI is excluded. (URI: " + _request.getRequestURI() + ")");
                 }
                 chain.doFilter(_request, _response);
-
+                // KHAN Request이면
+            } else  if (isKhanSessionHttpRequest(_request) ) {
+                if (log.isDebugEnabled()) {
+                    log.debug("******* KhanSessionHttpRequest is already applied.");
+                    log.debug("requestedSessionId=" + _request.getRequestedSessionId());
+                }
+                chain.doFilter(_request, _response);
                 // 새로운 요청
             } else {
                 try {
                     // doFilter with the request wrapper
+
+                    Cookie cookie = getCurrentValidSessionIdCookie(_request);
+                    log.debug( SessionIdThreadStore.get() );
+                    HttpSession s = _request.getSession(false);
+                    log.debug( s + "" );
+
+                    if( log.isDebugEnabled() )
+                        log.debug(">>>>> cookie=" + cookie);
+
                     String sessionIdValue = null;
 
                     log.debug("******* new request");
