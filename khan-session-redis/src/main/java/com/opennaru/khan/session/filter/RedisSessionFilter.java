@@ -25,6 +25,7 @@ import com.opennaru.khan.session.store.SessionCache;
 import com.opennaru.khan.session.store.SessionStoreImpl;
 import com.opennaru.khan.session.store.redis.RedisClientImpl;
 import com.opennaru.khan.session.util.StringUtils;
+import com.opennaru.khan.session.util.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +81,7 @@ public class RedisSessionFilter extends KhanSessionFilter implements Filter {
         }
 
         log.info("KHAN [session manager] Redis filter initialized.");
+        log.info(VersionUtil.getVersion("KHAN-session-redis"));
     }
 
 }

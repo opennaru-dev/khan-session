@@ -32,6 +32,10 @@
     <description>Builds the complete KHAN [session manager] distribution modules</description>
     <packaging>pom</packaging>
 
+    <scm>
+        <connection>scm:git:https://github.com/opennaru-dev/khan-session.git</connection>
+        <url>https://github.com/opennaru-dev/khan-session.git</url>
+    </scm>
 
     <modules>
         <module>khan-session-core</module>

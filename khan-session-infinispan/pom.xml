@@ -29,6 +29,11 @@
     <artifactId>khan-session-infinispan</artifactId>
     <version>1.3.0</version>
 
+    <scm>
+        <connection>scm:git:https://github.com/opennaru-dev/khan-session.git</connection>
+        <url>https://github.com/opennaru-dev/khan-session.git</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jboss.version>3.0.0.Final</jboss.version>
@@ -107,6 +112,42 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <shortRevisionLength>5</shortRevisionLength>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <KHAN-session-infinispan-version>${project.version}</KHAN-session-infinispan-version>
+                            <KHAN-session-infinispan-build>${buildNumber}</KHAN-session-infinispan-build>
+                            <KHAN-session-infinispan-timestamp>${timestamp}</KHAN-session-infinispan-timestamp>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
         </plugins>
 
     </build>
