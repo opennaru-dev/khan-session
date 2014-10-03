@@ -57,7 +57,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
     /**
      *  logger
      */
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private transient Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
      *  Session ID
@@ -69,16 +69,16 @@ public class KhanHttpSession implements HttpSession, Serializable {
     /**
      *  SessionStore - Interface
      */
-    private final SessionStore sessionStore;
+    private transient final SessionStore sessionStore;
 
     /**
      *  HttpSession Object
      */
-    private final HttpSession session;
+    private transient final HttpSession session;
     /**
      *  Khan SessionStore 저장을 위한 Key 생성기
      */
-    private KhanSessionKeyGenerator keyGenerator;
+    private transient KhanSessionKeyGenerator keyGenerator;
     /**
      * Session Attribute를 저장할 객체
      */
@@ -100,7 +100,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
     /**
      *  Khan Session manager
      */
-    private KhanSessionManager sessionManager = null;
+    private transient KhanSessionManager sessionManager = null;
 
     /**
      * Constructor
