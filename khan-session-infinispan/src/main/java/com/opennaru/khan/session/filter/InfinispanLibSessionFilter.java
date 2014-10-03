@@ -92,8 +92,8 @@ public class InfinispanLibSessionFilter extends KhanSessionFilter implements Fil
             throw new IllegalStateException("Failed", e);
         }
 
-        log.info("KHAN [session manager] Infinispan Library mode filter initialized.");
-        log.info(VersionUtil.getVersion("KHAN-session-infinispan"));
+        System.out.println("KHAN [session manager] Infinispan Library mode filter initialized.");
+        System.out.println(VersionUtil.getVersion("KHAN-session-infinispan"));
 
     }
 

@@ -311,8 +311,8 @@ public abstract class KhanSessionFilter implements Filter {
      */
     @Override
     public void init(FilterConfig config) throws ServletException {
-        log.info( "KHAN [session manager] starting... " );
-        log.info( VersionUtil.getVersion("KHAN-session-core") );
+        System.out.println( "KHAN [session manager] starting... " );
+        System.out.println( VersionUtil.getVersion("KHAN-session-core") );
 
         getSessionFilterConfig(config);
 

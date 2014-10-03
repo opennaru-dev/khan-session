@@ -91,8 +91,8 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
             throw new IllegalStateException("Failed", e);
         }
 
-        log.info("KHAN [session manager] Infinispan Hotrod filter initialized.");
-        log.info(VersionUtil.getVersion("KHAN-session-hotrod"));
+        System.out.println("KHAN [session manager] Infinispan Hotrod filter initialized.");
+        System.out.println(VersionUtil.getVersion("KHAN-session-hotrod"));
 
     }
 
