@@ -25,7 +25,6 @@ import com.opennaru.khan.session.store.SessionCache;
 import com.opennaru.khan.session.store.SessionStoreImpl;
 import com.opennaru.khan.session.store.infinispan.InfinispanHotRodImpl;
 import com.opennaru.khan.session.util.StringUtils;
-import com.opennaru.khan.session.util.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +91,7 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
         }
 
         System.out.println("KHAN [session manager] Infinispan Hotrod filter initialized.");
-        System.out.println(VersionUtil.getVersion("KHAN-session-hotrod"));
+        System.out.println(HotrodVersion.getInstance().getVersion());
 
     }
 

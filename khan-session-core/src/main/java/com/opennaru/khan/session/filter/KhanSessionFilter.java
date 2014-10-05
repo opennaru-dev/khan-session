@@ -33,7 +33,6 @@ import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.CookieUtil;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
-import com.opennaru.khan.session.util.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -311,8 +310,8 @@ public abstract class KhanSessionFilter implements Filter {
      */
     @Override
     public void init(FilterConfig config) throws ServletException {
-        System.out.println( "KHAN [session manager] starting... " );
-        System.out.println( VersionUtil.getVersion("KHAN-session-core") );
+        System.out.println("KHAN [session manager] starting... ");
+        System.out.println(Version.getInstance().getVersion() );
 
         getSessionFilterConfig(config);
 

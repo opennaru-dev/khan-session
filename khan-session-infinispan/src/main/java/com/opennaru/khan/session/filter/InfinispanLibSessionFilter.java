@@ -25,7 +25,6 @@ import com.opennaru.khan.session.store.SessionCache;
 import com.opennaru.khan.session.store.SessionStoreImpl;
 import com.opennaru.khan.session.store.infinispan.InfinispanLibrayImpl;
 import com.opennaru.khan.session.util.StringUtils;
-import com.opennaru.khan.session.util.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +92,7 @@ public class InfinispanLibSessionFilter extends KhanSessionFilter implements Fil
         }
 
         System.out.println("KHAN [session manager] Infinispan Library mode filter initialized.");
-        System.out.println(VersionUtil.getVersion("KHAN-session-infinispan"));
+        System.out.println(InfinispanLibVersion.getInstance().getVersion());
 
     }
 

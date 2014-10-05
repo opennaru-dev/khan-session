@@ -20,22 +20,42 @@
  *  02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package com.opennaru.khan.session.util;
+package com.opennaru.khan.session.filter;
 
-import com.jcabi.manifests.Manifests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 /**
- * Get Implementation version from MANIFEST.MF
+ * Version
  *
+ * @since 1.3.0
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
-public class VersionUtil {
+public class Version {
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    protected static Version version = null;
+    protected static Properties properties = null;
+
+    public static Version getInstance() {
+        if( version == null ) {
+            try {
+                version = new Version();
+                InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties");
+                properties = new Properties();
+                properties.load(in);
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+        return version;
+    }
 
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -49,47 +69,34 @@ public class VersionUtil {
         return date;
     }
 
-    public static String getVersion(String p) {
+    public static String getVersion() {
         StringBuffer sb = new StringBuffer();
-        sb.append( p + " ");
-        sb.append( "Version : " + Manifests.read( p + "-version") + ", ");
-        sb.append( "Build : " + Manifests.read( p + "-build") + ", ");
-        sb.append( "Time : " + getDateAsString(Manifests.read( p + "-timestamp")) );
+        sb.append( "Version : " + properties.getProperty("khan.session.version") + ", ");
+        sb.append( "Build : " + properties.getProperty("buildNumber") + ", ");
+        sb.append( "Time : " + getDateAsString(properties.getProperty("timestamp")) );
 
         return sb.toString();
     }
 
-    public static String getVersionShort(String p) {
-        String version = Manifests.read( p + "-version" );
+    public static String getVersionShort() {
+        String version = properties.getProperty("khan.session.version");
         return version;
     }
 
-    public static String getVersionShort() {
-        return getVersionShort("KHAN-session-core");
-    }
-
-    public static String getBuild(String p) {
-        return Manifests.read( p + "-build");
-    }
 
     public static String getBuild() {
-        return getBuild("KHAN-session-core");
+        return properties.getProperty("buildNumber");
     }
 
-    public static Date getBuildDate(String p) {
-        return getDate( Manifests.read( p + "-timestamp") );
-    }
 
     public static Date getBuildDate() {
-        return getBuildDate("KHAN-session-core");
+        return getDate( properties.getProperty("timestamp") );
     }
 
-    public static String getBuildDateAsString(String p) {
-        return getDateAsString( Manifests.read( p + "-timestamp") );
-    }
 
     public static String getBuildDateAsString() {
-        return getBuildDateAsString("KHAN-session-core");
+        return getDateAsString( properties.getProperty("timestamp") );
     }
+
 
 }
