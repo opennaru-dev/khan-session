@@ -112,6 +112,7 @@
         <entry key="FindPuzzlers" value="true" />
         <entry key="FindRefComparison" value="true" />
         <entry key="FindReturnRef" value="true" />
+        <entry key="FindRoughConstants" value="true" />
         <entry key="FindRunInvocations" value="true" />
         <entry key="FindSelfComparison" value="true" />
         <entry key="FindSelfComparison2" value="true" />
@@ -134,6 +135,7 @@
         <entry key="IDivResultCastToDouble" value="true" />
         <entry key="IncompatMask" value="true" />
         <entry key="InconsistentAnnotations" value="true" />
+        <entry key="InefficientIndexOf" value="true" />
         <entry key="InefficientMemberAccess" value="false" />
         <entry key="InefficientToArray" value="true" />
         <entry key="InfiniteLoop" value="true" />
@@ -165,6 +167,7 @@
         <entry key="NoteSuppressedWarnings" value="true" />
         <entry key="NoteUnconditionalParamDerefs" value="true" />
         <entry key="NumberConstructor" value="true" />
+        <entry key="OptionalReturnNull" value="true" />
         <entry key="OverridingEqualsNotSymmetrical" value="true" />
         <entry key="PreferZeroLengthArrays" value="true" />
         <entry key="PublicSemaphores" value="false" />

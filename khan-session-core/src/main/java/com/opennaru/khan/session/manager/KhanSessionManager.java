@@ -84,6 +84,8 @@ public class KhanSessionManager {
      */
     private boolean statsEnabled = true;
 
+    private boolean memoryStatError = false;
+
     /**
      * 세션 ID 저장소
      */
@@ -104,8 +106,6 @@ public class KhanSessionManager {
         registerSessionMonitor();
 
         instances.put(appName, this);
-
-        log.info("KHAN [session manager] initialized.");
 
         if( log.isDebugEnabled() ) {
             log.debug(">>>>>>>>>> KhanSessionManager=" + this);
@@ -333,6 +333,9 @@ public class KhanSessionManager {
         else if( khanSessionConfig.isEnableMemoryStatistics() == false )
             return 0;
 
+        if( memoryStatError )
+            return 0;
+
         // TODO : agent를 설정하지 않을 경우를 체크해야 함
         long memorySize = 0;
         try {
@@ -340,6 +343,7 @@ public class KhanSessionManager {
             memorySize += meter.measureDeep(getSessionAttributes(session.getId()));
         } catch (Exception e) {
             log.error("Session memory size calculation error");
+            memoryStatError = true;
         }
         return memorySize;
     }

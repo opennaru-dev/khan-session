@@ -95,13 +95,33 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
 
     @Override
     public KhanHttpSession getSession(boolean create) {
+        HttpSession jsession = super.getSession(false);
+        if( jsession != null ) {
+            return this.session;
+        }
+
+        if( jsession != null && jsession.getId() != null ) {
+            if( this.session != null ) {
+                HttpSession _session = super.getSession(false);
+
+                store.put(
+                        session.getKeyGenerator().generate(KhanHttpSession.ATTRIBUTES_KEY),
+                        new ConcurrentHashMap<Object, Object>(),
+                        timeoutMin
+                );
+
+                this.session = new KhanHttpSession(sessionId, store, namespace,
+                        timeoutMin, _session, sessionManager, clientIp);
+            }
+        }
+
         if( create ) {
 //            this.sessionId = UUID.randomUUID().toString();
 //            SessionIdThreadStore.set(sessionId);
 
-            log.debug("khan.session.getSession.create=" + System.getProperty("khan.session.getSession.create"));
+//            log.debug("khan.session.getSession.create=" + System.getProperty("khan.session.getSession.create"));
 
-            if( System.getProperty("khan.session.getSession.create", "true").equals("true") ) {
+//            if( System.getProperty("khan.session.getSession.create", "true").equals("true") ) {
                 log.debug("***** >> SessionIdThreadStore.get()=" + SessionIdThreadStore.get());
                 HttpSession _session = super.getSession(true);
 
@@ -113,7 +133,7 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
 
                 this.session = new KhanHttpSession(sessionId, store, namespace,
                         timeoutMin, _session, sessionManager, clientIp);
-            }
+//            }
         }
 
         return this.session;

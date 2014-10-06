@@ -111,7 +111,6 @@ public class SessionListener implements HttpSessionListener {
 
             SessionId.removeKhanSessionId(sessionId);
 
-            session.invalidate();
         } catch (Exception e) {
             log.error("Error destroy event", e);
         }

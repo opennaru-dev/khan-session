@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="web" name="Web">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/resources/config/web.xml" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/resources/config" relative="/WEB-INF" />
-        </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
-      </configuration>
-    </facet>
-  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -109,6 +93,7 @@
         <entry key="FindPuzzlers" value="true" />
         <entry key="FindRefComparison" value="true" />
         <entry key="FindReturnRef" value="true" />
+        <entry key="FindRoughConstants" value="true" />
         <entry key="FindRunInvocations" value="true" />
         <entry key="FindSelfComparison" value="true" />
         <entry key="FindSelfComparison2" value="true" />
@@ -131,6 +116,7 @@
         <entry key="IDivResultCastToDouble" value="true" />
         <entry key="IncompatMask" value="true" />
         <entry key="InconsistentAnnotations" value="true" />
+        <entry key="InefficientIndexOf" value="true" />
         <entry key="InefficientMemberAccess" value="false" />
         <entry key="InefficientToArray" value="true" />
         <entry key="InfiniteLoop" value="true" />
@@ -162,6 +148,7 @@
         <entry key="NoteSuppressedWarnings" value="true" />
         <entry key="NoteUnconditionalParamDerefs" value="true" />
         <entry key="NumberConstructor" value="true" />
+        <entry key="OptionalReturnNull" value="true" />
         <entry key="OverridingEqualsNotSymmetrical" value="true" />
         <entry key="PreferZeroLengthArrays" value="true" />
         <entry key="PublicSemaphores" value="false" />

@@ -53,7 +53,7 @@
 <dependency>
     <groupId>com.opennaru.khan</groupId>
     <artifactId>khan-session-infinispan</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
  ```
  * Filter Class : com.opennaru.khan.session.filter.InfinispanLibSessionFilter
@@ -63,7 +63,7 @@
 <dependency>
     <groupId>com.opennaru.khan</groupId>
     <artifactId>khan-session-hotrod</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
  ```
  * Filter Class : com.opennaru.khan.session.filter.InfinispanHotRodSessionFilter
@@ -73,7 +73,7 @@
 <dependency>
     <groupId>com.opennaru.khan</groupId>
     <artifactId>khan-session-redis</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
  ```
  * Filter Class : com.opennaru.khan.session.filter.RedisSessionFilter
