@@ -67,8 +67,9 @@ public class SessionListener implements HttpSessionListener {
             if( sessionMonitorMBean != null )
                 sessionMonitorMBean.sessionCreated();
 
-            SessionId.setKhanSessionId(session.getId(), SessionIdThreadStore.get());
-//            SessionId.setKhanSessionId(session.getId(), (String)session.getAttribute("khan.session.id"));
+            if( session != null && session.getId() != null) {
+                SessionId.setKhanSessionId(session.getId(), SessionIdThreadStore.get());
+            }
             SessionIdThreadStore.remove();
 
             if (KhanSessionFilter.getKhanSessionConfig().isAllowDuplicateLogin() == false) {

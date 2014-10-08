@@ -366,9 +366,9 @@ public class KhanHttpSession implements HttpSession, Serializable {
                     throw new IllegalStateException("Invalid Session");
                 }
 
-                reloadAttributes();
+                //reloadAttributes();
                 attributes.put(name, (Serializable) value);
-                saveAttributesToStore();
+                //saveAttributesToStore();
             } catch (NullPointerException e) {
             }
         } else {
