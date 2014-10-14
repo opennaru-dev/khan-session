@@ -79,13 +79,12 @@ public class ClassUtil {
      * @throws InstantiationException
      */
     public static <T> T getInstance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
-        // first look for a getInstance() constructor
         T instance = null;
+
         try {
             Method factoryMethod = getFactoryMethod(clazz);
             if (factoryMethod != null) instance = (T) factoryMethod.invoke(null);
         } catch (Exception e) {
-            // no factory method or factory method failed.  Try a constructor.
             instance = null;
         }
 

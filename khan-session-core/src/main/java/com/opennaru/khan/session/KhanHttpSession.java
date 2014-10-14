@@ -22,7 +22,6 @@
 package com.opennaru.khan.session;
 
 import com.opennaru.khan.session.manager.KhanSessionManager;
-import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
@@ -62,9 +61,9 @@ public class KhanHttpSession implements HttpSession, Serializable {
     /**
      *  Session ID
      */
-    private String sessionId;
+    private String khanSessionId;
 
-    private String namespace;
+    private String khanNamespace;
 
     /**
      *  SessionStore - Interface
@@ -95,7 +94,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
     /**
      *  max inactive interval
      */
-    private Integer maxInactiveIntervalSeconds = null;
+    private Integer maxInactiveIntervalSec = null;
 
     /**
      *  Khan Session manager
@@ -115,15 +114,15 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     public KhanHttpSession(String sessionId, SessionStore sessionStore, String namespace, Integer timeoutMin, HttpSession session, KhanSessionManager sessionManager, String clientIp) {
         // Check argument is not null
-        StringUtils.isNotNull("sessionId", sessionId);
+        StringUtils.isNotNull("khanSessionId", sessionId);
         StringUtils.isNotNull("sessionStore", sessionStore);
-        StringUtils.isNotNull("namespace", namespace);
+        StringUtils.isNotNull("khanNamespace", namespace);
         StringUtils.isNotNull("timeoutMin", timeoutMin);
         StringUtils.isNotNull("session", session);
 
-        this.sessionId = sessionId;
+        this.khanSessionId = sessionId;
         this.sessionStore = sessionStore;
-        this.namespace = namespace;
+        this.khanNamespace = namespace;
         this.session = session;
         this.keyGenerator = new KhanSessionKeyGenerator(sessionId, namespace);
         this.sessionManager = sessionManager;
@@ -154,12 +153,12 @@ public class KhanHttpSession implements HttpSession, Serializable {
             log.debug("KhanHttpSession.attributes=" + attributes);
         }
 
-        //session.setAttribute("khansid", sessionId);
-        //KhanSessionManager.getInstance().addSessionId(sessionId);
-        //sessionManager.addSessionId(sessionId);
+        //session.setAttribute("khansid", khanSessionId);
+        //KhanSessionManager.getInstance().addSessionId(khanSessionId);
+        //sessionManager.addSessionId(khanSessionId);
 
         if (log.isDebugEnabled()) {
-            log.debug("New KhanHttpSession is created. (sessionId: " + sessionId + ", attributes: " + attributes + ")");
+            log.debug("New KhanHttpSession is created. (khanSessionId: " + sessionId + ", attributes: " + attributes + ")");
         }
     }
 
@@ -241,6 +240,11 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
     }
 
+    @Override
+    public String getId() {
+        return khanSessionId;
+    }
+
     /**
      * Returns the object bound with the specified name in this session, or
      * <code>null</code> if no object is bound under the name.
@@ -259,7 +263,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("getAttribute is called. (sessionId: " + sessionId + ", " + name + " -> " + value + ")");
+            log.debug("getAttribute is called. (khanSessionId: " + khanSessionId + ", " + name + " -> " + value + ")");
         }
 
         return value;
@@ -307,7 +311,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
     public void invalidate() {
 
         if (log.isDebugEnabled()) {
-            log.debug("invalidate called. (sessionId: " + sessionId + ")");
+            log.debug("invalidate called. (khanSessionId: " + khanSessionId + ")");
 
             Throwable t = new Throwable();
             String message = ">>> Invalidate !!";
@@ -354,7 +358,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
     public void setAttribute(String name, Object value) {
 
         if (log.isDebugEnabled()) {
-            log.debug("setAttribute called. (sessionId: " + sessionId + ", " + name + " -> " + value + ")");
+            log.debug("setAttribute called. (khanSessionId: " + khanSessionId + ", " + name + " -> " + value + ")");
         }
 
         if (value == null) {
@@ -394,14 +398,14 @@ public class KhanHttpSession implements HttpSession, Serializable {
     @Override
     public String[] getValueNames() {
         Enumeration<String> names = (Enumeration<String>) getAttributeNames();
-        return Collections.list(names).toArray(new String[]{});
+        String[] name = Collections.list(names).toArray( new String[]{} );
+        return name;
     }
 
-    @Override
-    public String getId() {
-        return sessionId;
-    }
-
+    /**
+     * return Session creation time
+     * @return
+     */
     @Override
     public long getCreationTime() {
         if (khanSessionMetadata == null || khanSessionMetadata.getCreationTime() == null) {
@@ -411,6 +415,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
     }
 
+    /**
+     * return last accessed time
+     * @return
+     */
     @Override
     public long getLastAccessedTime() {
         if (khanSessionMetadata == null || khanSessionMetadata.getLastAccessedTime() == null) {
@@ -420,41 +428,70 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
     }
 
-    @Override
-    public int getMaxInactiveInterval() {
-        return this.maxInactiveIntervalSeconds;
-    }
-
-    @Override
-    public void setMaxInactiveInterval(int interval) {
-        this.maxInactiveIntervalSeconds = interval;
-        session.setMaxInactiveInterval(interval);
-    }
-
+    /**
+     * get servlet context
+     * @return
+     */
     @Override
     public ServletContext getServletContext() {
         return session.getServletContext();
     }
 
+    /**
+     * get HttpSessionContext
+     * @return
+     */
     @SuppressWarnings("deprecation")
     @Override
     public HttpSessionContext getSessionContext() {
         return session.getSessionContext();
     }
 
+    /**
+     * is new session
+     * @return
+     */
     @Override
     public boolean isNew() {
         return isNewlyCreated;
     }
 
+    /**
+     * put value to session
+     * @param name
+     * @param value
+     */
     @Override
     public void putValue(String name, Object value) {
         setAttribute(name, value);
     }
 
+    /**
+     * remove session attribute from session
+     * @param name
+     */
     @Override
     public void removeValue(String name) {
         removeAttribute(name);
+    }
+
+    /**
+     * get max inactive seconds
+     * @return
+     */
+    @Override
+    public int getMaxInactiveInterval() {
+        return this.maxInactiveIntervalSec;
+    }
+
+    /**
+     * set max inactive seconds
+     * @param interval
+     */
+    @Override
+    public void setMaxInactiveInterval(int interval) {
+        this.maxInactiveIntervalSec = interval;
+        session.setMaxInactiveInterval(interval);
     }
 
     /**
