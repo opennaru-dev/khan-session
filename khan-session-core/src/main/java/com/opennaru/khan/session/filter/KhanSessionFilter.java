@@ -21,10 +21,7 @@
  */
 package com.opennaru.khan.session.filter;
 
-import com.opennaru.khan.session.KhanHttpSession;
-import com.opennaru.khan.session.KhanSessionConfig;
-import com.opennaru.khan.session.KhanSessionHttpRequest;
-import com.opennaru.khan.session.KhanSessionKeyGenerator;
+import com.opennaru.khan.session.*;
 import com.opennaru.khan.session.listener.SessionLoginManager;
 import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionId;
@@ -37,11 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.UUID;
 
@@ -219,6 +215,13 @@ public abstract class KhanSessionFilter implements Filter {
             enableMemoryStatistics = true;
         }
         khanSessionConfig.setEnableMemoryStatistics(enableMemoryStatistics);
+
+        boolean enableImmediateSave = false;
+        if( getConfigValue(config, Constants.ENABLE_IMMEDIATED_SAVE) != null &&
+                getConfigValue(config, Constants.ENABLE_IMMEDIATED_SAVE).equals("true") ) {
+            enableImmediateSave = true;
+        }
+        khanSessionConfig.setEnableImmediateSave(enableImmediateSave);
     }
 
     /**
@@ -265,10 +268,10 @@ public abstract class KhanSessionFilter implements Filter {
     protected Cookie generateSessionIdCookie(String sessionIdValue) {
 
         Cookie sessionIdCookie = new Cookie(khanSessionConfig.getSessionIdKey(), sessionIdValue);
-        if (khanSessionConfig.getDomain() != null) {
+        if (khanSessionConfig.getDomain() != null && !khanSessionConfig.getDomain().equals("")) {
             sessionIdCookie.setDomain(khanSessionConfig.getDomain());
         }
-        if (khanSessionConfig.getPath() != null) {
+        if (khanSessionConfig.getPath() != null && !khanSessionConfig.getPath().equals("")) {
             sessionIdCookie.setPath(khanSessionConfig.getPath());
         } else {
             sessionIdCookie.setPath("/");
@@ -345,7 +348,7 @@ public abstract class KhanSessionFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
 
         if (log.isDebugEnabled()) {
-            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            log.debug("===== >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         }
         if (log.isTraceEnabled()) {
             Throwable t = new Throwable();
@@ -539,7 +542,7 @@ public abstract class KhanSessionFilter implements Filter {
                         }
 
                         if (log.isDebugEnabled())
-                            log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                            log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< =====");
                     }
 
                 } finally {
@@ -562,4 +565,47 @@ public abstract class KhanSessionFilter implements Filter {
         }
         sessionManager.destroy();
     }
+
+
+//    private final class KhanSessionResponseWrapper extends HttpServletResponseWrapper
+//    {
+//
+//        MyServletOutputStream stream = new MyServletOutputStream();
+//
+//        public KhanSessionResponseWrapper(KhanSessionHttpRequest request, HttpServletResponse httpServletResponse)
+//        {
+//            super(httpServletResponse);
+//        }
+//
+//        public ServletOutputStream getOutputStream() throws IOException
+//        {
+//            return stream;
+//        }
+//
+//        public PrintWriter getWriter() throws IOException
+//        {
+//            return new PrintWriter(stream);
+//        }
+//
+//        public byte[] getWrapperBytes()
+//        {
+//            return stream.getBytes();
+//        }
+//    }
+//
+//    private final class MyServletOutputStream extends ServletOutputStream
+//    {
+//        private ByteArrayOutputStream out = new ByteArrayOutputStream();
+//
+//        public void write(int b) throws IOException
+//        {
+//            out.write(b);
+//        }
+//
+//        public byte[] getBytes()
+//        {
+//            return out.toByteArray();
+//        }
+//
+//    }
 }
