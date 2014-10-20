@@ -61,6 +61,9 @@ public class KhanSessionConfig {
     // enable Memory statistics
     private boolean enableMemoryStatistics;
 
+    // for spring security
+    private boolean enableImmediateSave;
+
     /**
      * check if library mode
      * @return
@@ -271,6 +274,14 @@ public class KhanSessionConfig {
      */
     public void setEnableMemoryStatistics(boolean enableMemoryStatistics) {
         this.enableMemoryStatistics = enableMemoryStatistics;
+    }
+
+    public boolean isEnableImmediateSave() {
+        return enableImmediateSave;
+    }
+
+    public void setEnableImmediateSave(boolean enableImmediateSave) {
+        this.enableImmediateSave = enableImmediateSave;
     }
 
     @Override

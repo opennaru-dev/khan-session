@@ -21,6 +21,7 @@
  */
 package com.opennaru.khan.session;
 
+import com.opennaru.khan.session.filter.KhanSessionFilter;
 import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StackTraceUtil;
@@ -329,8 +330,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
             this.khanSessionMetadata = null;
             this.attributes = null;
 
-            //
-            //sessionManager.getSessionMonitor().sessionDestroyed();
         } catch (NullPointerException e) {
             log.debug("invalidate." + e.getMessage() );
         } catch (IllegalStateException ise) {
@@ -345,7 +344,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
     @Override
     public void removeAttribute(String name) {
         reloadAttributes();
-        attributes.remove(name);
+        if( attributes != null )
+            attributes.remove(name);
         saveAttributesToStore();
     }
 
@@ -372,7 +372,11 @@ public class KhanHttpSession implements HttpSession, Serializable {
 
                 //reloadAttributes();
                 attributes.put(name, (Serializable) value);
-                //saveAttributesToStore();
+
+                // spring-security 사용할 때 켜기
+                KhanSessionConfig config = KhanSessionFilter.getKhanSessionConfig();
+                if( config.isEnableImmediateSave() )
+                    saveAttributesToStore();
             } catch (NullPointerException e) {
             }
         } else {
@@ -398,8 +402,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
     @Override
     public String[] getValueNames() {
         Enumeration<String> names = (Enumeration<String>) getAttributeNames();
-        String[] name = Collections.list(names).toArray( new String[]{} );
-        return name;
+        return Collections.list(names).toArray(new String[]{});
     }
 
     /**
@@ -456,6 +459,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
         return isNewlyCreated;
     }
 
+    public void setNew() {
+        isNewlyCreated = true;
+    }
+
     /**
      * put value to session
      * @param name
@@ -499,9 +506,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     private void saveAttributesToStore() {
         sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
-
         KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
-
     }
 
     /**

@@ -129,4 +129,5 @@ public class Constants {
      */
     public static final String ENABLE_MEMORY_STATISTICS = "enableMemoryStatistics";
 
+    public static final String ENABLE_IMMEDIATED_SAVE = "enableImmediateSave";
 }

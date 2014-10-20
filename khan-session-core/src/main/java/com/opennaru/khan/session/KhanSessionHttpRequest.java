@@ -28,9 +28,7 @@ import com.opennaru.khan.session.store.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -118,22 +116,25 @@ public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
         if( create ) {
 //            this.sessionId = UUID.randomUUID().toString();
 //            SessionIdThreadStore.set(sessionId);
-
+//            session.setNew();
+//            log.debug("&&&&& createNewSession=" + sessionId);
+            //
 //            log.debug("khan.session.getSession.create=" + System.getProperty("khan.session.getSession.create"));
 
-//            if( System.getProperty("khan.session.getSession.create", "true").equals("true") ) {
-                log.debug("***** >> SessionIdThreadStore.get()=" + SessionIdThreadStore.get());
-                HttpSession _session = super.getSession(true);
+            log.debug("***** >> SessionIdThreadStore.get()=" + SessionIdThreadStore.get());
+            HttpSession _session = super.getSession(true);
 
-                store.put(
-                        session.getKeyGenerator().generate(KhanHttpSession.ATTRIBUTES_KEY),
-                        new ConcurrentHashMap<Object, Object>(),
-                        timeoutMin
-                );
+            this.session = new KhanHttpSession(sessionId, store, namespace,
+                    timeoutMin, _session, sessionManager, clientIp);
 
-                this.session = new KhanHttpSession(sessionId, store, namespace,
-                        timeoutMin, _session, sessionManager, clientIp);
-//            }
+            _session.setAttribute("khan.session.id", this.sessionId);
+            log.debug("&&&&& createNewRawSession=" + _session.getId());
+
+            store.put(
+                    session.getKeyGenerator().generate(KhanHttpSession.ATTRIBUTES_KEY),
+                    new ConcurrentHashMap<Object, Object>(),
+                    timeoutMin
+            );
         }
 
         return this.session;
