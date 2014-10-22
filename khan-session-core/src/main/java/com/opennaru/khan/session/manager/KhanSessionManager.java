@@ -181,6 +181,19 @@ public class KhanSessionManager {
     }
 
     /**
+     * Infinispan에 저장된 Session의 총 갯수
+     * 세션은 메타데이터와 Attribute 두 개의 키로 나누어 저장되어 / 2 값이 세션의 총 갯수
+     * @return
+     */
+    public int getTotalSessionCount() {
+        if( statsEnabled ) {
+            return (sessionStore.size() / 2);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Cleanup all sessions
      *
      */
