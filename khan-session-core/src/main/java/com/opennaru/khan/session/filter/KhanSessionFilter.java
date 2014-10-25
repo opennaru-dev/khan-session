@@ -528,24 +528,34 @@ public abstract class KhanSessionFilter implements Filter {
                         if (log.isDebugEnabled()) {
                             log.debug("*****[[[[[ session.getId()=" + session.getId() + "]]]]]*****");
                         }
-                        // need reloading from the store to work
-                        //session.reloadAttributes();
-                        session.save();
+
 
                         // 중복로그인 되었을 경우 url forward
                         if (redirectLogoutUrl) {
                             try {
+                                // 중복로그인된 세션의 정보를 지운다
+                                String key = KhanSessionKeyGenerator.generate("$", "SID", _wrappedRequest.getSession(false).getId());
+                                KhanSessionFilter.getSessionStore().loginRemove(key);
+                                SessionLoginManager.getInstance().logout(_wrappedRequest);
+                                _wrappedRequest.getSession().invalidate();
+
                                 request.getRequestDispatcher(khanSessionConfig.getLogoutUrl()).forward(request, response);
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
+
+                        // need reloading from the store to work
+                        //session.reloadAttributes();
+                        session.save();
 
                         if (log.isDebugEnabled())
                             log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< =====");
                     }
 
                 } finally {
+
                     _request.removeAttribute(alreadyFilteredAttributeName);
                     SessionIdThreadStore.remove();
                 }
