@@ -196,11 +196,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
             }
         }
 
-//        if( khanSessionMetadata == null && attributes == null ) {
-//            createSessionStore();
-//        }
-
-        //KhanSessionMetadata khanSessionMetadata = sessionStore.get(keyGenerator.generate(METADATA_KEY));
         boolean isNotInvalidated = khanSessionMetadata != null &&
                 khanSessionMetadata.getInvalidated() != null &&
                 khanSessionMetadata.getInvalidated() == false;
