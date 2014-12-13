@@ -28,6 +28,7 @@ import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionIdThreadStore;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.CookieUtil;
+import com.opennaru.khan.session.util.PropertyUtil;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
@@ -79,7 +80,7 @@ public abstract class KhanSessionFilter implements Filter {
      */
     protected static String getConfigValue(FilterConfig config, String keyName) {
         String fromInitParam = config.getInitParameter(keyName);
-        return fromInitParam;
+        return PropertyUtil.getProperty(fromInitParam);
     }
 
     /**
