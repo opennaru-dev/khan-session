@@ -338,7 +338,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     @Override
     public void removeAttribute(String name) {
-        reloadAttributes();
+//        BUG : Session attribute restored when remove attribute
+//        reloadAttributes();
         if( attributes != null )
             attributes.remove(name);
         saveAttributesToStore();

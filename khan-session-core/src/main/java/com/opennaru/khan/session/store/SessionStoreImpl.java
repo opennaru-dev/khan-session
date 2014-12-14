@@ -68,10 +68,12 @@ public class SessionStoreImpl implements SessionStore {
         try {
             V value = (V) sessionCache.get(key);
 
-            if (log.isTraceEnabled()) {
+            // Old log4j library does not support trace level
+            // So, change trace --> debug
+            if (log.isDebugEnabled()) {
                 Throwable t = new Throwable();
                 String message = ">>> GET [" + key + " -> " + value + "]";
-                log.trace(message + StackTraceUtil.getStackTrace(t));
+                log.debug(message + StackTraceUtil.getStackTrace(t));
             }
             return value;
 
@@ -91,11 +93,11 @@ public class SessionStoreImpl implements SessionStore {
     @Override
     public <V extends Serializable> void put(String key, V value, long expire) {
 
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             Throwable t = new Throwable();
             String message = ">>> SET (expire:" + expire + ") [" + key + " -> "
                     + value + "]";
-            log.trace(message + StackTraceUtil.getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -116,10 +118,10 @@ public class SessionStoreImpl implements SessionStore {
     @Override
     public void remove(String key) {
 
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             Throwable t = new Throwable();
             String message = ">>> DELETE: [" + key + "]";
-            log.trace(message + StackTraceUtil.getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -171,10 +173,10 @@ public class SessionStoreImpl implements SessionStore {
         try {
             V value = (V) sessionCache.loginGet(key);
 
-            if (log.isTraceEnabled()) {
+            if (log.isDebugEnabled()) {
                 Throwable t = new Throwable();
                 String message = ">>> GET [" + key + " -> " + value + "]";
-                log.trace(message + StackTraceUtil.getStackTrace(t));
+                log.debug(message + StackTraceUtil.getStackTrace(t));
             }
             return value;
 
@@ -194,11 +196,11 @@ public class SessionStoreImpl implements SessionStore {
     @Override
     public <V extends Serializable> void loginPut(String key, V value,
                                                   long expire) {
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             Throwable t = new Throwable();
             String message = ">>> SET (expire:" + expire + ") [" + key + " -> "
                     + value + "]";
-            log.trace(message + StackTraceUtil.getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
@@ -219,10 +221,10 @@ public class SessionStoreImpl implements SessionStore {
      */
     @Override
     public void loginRemove(String key) {
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             Throwable t = new Throwable();
             String message = ">>> DELETE: [" + key + "]";
-            log.trace(message + StackTraceUtil.getStackTrace(t));
+            log.debug(message + StackTraceUtil.getStackTrace(t));
         }
 
         try {
