@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionHttpRequest extends HttpServletRequestWrapper {
-    private static Logger log = LoggerFactory.getLogger("KhanSessionHttpRequest");
+    private static Logger log = LoggerFactory.getLogger(KhanSessionHttpRequest.class);
 
     private KhanHttpSession session;
 

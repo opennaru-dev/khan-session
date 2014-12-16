@@ -52,7 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Junshik Jeon(service@opennaru.com, nameislocus@gmail.com)
  */
 public class KhanSessionManager {
-    private static Logger log = LoggerFactory.getLogger("KhanSessionManager");
+    private static Logger log = LoggerFactory.getLogger(KhanSessionManager.class);
 
     /**
      * 애플리케이션 별로 SessionManager를 보관
