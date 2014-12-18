@@ -354,29 +354,38 @@ public class KhanHttpSession implements HttpSession, Serializable {
     public void setAttribute(String name, Object value) {
 
         if (log.isDebugEnabled()) {
-            log.debug("setAttribute called. (khanSessionId: " + khanSessionId + ", " + name + " -> " + value + ")");
+            log.debug("setAttribute called. (khanSessionId: " + khanSessionId + ", " + name + " -> [" + value + "])");
+            log.debug("value=[" + value + "]");
         }
 
         if (value == null) {
             removeAttribute(name);
+            return;
         }
+
         if (value instanceof Serializable) {
             try {
-                if( !isValid() ) {
+                if (!isValid()) {
                     throw new IllegalStateException("Invalid Session");
                 }
 
-                //reloadAttributes();
                 attributes.put(name, (Serializable) value);
 
                 // spring-security 사용할 때 켜기
                 KhanSessionConfig config = KhanSessionFilter.getKhanSessionConfig();
-                if( config.isEnableImmediateSave() )
+                if (config.isEnableImmediateSave())
                     saveAttributesToStore();
             } catch (NullPointerException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("NullPointerException", e);
+                }
             }
         } else {
-            String message = "The value should be an instance of java.io.Serializable. (" + value + ")";
+            String message = "The value should be an instance of java.io.Serializable. (name=[" + name + "], value=[" + value + "])";
+            if (log.isDebugEnabled()) {
+                Throwable t = new Throwable();
+                log.debug(">>> Not serialized!\n\n" + StackTraceUtil.getStackTrace(t));
+            }
             throw new IllegalArgumentException(message);
         }
     }
