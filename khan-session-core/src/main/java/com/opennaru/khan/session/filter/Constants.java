@@ -79,6 +79,12 @@ public class Constants {
     public static final String EXCLUDE_REG_EXP = "excludeRegExp";
 
     /**
+     * use authenticator
+     */
+    public static final String USE_AUTHENTICATOR = "useAuthenticator";
+
+    /**
+    /**
      * duplicate login key
      */
     public static final String ALLOW_DUPLICATE_LOGIN = "allowDuplicateLogin";

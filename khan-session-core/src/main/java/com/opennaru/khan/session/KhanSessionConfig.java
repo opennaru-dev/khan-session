@@ -46,6 +46,9 @@ public class KhanSessionConfig {
     private boolean secure;
     // cookie is httpOnly
     private boolean httpOnly;
+
+    private boolean useAuthenticator;
+
     // if allow duplicate login
     private boolean allowDuplicateLogin;
 
@@ -180,6 +183,14 @@ public class KhanSessionConfig {
         this.httpOnly = httpOnly;
     }
 
+    public boolean useAuthenticator() {
+        return useAuthenticator;
+    }
+
+    public void setUseAuthenticator(boolean useAuthenticator) {
+        this.useAuthenticator = useAuthenticator;
+    }
+
     /**
      * is allow duplicate login
       * @return
@@ -295,6 +306,7 @@ public class KhanSessionConfig {
                 ", path='" + path + '\'' +
                 ", secure=" + secure +
                 ", httpOnly=" + httpOnly +
+                ", useAuthenticator=" + useAuthenticator +
                 ", allowDuplicateLogin=" + allowDuplicateLogin +
                 ", logoutUrl='" + logoutUrl + '\'' +
                 ", sessionTimeoutMin=" + sessionTimeoutMin +

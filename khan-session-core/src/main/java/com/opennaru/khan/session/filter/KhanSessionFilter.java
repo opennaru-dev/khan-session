@@ -191,6 +191,10 @@ public abstract class KhanSessionFilter implements Filter {
             khanSessionConfig.setSessionTimeoutMin(Integer.valueOf(sessionTimeout));
         }
 
+        // use authenticator
+        khanSessionConfig.setUseAuthenticator(getConfigValue(config, Constants.USE_AUTHENTICATOR) != null
+                && getConfigValue(config, Constants.USE_AUTHENTICATOR).equals("true"));
+
         // allow duplicated login
         khanSessionConfig.setAllowDuplicateLogin(getConfigValue(config, Constants.ALLOW_DUPLICATE_LOGIN) != null
                 && getConfigValue(config, Constants.ALLOW_DUPLICATE_LOGIN).equals("true"));
@@ -457,6 +461,24 @@ public abstract class KhanSessionFilter implements Filter {
 
                         boolean redirectLogoutUrl = false;
                         String khan_uid = "";
+
+
+                        // Authenticator 사용할 경우
+                        if (khanSessionConfig.useAuthenticator() == true) {
+                            log.debug("> _wrappedRequest.getRemoteUser()=" + _wrappedRequest.getRemoteUser());
+                            if (_wrappedRequest.getRemoteUser() == null) {
+                                khan_uid = (String) _wrappedRequest.getSession(false).getAttribute("khan.uid");
+                                log.debug("> khan_uid=" + khan_uid);
+                                if (khan_uid != null) {
+                                    _wrappedRequest.login(khan_uid, khan_uid);
+                                }
+                            } else {
+                                HttpSession _session = _request.getSession(false);
+                                if (_session.getAttribute("___KHAN___") == null) {
+                                    _request.getSession(false).setAttribute("___KHAN___", "1");
+                                }
+                            }
+                        }
 
                         // 중복 로그인을 허용하지 않는다고 설정되어 있는 경우
                         if (khanSessionConfig.isAllowDuplicateLogin() == false) {
