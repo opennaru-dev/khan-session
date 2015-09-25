@@ -74,21 +74,21 @@ public class RedisTest {
         jedis.del("foo");
     }
 
-    @Test
-    public void testURL() {
-
-        String host = "redis://:foobared@localhost:6379/1";
-        URI uri = URI.create(host);
-        if (uri.getScheme() != null && uri.getScheme().equals("redis")) {
-            String h = uri.getHost();
-            int port = uri.getPort();
-            String password = uri.getUserInfo().split(":", 2)[1];
-            int database = Integer.parseInt(uri.getPath().split("/", 2)[1]);
-
-            System.out.println("h=" + h);
-            System.out.println("port=" + port);
-            System.out.println("password=" + password );
-            System.out.println("database=" + database );
-        }
-    }
+//    @Test
+//    public void testURL() {
+//
+//        String host = "redis://localhost:6379/1";
+//        URI uri = URI.create(host);
+//        if (uri.getScheme() != null && uri.getScheme().equals("redis")) {
+//            String h = uri.getHost();
+//            int port = uri.getPort();
+//            String password = uri.getUserInfo().split(":", 2)[1];
+//            int database = Integer.parseInt(uri.getPath().split("/", 2)[1]);
+//
+//            System.out.println("h=" + h);
+//            System.out.println("port=" + port);
+//            System.out.println("password=" + password );
+//            System.out.println("database=" + database );
+//        }
+//    }
 }
