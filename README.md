@@ -187,7 +187,7 @@
 
 </web-app>
 ```
-```
+
 
  * **Library 모드를 사용할 때 설정**
   * khan-session.xml 파일에서 설정
