@@ -241,7 +241,22 @@ public abstract class KhanSessionFilter implements Filter {
                         && cookie.getValue() != null
                         && cookie.getValue().trim().length() > 0 ) {
 
-                    if( isValidSession(createSessionRequest(req, cookie.getValue())) ) {
+                    String sessionKey = cookie.getValue();
+//                    // check session key is in store
+                    boolean isContains = KhanSessionStore.contains(sessionKey);
+                    if( log.isDebugEnabled() ) {
+                        log.debug("Check Session id key [" + sessionKey + "] is exist. / isContains=" + isContains);
+                    }
+                    if( isContains == false ) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("SessionId cookie expired. ("
+                                    + khanSessionConfig.getSessionIdKey() + " -> "
+                                    + cookie.getValue() + ")");
+                        }
+                        return null;
+                    }
+
+                    if( isValidSession(createSessionRequest(req, sessionKey)) ) {
                         if (log.isDebugEnabled()) {
                             log.debug("SessionId cookie found. ("
                                     + khanSessionConfig.getSessionIdKey() + " -> "
@@ -253,7 +268,7 @@ public abstract class KhanSessionFilter implements Filter {
                             log.debug("SessionId cookie found but it's invalid. ("
                                     + khanSessionConfig.getSessionIdKey()
                                     + " -> "
-                                    + cookie.getValue() + ")");
+                                    + sessionKey + ")");
                         }
                     }
                 }

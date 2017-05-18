@@ -200,7 +200,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 khanSessionMetadata.getInvalidated() != null &&
                 khanSessionMetadata.getInvalidated() == false;
 
-//        boolean isNotExpired = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY)) != null;
         boolean isNotExpired = attributes != null;
 
         if (log.isDebugEnabled()) {

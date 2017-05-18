@@ -105,4 +105,25 @@ public class KhanSessionStore {
         return attributes.get(name);
     }
 
+    public static boolean contains(String khanSessionId) {
+
+        String nameSpace = KhanSessionFilter.getKhanSessionConfig().getNamespace();
+
+        String sidKey = KhanSessionKeyGenerator.generate(nameSpace, khanSessionId, KhanHttpSession.METADATA_KEY);
+
+        boolean isContains = false;
+
+        if( log.isDebugEnabled() ) {
+            log.debug("sidKey=" + sidKey);
+        }
+
+        isContains = KhanSessionFilter.getSessionStore().contains(sidKey);
+
+        if( log.isDebugEnabled() ) {
+            log.debug("isContains=" + isContains);
+        }
+
+        return isContains;
+    }
+
 }

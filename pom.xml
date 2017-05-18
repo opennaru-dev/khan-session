@@ -50,4 +50,10 @@
         <khan.session.version>1.3.0</khan.session.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>opennaru</id>
+            <url>http://maven.nameislocus.iptime.org/nexus/content/repositories/opennaru</url>
+        </repository>
+    </distributionManagement>
 </project>

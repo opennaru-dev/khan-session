@@ -34,7 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class InfinispanHotRodImpl implements SessionCache {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * HotRod Remote Cache Manager
@@ -123,7 +125,7 @@ public class InfinispanHotRodImpl implements SessionCache {
         InputStream stream = cl.getResourceAsStream(configFile);
 
         if (stream == null) {
-            log.error("Can't Found configFile=" + configFile);
+            logger.error("Can't Found configFile=" + configFile);
         } else {
             try {
                 builder.withProperties(loadFromStream(stream));
@@ -150,6 +152,16 @@ public class InfinispanHotRodImpl implements SessionCache {
      */
     @Override
     public <T> boolean contains(String key) {
+        if( logger.isDebugEnabled() ) {
+            System.out.println("InfinispanHotRodImpl/contains");
+            Set keySet = cache.keySet();
+            Iterator<String> i = keySet.iterator();
+            while( i.hasNext() ) {
+                String name = i.next();
+                logger.debug("key=" + name);
+                System.out.println("key=" + name);
+            }
+        }
         return cache.containsKey(key);
     }
 
@@ -165,8 +177,8 @@ public class InfinispanHotRodImpl implements SessionCache {
     public <T> void put(String key, T value, long secondsToExpire)
             throws IOException {
         cache.put(key, value, secondsToExpire, TimeUnit.SECONDS, secondsToExpire, TimeUnit.SECONDS);
-        if( log.isTraceEnabled() )
-            log.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( logger.isTraceEnabled() )
+            logger.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     /**
@@ -179,8 +191,8 @@ public class InfinispanHotRodImpl implements SessionCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws IOException {
-        if( log.isTraceEnabled() )
-            log.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( logger.isTraceEnabled() )
+            logger.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
 
         return (T) cache.get(key);
     }
@@ -195,8 +207,8 @@ public class InfinispanHotRodImpl implements SessionCache {
     public <T> void delete(String key) throws IOException {
         cache.remove(key);
 
-        if( log.isTraceEnabled() )
-            log.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
+        if( logger.isTraceEnabled() )
+            logger.trace("@@@@@@@@@@@@@ cache.size=" + cache.size());
     }
 
     /**
@@ -206,8 +218,8 @@ public class InfinispanHotRodImpl implements SessionCache {
      */
     @Override
     public int size() throws IOException {
-        if( log.isTraceEnabled() ) {
-            log.trace("sizeof=" + cache.size());
+        if( logger.isTraceEnabled() ) {
+            logger.trace("sizeof=" + cache.size());
         }
         return cache.size();
     }
@@ -268,8 +280,8 @@ public class InfinispanHotRodImpl implements SessionCache {
      */
     @Override
     public int loginSize() throws IOException {
-        if( log.isTraceEnabled() ) {
-            log.trace("sizeof=" + loginCache.size());
+        if( logger.isTraceEnabled() ) {
+            logger.trace("sizeof=" + loginCache.size());
         }
         return loginCache.size();
     }
