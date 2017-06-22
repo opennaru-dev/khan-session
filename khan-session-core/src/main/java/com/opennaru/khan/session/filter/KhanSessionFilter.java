@@ -577,7 +577,9 @@ public abstract class KhanSessionFilter implements Filter {
                                 SessionLoginManager.getInstance().logout(_wrappedRequest);
                                 _wrappedRequest.getSession().invalidate();
 
-                                request.getRequestDispatcher(khanSessionConfig.getLogoutUrl()).forward(request, response);
+                                if( !StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl() ) ) {
+                                    request.getRequestDispatcher(khanSessionConfig.getLogoutUrl()).forward(request, response);
+                                }
 
                             } catch (Exception e) {
                                 e.printStackTrace();
