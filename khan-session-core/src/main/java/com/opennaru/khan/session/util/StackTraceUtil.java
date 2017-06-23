@@ -40,10 +40,14 @@ public class StackTraceUtil {
      * @return StackTrace String
      */
     public static String getStackTrace(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        return sw.toString();
+        if( System.getProperty("KHAN_SM_DEBUG_STACK", "false").equals("true") ) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            t.printStackTrace(pw);
+            return sw.toString();
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -53,13 +57,17 @@ public class StackTraceUtil {
      * @return StackTrace String
      */
     public static String getStackTrace(StackTraceElement[] trace) {
-        StringBuffer sb = new StringBuffer();
+        if( System.getProperty("KHAN_SM_DEBUG_STACK", "false").equals("true") ) {
+            StringBuffer sb = new StringBuffer();
 
-        sb.append("============================================\n");
-        for (int i = 0; i < trace.length; i++)
-            sb.append("\tat " + trace[i] + "\n");
+            sb.append("============================================\n");
+            for (int i = 0; i < trace.length; i++)
+                sb.append("\tat " + trace[i] + "\n");
 
-        sb.append("--------------------------------------------\n");
-        return sb.toString();
+            sb.append("--------------------------------------------\n");
+            return sb.toString();
+        } else {
+            return "";
+        }
     }
 }
