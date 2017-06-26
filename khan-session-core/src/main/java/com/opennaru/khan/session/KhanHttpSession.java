@@ -280,6 +280,9 @@ public class KhanHttpSession implements HttpSession, Serializable {
 
         Object value = null;
         if (isValid()) {
+            if( localChangedMap.get(keyGenerator.generate(CHANGE_RECENT_KEY)) != null ) {
+                attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
+            }
             value = attributes.get(name);
         } else {
             value = null;
@@ -299,6 +302,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
     @Override
     public Enumeration<String> getAttributeNames() {
         if (isValid()) {
+            if( localChangedMap.get(keyGenerator.generate(CHANGE_RECENT_KEY)) != null ) {
+                attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
+            }
+
             final Iterator<Object> names = attributes.keySet().iterator();
             Enumeration<String> e = new Enumeration<String>() {
                 public boolean hasMoreElements() {
@@ -399,6 +406,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 }
 
                 attributes.put(name, (Serializable) value);
+
                 numberOfChangeAttribute++;
 
                 // spring-security 사용할 때 켜기
@@ -541,7 +549,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     private void saveAttributesToStore() {
         if( config.getSessionSaveDelay() <= 0 ) {
-            sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
+            ConcurrentHashMap<Object, Object> valueMap = toMap();
+            if( valueMap.size() > 0 ) {
+                sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), valueMap, getMaxInactiveInterval());
+            }
             KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
             log.debug("** saveAttributesToStore without delay **");
             return;
@@ -562,7 +573,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
             needToSave = true;
         } else {
             if( localChangedMap.get(CHANGE_KEY) != null ) {
-                needToSave = true;
+                needToSave = false;
             } else {
                 if (sessionStore.get(CHANGE_KEY) == null) {
                     needToSave = true;
@@ -573,7 +584,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
 
         if( needToSave ) {
-            sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
+            ConcurrentHashMap<Object, Object> valueMap = toMap();
+            if( valueMap.size() > 0 ) {
+                sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), valueMap, getMaxInactiveInterval());
+            }
             KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
 
             if( log.isDebugEnabled() ) {

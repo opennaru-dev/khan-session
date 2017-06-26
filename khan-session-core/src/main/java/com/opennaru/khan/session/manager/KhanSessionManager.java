@@ -308,8 +308,9 @@ public class KhanSessionManager {
      * @param session
      */
     public void putSessionId(HttpSession session) {
-        if( statsEnabled )
+        if( statsEnabled ) {
             sessionIdStore.getSessionStore(appName).put(session.getId(), getSessionMemorySize(session));
+        }
 
         if( log.isDebugEnabled() ) {
             log.debug("addSessionId/size=" + sessionIdStore.getSessionStore(appName).size());
