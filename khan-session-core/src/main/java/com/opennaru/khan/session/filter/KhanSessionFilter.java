@@ -557,7 +557,9 @@ public abstract class KhanSessionFilter implements Filter {
                             String setCookie = CookieUtil.createCookieHeader(newSessionIdCookie, khanSessionConfig.isHttpOnly());
                             _response.addHeader("Set-Cookie", setCookie);
                             setSessionStatus(_request, SessionStatus.FIXED);
-                            log.debug("########### new session id=" + currentSessionId);
+                            if( log.isDebugEnabled() ) {
+                                log.debug("########### new session id=" + currentSessionId);
+                            }
                         }
 
                         // update attributes, expiration
@@ -610,8 +612,9 @@ public abstract class KhanSessionFilter implements Filter {
                         //session.reloadAttributes();
                         session.save();
 
-                        if (log.isDebugEnabled())
+                        if (log.isDebugEnabled()) {
                             log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< =====");
+                        }
                     }
 
                 } finally {

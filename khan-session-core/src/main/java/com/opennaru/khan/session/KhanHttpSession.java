@@ -554,7 +554,9 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), valueMap, getMaxInactiveInterval());
             }
             KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
-            log.debug("** saveAttributesToStore without delay **");
+            if( log.isDebugEnabled() ) {
+                log.debug("** saveAttributesToStore without delay **");
+            }
             return;
         }
 
