@@ -26,6 +26,7 @@ import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
+import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpSessionContext;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * KHAN [session manager]에서 관리하는 Session Object
@@ -58,6 +60,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
      * Key for Session Changed with setAttribute or removeAttribute method is called recently
      */
     public static final String CHANGE_RECENT_KEY = "_CHANGED_";
+
+    public static Map<String, Boolean> localChangedMap = null;
 
     /**
      *  logger
@@ -171,6 +175,12 @@ public class KhanHttpSession implements HttpSession, Serializable {
         //sessionManager.addSessionId(khanSessionId);
 
         config = KhanSessionFilter.getKhanSessionConfig();
+
+        if( localChangedMap == null ) {
+            localChangedMap = ExpiringMap.builder()
+                    .expiration(config.getSessionSaveDelay(), TimeUnit.SECONDS)
+                    .build();
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("New KhanHttpSession is created. (khanSessionId: " + sessionId + ", attributes: " + attributes + ")");
@@ -545,15 +555,20 @@ public class KhanHttpSession implements HttpSession, Serializable {
             log.debug("numberOfChangeAttribute=" + this.numberOfChangeAttribute);
             log.debug("CHANGE_KEY=" + CHANGE_KEY);
             log.debug("sessionStore.get(CHANGE_KEY)=" + sessionStore.get(CHANGE_KEY));
+            log.debug("localChangedMap.get(CHANGE_KEY)=" + localChangedMap.get(CHANGE_KEY));
         }
 
         if( this.numberOfChangeAttribute > 0 ) {
             needToSave = true;
         } else {
-            if( sessionStore.get(CHANGE_KEY) == null ) {
+            if( localChangedMap.get(CHANGE_KEY) != null ) {
                 needToSave = true;
-            }  else {
-                needToSave = false;
+            } else {
+                if (sessionStore.get(CHANGE_KEY) == null) {
+                    needToSave = true;
+                } else {
+                    needToSave = false;
+                }
             }
         }
 
@@ -566,6 +581,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 log.debug("** save session delay=" + config.getSessionSaveDelay());
             }
             if( this.numberOfChangeAttribute > 0 ) {
+                localChangedMap.put(CHANGE_KEY, true);
                 sessionStore.put(CHANGE_KEY, true, config.getSessionSaveDelay());
                 if (log.isDebugEnabled()) {
                     log.debug("sessionStore PUT expire " + config.getSessionSaveDelay());
