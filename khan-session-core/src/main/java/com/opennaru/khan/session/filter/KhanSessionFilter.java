@@ -221,7 +221,7 @@ public abstract class KhanSessionFilter implements Filter {
 
         // force logout url
         khanSessionConfig.setLogoutUrl(getConfigValue(config, Constants.LOGOUT_URL));
-        if (StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl() ) ) {
+        if (StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl().trim() ) ) {
             khanSessionConfig.setLogoutUrl("");
         }
 
