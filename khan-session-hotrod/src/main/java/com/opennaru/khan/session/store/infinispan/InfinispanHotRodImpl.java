@@ -152,6 +152,7 @@ public class InfinispanHotRodImpl implements SessionCache {
      */
     @Override
     public <T> boolean contains(String key) {
+/*
         if( logger.isDebugEnabled() ) {
             System.out.println("InfinispanHotRodImpl/contains");
             Set keySet = cache.keySet();
@@ -159,9 +160,9 @@ public class InfinispanHotRodImpl implements SessionCache {
             while( i.hasNext() ) {
                 String name = i.next();
                 logger.debug("key=" + name);
-                System.out.println("key=" + name);
             }
         }
+*/
         return cache.containsKey(key);
     }
 

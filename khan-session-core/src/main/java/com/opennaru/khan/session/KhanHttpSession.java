@@ -595,6 +595,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
             if( log.isDebugEnabled() ) {
                 log.debug("** saveAttributesToStore **");
                 log.debug("** save session delay=" + config.getSessionSaveDelay());
+                log.debug("sizeOf localChangedMap=" + localChangedMap.size());
             }
             if( this.numberOfChangeAttribute > 0 ) {
                 localChangedMap.put(CHANGE_KEY, true);
@@ -606,6 +607,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
         } else {
             if( log.isDebugEnabled() ) {
                 log.debug("** skip saveAttributesToStore ** within " + config.getSessionSaveDelay());
+                log.debug("sizeOf localChangedMap=" + localChangedMap.size());
             }
         }
 
