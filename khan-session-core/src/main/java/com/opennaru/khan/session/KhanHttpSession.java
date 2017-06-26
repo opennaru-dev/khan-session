@@ -55,6 +55,11 @@ public class KhanHttpSession implements HttpSession, Serializable {
     public static final String METADATA_KEY = "_META_";
 
     /**
+     * Key for Session Changed with setAttribute or removeAttribute method is called recently
+     */
+    public static final String CHANGE_RECENT_KEY = "_CHANGED_";
+
+    /**
      *  logger
      */
     private transient Logger log = LoggerFactory.getLogger(this.getClass());
@@ -101,6 +106,13 @@ public class KhanHttpSession implements HttpSession, Serializable {
      *  Khan Session manager
      */
     private transient KhanSessionManager sessionManager = null;
+
+    /**
+     *  Number of setAttribute or removeAttribute method call
+     */
+    private int numberOfChangeAttribute = 0;
+
+    private KhanSessionConfig config = null;
 
     /**
      * Constructor
@@ -158,6 +170,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
         //KhanSessionManager.getInstance().addSessionId(khanSessionId);
         //sessionManager.addSessionId(khanSessionId);
 
+        config = KhanSessionFilter.getKhanSessionConfig();
+
         if (log.isDebugEnabled()) {
             log.debug("New KhanHttpSession is created. (khanSessionId: " + sessionId + ", attributes: " + attributes + ")");
         }
@@ -177,6 +191,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     public KhanSessionKeyGenerator getKeyGenerator() {
         return keyGenerator;
+    }
+
+    public int getNumberOfChangeAttribute() {
+        return numberOfChangeAttribute;
     }
 
     /**
@@ -339,8 +357,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
     public void removeAttribute(String name) {
 //        BUG : Session attribute restored when remove attribute
 //        reloadAttributes();
-        if( attributes != null )
+        if( attributes != null ) {
             attributes.remove(name);
+            numberOfChangeAttribute++;
+        }
         saveAttributesToStore();
     }
 
@@ -369,6 +389,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 }
 
                 attributes.put(name, (Serializable) value);
+                numberOfChangeAttribute++;
 
                 // spring-security 사용할 때 켜기
                 KhanSessionConfig config = KhanSessionFilter.getKhanSessionConfig();
@@ -509,8 +530,53 @@ public class KhanHttpSession implements HttpSession, Serializable {
      * Save Attributes to SessionStore
      */
     private void saveAttributesToStore() {
-        sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
-        KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
+        if( config.getSessionSaveDelay() <= 0 ) {
+            sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
+            KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
+            log.debug("** saveAttributesToStore without delay **");
+            return;
+        }
+
+        boolean needToSave = true;
+        String CHANGE_KEY = keyGenerator.generate(CHANGE_RECENT_KEY);
+
+        if( log.isDebugEnabled() ) {
+            log.debug("-----");
+            log.debug("numberOfChangeAttribute=" + this.numberOfChangeAttribute);
+            log.debug("CHANGE_KEY=" + CHANGE_KEY);
+            log.debug("sessionStore.get(CHANGE_KEY)=" + sessionStore.get(CHANGE_KEY));
+        }
+
+        if( this.numberOfChangeAttribute > 0 ) {
+            needToSave = true;
+        } else {
+            if( sessionStore.get(CHANGE_KEY) == null ) {
+                needToSave = true;
+            }  else {
+                needToSave = false;
+            }
+        }
+
+        if( needToSave ) {
+            sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), toMap(), getMaxInactiveInterval());
+            KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
+
+            if( log.isDebugEnabled() ) {
+                log.debug("** saveAttributesToStore **");
+                log.debug("** save session delay=" + config.getSessionSaveDelay());
+            }
+            if( this.numberOfChangeAttribute > 0 ) {
+                sessionStore.put(CHANGE_KEY, true, config.getSessionSaveDelay());
+                if (log.isDebugEnabled()) {
+                    log.debug("sessionStore PUT expire " + config.getSessionSaveDelay());
+                }
+            }
+        } else {
+            if( log.isDebugEnabled() ) {
+                log.debug("** skip saveAttributesToStore ** within " + config.getSessionSaveDelay());
+            }
+        }
+
     }
 
     /**

@@ -58,6 +58,9 @@ public class KhanSessionConfig {
     // Session timout minute
     private Integer sessionTimeoutMin;
 
+    // Session save delay
+    private Integer sessionSaveDelay;
+
     // enable MBean statistics
     private boolean enableStatistics;
 
@@ -239,6 +242,14 @@ public class KhanSessionConfig {
         this.sessionTimeoutMin = sessionTimeoutMin;
     }
 
+    public Integer getSessionSaveDelay() {
+        return sessionSaveDelay;
+    }
+
+    public void setSessionSaveDelay(Integer sessionSaveDelay) {
+        this.sessionSaveDelay = sessionSaveDelay;
+    }
+
     /**
      * is secure
      * @return
@@ -297,21 +308,24 @@ public class KhanSessionConfig {
 
     @Override
     public String toString() {
-        return "KhanSessionConfig{" +
-                "useLibraryMode=" + useLibraryMode +
-                ", namespace='" + namespace + '\'' +
-                ", excludeRegExp='" + excludeRegExp + '\'' +
-                ", sessionIdKey='" + sessionIdKey + '\'' +
-                ", domain='" + domain + '\'' +
-                ", path='" + path + '\'' +
-                ", secure=" + secure +
-                ", httpOnly=" + httpOnly +
-                ", useAuthenticator=" + useAuthenticator +
-                ", allowDuplicateLogin=" + allowDuplicateLogin +
-                ", logoutUrl='" + logoutUrl + '\'' +
-                ", sessionTimeoutMin=" + sessionTimeoutMin +
-                ", enableStatistics=" + enableStatistics +
-                ", enableMemoryStatistics=" + enableMemoryStatistics +
-                '}';
+        final StringBuffer sb = new StringBuffer("KhanSessionConfig{");
+        sb.append("useLibraryMode=").append(useLibraryMode);
+        sb.append(", namespace='").append(namespace).append('\'');
+        sb.append(", excludeRegExp='").append(excludeRegExp).append('\'');
+        sb.append(", sessionIdKey='").append(sessionIdKey).append('\'');
+        sb.append(", domain='").append(domain).append('\'');
+        sb.append(", path='").append(path).append('\'');
+        sb.append(", secure=").append(secure);
+        sb.append(", httpOnly=").append(httpOnly);
+        sb.append(", useAuthenticator=").append(useAuthenticator);
+        sb.append(", allowDuplicateLogin=").append(allowDuplicateLogin);
+        sb.append(", logoutUrl='").append(logoutUrl).append('\'');
+        sb.append(", sessionTimeoutMin=").append(sessionTimeoutMin);
+        sb.append(", sessionSaveDelay=").append(sessionSaveDelay);
+        sb.append(", enableStatistics=").append(enableStatistics);
+        sb.append(", enableMemoryStatistics=").append(enableMemoryStatistics);
+        sb.append(", enableImmediateSave=").append(enableImmediateSave);
+        sb.append('}');
+        return sb.toString();
     }
 }

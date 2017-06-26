@@ -160,7 +160,7 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
                 log.debug("uid=" + uid);
             }
             //System.out.println("####### duplicated login=" + uid);
-//    		TODO : Send 중복 로그인 정보 to Server...
+//          TODO : Send 중복 로그인 정보 to Server...
 
         }
 
@@ -210,8 +210,19 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
     public String loggedInUserId(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return (String)session.getAttribute("khan.uid");
-//        SessionLoginManager sessionLoginManager = (SessionLoginManager) session.getAttribute("khan.uid");
+    }
 
+    /**
+     * Get Current Session ID's Login Status
+     * if login is duplicated then return "DUPLICATED" else return log in userId.
+     *
+     * @param request
+     * @return
+     */
+    public String loginStatus(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String sidKey = KhanSessionKeyGenerator.generate("$", "SID", session.getId());
+        return KhanSessionFilter.getSessionStore().loginGet(sidKey);
     }
 
 }
