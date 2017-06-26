@@ -205,6 +205,7 @@ public abstract class KhanSessionFilter implements Filter {
             try {
                 khanSessionConfig.setSessionSaveDelay(Integer.valueOf(sessionSaveDelay));
             } catch (NumberFormatException e) {
+                khanSessionConfig.setSessionSaveDelay(5);
                 log.error("sessionSaveDelay value is invalid number format : " + sessionSaveDelay);
                 log.error("use default value(5 seconds)");
             }
