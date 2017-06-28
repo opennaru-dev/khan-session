@@ -141,8 +141,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
         StringUtils.isNotNull("timeoutMin", timeoutMin);
         StringUtils.isNotNull("session", session);
 
-        System.out.println("======================= KhanHttpSession ===================");
-
         this.khanSessionId = sessionId;
         this.sessionStore = sessionStore;
         this.khanNamespace = namespace;
@@ -388,7 +386,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
             numberOfChangeAttribute++;
             SysOutUtil.println("removeAttribute key: ", name);
         }
-        saveAttributesToStore();
+        if (config.isEnableImmediateSave())
+            saveAttributesToStore();
     }
 
     /**
