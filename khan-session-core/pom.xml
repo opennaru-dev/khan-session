@@ -217,5 +217,10 @@
             </plugin>
         </plugins>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>opennaru</id>
+            <url>http://maven.nameislocus.iptime.org/nexus/content/repositories/opennaru</url>
+        </repository>
+    </distributionManagement>
 </project>

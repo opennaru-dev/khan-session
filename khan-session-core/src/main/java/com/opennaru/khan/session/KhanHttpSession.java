@@ -34,7 +34,9 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -138,6 +140,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
         StringUtils.isNotNull("khanNamespace", namespace);
         StringUtils.isNotNull("timeoutMin", timeoutMin);
         StringUtils.isNotNull("session", session);
+
+        System.out.println("======================= KhanHttpSession ===================");
 
         this.khanSessionId = sessionId;
         this.sessionStore = sessionStore;
@@ -285,9 +289,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
 
         Object value = null;
         if (isValid()) {
-            if( localChangedMap.get(keyGenerator.generate(CHANGE_RECENT_KEY)) != null ) {
-                attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
-            }
             value = attributes.get(name);
             numberOfGetAttribute++;
             SysOutUtil.println("getAttribute key: ", name, ", value: " + value);
@@ -310,10 +311,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
     @Override
     public Enumeration<String> getAttributeNames() {
         if (isValid()) {
-            if( localChangedMap.get(keyGenerator.generate(CHANGE_RECENT_KEY)) != null ) {
-                attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
-            }
-
             final Iterator<Object> names = attributes.keySet().iterator();
             Enumeration<String> e = new Enumeration<String>() {
                 public boolean hasMoreElements() {
