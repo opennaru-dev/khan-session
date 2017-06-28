@@ -27,10 +27,7 @@ import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionId;
 import com.opennaru.khan.session.store.SessionIdThreadStore;
 import com.opennaru.khan.session.store.SessionStore;
-import com.opennaru.khan.session.util.CookieUtil;
-import com.opennaru.khan.session.util.PropertyUtil;
-import com.opennaru.khan.session.util.StackTraceUtil;
-import com.opennaru.khan.session.util.StringUtils;
+import com.opennaru.khan.session.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -387,6 +384,8 @@ public abstract class KhanSessionFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
 
+        SysOutUtil.printFilterStart(request);
+
         if (log.isDebugEnabled()) {
             log.debug("===== >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         }
@@ -593,6 +592,8 @@ public abstract class KhanSessionFilter implements Filter {
                         // 중복로그인 되었을 경우 url forward
                         if (redirectLogoutUrl) {
                             try {
+                                SysOutUtil.printDuplicatedInvalidate(request);
+
                                 // 중복로그인된 세션의 정보를 지운다
                                 String key = KhanSessionKeyGenerator.generate("$", "SID", _wrappedRequest.getSession(false).getId());
                                 KhanSessionFilter.getSessionStore().loginRemove(key);
@@ -600,6 +601,7 @@ public abstract class KhanSessionFilter implements Filter {
                                 _wrappedRequest.getSession().invalidate();
 
                                 if( !StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl() ) ) {
+                                    SysOutUtil.printDuplicatedRedirect(request);
                                     request.getRequestDispatcher(khanSessionConfig.getLogoutUrl()).forward(request, response);
                                 }
 
@@ -621,6 +623,8 @@ public abstract class KhanSessionFilter implements Filter {
 
                     _request.removeAttribute(alreadyFilteredAttributeName);
                     SessionIdThreadStore.remove();
+
+                    SysOutUtil.printFilterEnd(request);
                 }
 
             }

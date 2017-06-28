@@ -26,6 +26,7 @@ import com.opennaru.khan.session.manager.KhanSessionManager;
 import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
+import com.opennaru.khan.session.util.SysOutUtil;
 import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,6 +116,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
      *  Number of setAttribute or removeAttribute method call
      */
     private int numberOfChangeAttribute = 0;
+    private int numberOfGetAttribute = 0;
 
     private KhanSessionConfig config = null;
 
@@ -164,6 +166,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
 
         attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
+
+        SysOutUtil.printGetStore(attributes);
 
         if( log.isDebugEnabled() ) {
             log.debug("keyGenerator.generate(ATTRIBUTES_KEY)=" + keyGenerator.generate(ATTRIBUTES_KEY));
@@ -259,6 +263,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
             }
             sessionStore.put(keyGenerator.generate(METADATA_KEY), khanSessionMetadata, getMaxInactiveInterval());
         } else {
+            SysOutUtil.println("save isNotValid removeAttributesFromStore call");
             removeAttributesFromStore();
         }
     }
@@ -284,8 +289,11 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 attributes = sessionStore.get(keyGenerator.generate(ATTRIBUTES_KEY));
             }
             value = attributes.get(name);
+            numberOfGetAttribute++;
+            SysOutUtil.println("getAttribute key: ", name, ", value: " + value);
         } else {
             value = null;
+            SysOutUtil.println("getAttribute key: ", name, " isNotValid");
         }
 
         if (log.isDebugEnabled()) {
@@ -316,6 +324,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
                     return names.next().toString();
                 }
             };
+            numberOfGetAttribute++;
+            SysOutUtil.println("getAttributeNames: " + e);
 
             return e;
         } else {
@@ -328,6 +338,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
                     return null;
                 }
             };
+            SysOutUtil.println("getAttributeNames isNotValid");
 
             return e;
         }
@@ -339,6 +350,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     @Override
     public void invalidate() {
+        SysOutUtil.println("invalidate called. (khanSessionId: ", khanSessionId, ")");
 
         if (log.isDebugEnabled()) {
             log.debug("invalidate called. (khanSessionId: " + khanSessionId + ")");
@@ -377,6 +389,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
         if( attributes != null ) {
             attributes.remove(name);
             numberOfChangeAttribute++;
+            SysOutUtil.println("removeAttribute key: ", name);
         }
         saveAttributesToStore();
     }
@@ -408,6 +421,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 attributes.put(name, (Serializable) value);
 
                 numberOfChangeAttribute++;
+                SysOutUtil.println("setAttribute key: ", name, ", value: " + value);
 
                 // spring-security 사용할 때 켜기
                 KhanSessionConfig config = KhanSessionFilter.getKhanSessionConfig();
@@ -548,9 +562,11 @@ public class KhanHttpSession implements HttpSession, Serializable {
      * Save Attributes to SessionStore
      */
     private void saveAttributesToStore() {
+        SysOutUtil.printSaveStore(toMap(), numberOfChangeAttribute, numberOfGetAttribute);
         if( config.getSessionSaveDelay() <= 0 ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
             if( valueMap.size() > 0 ) {
+                SysOutUtil.println("CALL PUT STORE SAVE DELAY <= 0");
                 sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), valueMap, getMaxInactiveInterval());
             }
             KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
@@ -572,12 +588,14 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
 
         if( this.numberOfChangeAttribute > 0 ) {
+            SysOutUtil.println("PUT STORE numberOfChangeAttribute > 0");
             needToSave = true;
         } else {
             if( localChangedMap.get(CHANGE_KEY) != null ) {
                 needToSave = false;
             } else {
                 if (sessionStore.get(CHANGE_KEY) == null) {
+                    SysOutUtil.println("PUT STORE CHANGE_KEY == null");
                     needToSave = true;
                 } else {
                     needToSave = false;
@@ -588,7 +606,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
         if( needToSave ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
             if( valueMap.size() > 0 ) {
+                SysOutUtil.println("CALL PUT STORE numberOfChangeAttribute > 0 && CHANGE_KEY == null");
                 sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), valueMap, getMaxInactiveInterval());
+            } else {
+                SysOutUtil.println("PUT STORE SessionValMap SIZE == 0");
             }
             KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
 
@@ -617,6 +638,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
      * Remove attributes from SessionStore
      */
     private void removeAttributesFromStore() {
+        SysOutUtil.println("removeAttributesFromStore");
         sessionStore.remove(keyGenerator.generate(ATTRIBUTES_KEY));
         sessionStore.remove(keyGenerator.generate(METADATA_KEY));
 

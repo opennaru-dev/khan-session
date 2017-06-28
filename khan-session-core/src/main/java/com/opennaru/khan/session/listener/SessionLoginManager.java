@@ -27,6 +27,7 @@ import com.opennaru.khan.session.KhanSessionMetadata;
 import com.opennaru.khan.session.filter.KhanSessionFilter;
 import com.opennaru.khan.session.management.SessionMonitorMBean;
 import com.opennaru.khan.session.manager.KhanSessionManager;
+import com.opennaru.khan.session.util.SysOutUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,6 +111,7 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
      * @throws Exception
      */
     public void login(HttpServletRequest request, String uid) throws Exception {
+        SysOutUtil.println("LOGIN uid: ", uid);
 
         if (uid == null || uid.equals(""))
             throw new Exception("uid is null!");
