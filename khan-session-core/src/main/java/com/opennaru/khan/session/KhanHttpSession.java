@@ -564,7 +564,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
      * Save Attributes to SessionStore
      */
     private void saveAttributesToStore() {
-        SysOutUtil.printSaveStore(toMap(), numberOfChangeAttribute, numberOfGetAttribute);
+        SysOutUtil.printSaveStore(toMap(), numberOfChangeAttribute, numberOfGetAttribute, numberOfNotNullGet);
         if( config.getSessionSaveDelay() <= 0 ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
             if( valueMap.size() > 0 ) {

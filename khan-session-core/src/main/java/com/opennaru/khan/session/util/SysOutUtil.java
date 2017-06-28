@@ -73,11 +73,13 @@ public class SysOutUtil {
         }
     }
 
-    public static void printSaveStore(ConcurrentHashMap<Object, Object> sessionValueMap, int numberOfChangeAttribute, int numberOfGetAttribute) {
+    public static void printSaveStore(ConcurrentHashMap<Object, Object> sessionValueMap, int numberOfChangeAttribute, int numberOfGetAttribute, int numberOfNotNullGet) {
         if( System.getProperty(KHAN_SM_SYSOUT_STACK, "false").equals("true") ) {
             log.info("===== SAVE STORE numberOfChangeAttribute: {}", numberOfChangeAttribute);
             log.info("===== SAVE STORE numberOfGetAttribute: {}", numberOfGetAttribute);
+            log.info("===== SAVE STORE save numberOfNotNullGet: {}", numberOfNotNullGet);
             log.info("===== SAVE STORE save sessionValueMap: {}", sessionValueMap);
+
         }
     }
 
