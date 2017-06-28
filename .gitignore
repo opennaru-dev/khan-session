@@ -22,5 +22,4 @@ hs_err_pid*
 # Maven related files/olders
 dist/
 out/
-src/
 target/
