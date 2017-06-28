@@ -18,6 +18,7 @@ hs_err_pid*
 # Intellij related files/folders
 .idea/
 *.iml
+*.iws
 
 # Maven related files/olders
 dist/
