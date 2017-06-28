@@ -120,6 +120,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
     private int numberOfChangeAttribute = 0;
     private int numberOfGetAttribute = 0;
 
+    private int numberOfNotNullGet = 0;
+
     private KhanSessionConfig config = null;
 
     /**
@@ -293,6 +295,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
         } else {
             value = null;
             SysOutUtil.println("getAttribute key: ", name, " isNotValid");
+        }
+
+        if( value != null ) {
+            numberOfNotNullGet++;
         }
 
         if (log.isDebugEnabled()) {
@@ -593,11 +599,17 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 if (sessionStore.get(CHANGE_KEY) == null) {
                     SysOutUtil.println("PUT STORE CHANGE_KEY == null");
                     needToSave = true;
+                    SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet);
+                    if( numberOfNotNullGet == 0 ) {
+                        SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet + ", SKIP SAVE");
+                        needToSave = false;
+                    }
                 } else {
                     needToSave = false;
                 }
             }
         }
+
 
         if( needToSave ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
