@@ -219,6 +219,9 @@ public abstract class KhanSessionFilter implements Filter {
         khanSessionConfig.setAllowDuplicateLogin(getConfigValue(config, Constants.ALLOW_DUPLICATE_LOGIN) != null
                 && getConfigValue(config, Constants.ALLOW_DUPLICATE_LOGIN).equals("true"));
 
+        khanSessionConfig.setInvalidateDuplicateLogin(getConfigValue(config, Constants.INVALIDATE_DUPLICATE_LOGIN) != null
+                && getConfigValue(config, Constants.INVALIDATE_DUPLICATE_LOGIN).equals("true"));
+
         // force logout url
         khanSessionConfig.setLogoutUrl(getConfigValue(config, Constants.LOGOUT_URL));
         if (StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl().trim() ) ) {
@@ -597,7 +600,10 @@ public abstract class KhanSessionFilter implements Filter {
                                 String key = KhanSessionKeyGenerator.generate("$", "SID", _wrappedRequest.getSession(false).getId());
                                 KhanSessionFilter.getSessionStore().loginRemove(key);
                                 SessionLoginManager.getInstance().logout(_wrappedRequest);
-                                _wrappedRequest.getSession().invalidate();
+
+                                if( khanSessionConfig.isInvalidateDuplicateLogin() ) {
+                                    _wrappedRequest.getSession().invalidate();
+                                }
 
                                 if( !StringUtils.isNullOrEmpty( khanSessionConfig.getLogoutUrl() ) ) {
                                     request.getRequestDispatcher(khanSessionConfig.getLogoutUrl()).forward(request, response);

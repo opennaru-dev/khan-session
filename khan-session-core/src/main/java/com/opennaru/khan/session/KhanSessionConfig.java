@@ -52,6 +52,8 @@ public class KhanSessionConfig {
     // if allow duplicate login
     private boolean allowDuplicateLogin;
 
+    private boolean invalidateDuplicateLogin;
+
     // 중복로그인 강제 logout url
     private String logoutUrl;
 
@@ -208,6 +210,14 @@ public class KhanSessionConfig {
      */
     public void setAllowDuplicateLogin(boolean allowDuplicateLogin) {
         this.allowDuplicateLogin = allowDuplicateLogin;
+    }
+
+    public boolean isInvalidateDuplicateLogin() {
+        return invalidateDuplicateLogin;
+    }
+
+    public void setInvalidateDuplicateLogin(boolean invalidateDuplicateLogin) {
+        this.invalidateDuplicateLogin = invalidateDuplicateLogin;
     }
 
     /**

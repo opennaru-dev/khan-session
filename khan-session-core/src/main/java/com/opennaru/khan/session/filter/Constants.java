@@ -94,6 +94,8 @@ public class Constants {
      */
     public static final String ALLOW_DUPLICATE_LOGIN = "allowDuplicateLogin";
 
+    public static final String INVALIDATE_DUPLICATE_LOGIN = "invalidateDuplicateLogin";
+
     /**
      * logout url
      */

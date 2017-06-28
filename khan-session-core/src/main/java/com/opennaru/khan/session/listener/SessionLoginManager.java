@@ -24,9 +24,11 @@ package com.opennaru.khan.session.listener;
 import com.opennaru.khan.session.KhanHttpSession;
 import com.opennaru.khan.session.KhanSessionKeyGenerator;
 import com.opennaru.khan.session.KhanSessionMetadata;
+import com.opennaru.khan.session.filter.Constants;
 import com.opennaru.khan.session.filter.KhanSessionFilter;
 import com.opennaru.khan.session.management.SessionMonitorMBean;
 import com.opennaru.khan.session.manager.KhanSessionManager;
+import com.opennaru.khan.session.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * SessionLoginManager / 중복로그인 관리를 위한 Manager
@@ -223,6 +226,66 @@ public class SessionLoginManager implements HttpSessionBindingListener, Serializ
         HttpSession session = request.getSession();
         String sidKey = KhanSessionKeyGenerator.generate("$", "SID", session.getId());
         return KhanSessionFilter.getSessionStore().loginGet(sidKey);
+    }
+
+    public boolean isAttributeExistDirect(String sessionId, String name) {
+        ConcurrentHashMap<Object, Object> attributes = null;
+
+        try {
+            if( log.isDebugEnabled() ) {
+                log.debug("isAttributeExistDirect sessionId=" + sessionId + ", name=" + name);
+            }
+            if( StringUtils.isNullOrEmpty(sessionId) ) {
+                return false;
+            }
+
+            KhanSessionKeyGenerator keyGenerator = new KhanSessionKeyGenerator(sessionId, KhanSessionFilter.getKhanSessionConfig().getNamespace());
+            String sidKey = keyGenerator.generate(KhanHttpSession.ATTRIBUTES_KEY);
+            attributes = KhanSessionFilter.getSessionStore().get(sidKey);
+            if( log.isDebugEnabled() ) {
+                log.debug("isAttributeExistDirect sidKey=" + sidKey + ", attributes=" + attributes);
+            }
+        } catch (Exception e) {
+            log.error("isExist Check", e);
+        }
+
+        if( attributes == null ) {
+            return false;
+        }
+
+        if( attributes.get(name) != null ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Object getAttributeDirect(String sessionId, String name) {
+        ConcurrentHashMap<Object, Object> attributes = null;
+
+        try {
+            if( log.isDebugEnabled() ) {
+                log.debug("getAttributeDirect sessionId=" + sessionId + ", name=" + name);
+            }
+            if( StringUtils.isNullOrEmpty(sessionId) ) {
+                return null;
+            }
+
+            KhanSessionKeyGenerator keyGenerator = new KhanSessionKeyGenerator(sessionId, KhanSessionFilter.getKhanSessionConfig().getNamespace());
+            String sidKey = keyGenerator.generate(KhanHttpSession.ATTRIBUTES_KEY);
+            attributes = KhanSessionFilter.getSessionStore().get(sidKey);
+            if( log.isDebugEnabled() ) {
+                log.debug("getAttributeDirect sidKey=" + sidKey + ", attributes=" + attributes);
+            }
+        } catch (Exception e) {
+            log.error("getAttributeDirect Object", e);
+        }
+
+        if( attributes == null ) {
+            return null;
+        } else {
+            return attributes.get(name);
+        }
     }
 
 }
