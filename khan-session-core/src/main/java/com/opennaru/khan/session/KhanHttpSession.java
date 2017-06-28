@@ -366,8 +366,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
             numberOfChangeAttribute++;
             SysOutUtil.println("removeAttribute key: ", name);
         }
-        if (config.isEnableImmediateSave())
-            saveAttributesToStore();
+        saveAttributesToStore();
     }
 
     /**
