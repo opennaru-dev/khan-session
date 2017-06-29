@@ -27,19 +27,18 @@ import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
 import com.opennaru.khan.session.util.SysOutUtil;
-import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * KHAN [session manager]에서 관리하는 Session Object
@@ -58,13 +57,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
      *  Store에 저장할 Metadata Key
      */
     public static final String METADATA_KEY = "_META_";
-
-    /**
-     * Key for Session Changed with setAttribute or removeAttribute method is called recently
-     */
-    public static final String CHANGE_RECENT_KEY = "_CHANGED_";
-
-    public static Map<String, Boolean> localChangedMap = null;
 
     /**
      *  logger
@@ -183,12 +175,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
         //sessionManager.addSessionId(khanSessionId);
 
         config = KhanSessionFilter.getKhanSessionConfig();
-
-        if( localChangedMap == null ) {
-            localChangedMap = ExpiringMap.builder()
-                    .expiration(config.getSessionSaveDelay(), TimeUnit.SECONDS)
-                    .build();
-        }
 
         if (log.isDebugEnabled()) {
             log.debug("New KhanHttpSession is created. (khanSessionId: " + sessionId + ", attributes: " + attributes + ")");
@@ -565,51 +551,25 @@ public class KhanHttpSession implements HttpSession, Serializable {
      */
     private void saveAttributesToStore() {
         SysOutUtil.printSaveStore(toMap(), numberOfChangeAttribute, numberOfGetAttribute, numberOfNotNullGet);
-        if( config.getSessionSaveDelay() <= 0 ) {
-            ConcurrentHashMap<Object, Object> valueMap = toMap();
-            if( valueMap.size() > 0 ) {
-                SysOutUtil.println("CALL PUT STORE SAVE DELAY <= 0");
-                sessionStore.put(keyGenerator.generate(ATTRIBUTES_KEY), valueMap, getMaxInactiveInterval());
-            }
-            KhanSessionManager.getInstance(this.getServletContext().getContextPath()).putSessionId(this);
-            if( log.isDebugEnabled() ) {
-                log.debug("** saveAttributesToStore without delay **");
-            }
-            return;
-        }
 
         boolean needToSave = true;
-        String CHANGE_KEY = keyGenerator.generate(CHANGE_RECENT_KEY);
+
+        if( KhanSessionFilter.haveToSaveForce == true ) {
+            needToSave = true;
+        } else {
+            needToSave = false;
+        }
 
         if( log.isDebugEnabled() ) {
             log.debug("-----");
             log.debug("numberOfChangeAttribute=" + this.numberOfChangeAttribute);
-            log.debug("CHANGE_KEY=" + CHANGE_KEY);
-            log.debug("sessionStore.get(CHANGE_KEY)=" + sessionStore.get(CHANGE_KEY));
-            log.debug("localChangedMap.get(CHANGE_KEY)=" + localChangedMap.get(CHANGE_KEY));
         }
 
-        if( this.numberOfChangeAttribute > 0 ) {
-            SysOutUtil.println("PUT STORE numberOfChangeAttribute > 0");
-            needToSave = true;
-        } else {
-            if( localChangedMap.get(CHANGE_KEY) != null ) {
-                needToSave = false;
-            } else {
-                if (sessionStore.get(CHANGE_KEY) == null) {
-                    SysOutUtil.println("PUT STORE CHANGE_KEY == null");
-                    needToSave = true;
-                    SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet);
-                    if( numberOfNotNullGet == 0 ) {
-                        SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet + ", SKIP SAVE");
-                        needToSave = false;
-                    }
-                } else {
-                    needToSave = false;
-                }
-            }
+        SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet);
+        if( numberOfNotNullGet == 0 ) {
+            SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet + ", SKIP SAVE");
+            needToSave = false;
         }
-
 
         if( needToSave ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
@@ -623,20 +583,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
 
             if( log.isDebugEnabled() ) {
                 log.debug("** saveAttributesToStore **");
-                log.debug("** save session delay=" + config.getSessionSaveDelay());
-                log.debug("sizeOf localChangedMap=" + localChangedMap.size());
-            }
-            if( this.numberOfChangeAttribute > 0 ) {
-                localChangedMap.put(CHANGE_KEY, true);
-                sessionStore.put(CHANGE_KEY, true, config.getSessionSaveDelay());
-                if (log.isDebugEnabled()) {
-                    log.debug("sessionStore PUT expire " + config.getSessionSaveDelay());
-                }
             }
         } else {
             if( log.isDebugEnabled() ) {
-                log.debug("** skip saveAttributesToStore ** within " + config.getSessionSaveDelay());
-                log.debug("sizeOf localChangedMap=" + localChangedMap.size());
+                log.debug("** skip saveAttributesToStore ** ");
             }
         }
 

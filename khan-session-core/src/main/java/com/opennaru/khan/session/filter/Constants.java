@@ -74,11 +74,6 @@ public class Constants {
     public static final String SESSION_TIMEOUT = "sessionTimeout";
 
     /**
-     * Session save delay when use get access only(in sec.)
-     */
-    public static final String SESSION_SAVE_DELAY = "sessionSaveDelay";
-
-    /**
      * session check exclude regular expression
      */
     public static final String EXCLUDE_REG_EXP = "excludeRegExp";

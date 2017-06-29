@@ -86,6 +86,9 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
 
             sessionStore = new SessionStoreImpl(sessionCache);
             sessionManager.setSessionStore(sessionStore);
+
+            haveToSaveForce = true;
+
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }
@@ -93,6 +96,8 @@ public class InfinispanHotRodSessionFilter extends KhanSessionFilter implements 
         System.out.println("KHAN [session manager] Infinispan Hotrod filter initialized.");
         System.out.println(HotrodVersion.getInstance().getVersion());
 
+        log.info("KHAN [session manager] Infinispan Hotrod filter initialized.");
+        log.info(HotrodVersion.getInstance().getVersion());
     }
 
 }

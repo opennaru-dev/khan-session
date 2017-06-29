@@ -59,6 +59,8 @@ public abstract class KhanSessionFilter implements Filter {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    public static boolean haveToSaveForce = true;
+
     /**
      * 세션 모니터링
      */
@@ -191,20 +193,6 @@ public abstract class KhanSessionFilter implements Filter {
                 khanSessionConfig.setSessionTimeoutMin(10);
                 log.error("sessionTimeout value is invalid number format : " + sessionTimeout);
                 log.error("use default value(10 minutes)");
-            }
-        }
-
-        // session save delay
-        String sessionSaveDelay = getConfigValue(config, Constants.SESSION_SAVE_DELAY);
-        if( StringUtils.isNullOrEmpty(sessionSaveDelay) ) {
-            khanSessionConfig.setSessionSaveDelay(5);
-        } else {
-            try {
-                khanSessionConfig.setSessionSaveDelay(Integer.valueOf(sessionSaveDelay));
-            } catch (NumberFormatException e) {
-                khanSessionConfig.setSessionSaveDelay(5);
-                log.error("sessionSaveDelay value is invalid number format : " + sessionSaveDelay);
-                log.error("use default value(5 seconds)");
             }
         }
 

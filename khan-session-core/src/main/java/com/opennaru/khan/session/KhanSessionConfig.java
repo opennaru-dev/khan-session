@@ -60,9 +60,6 @@ public class KhanSessionConfig {
     // Session timout minute
     private Integer sessionTimeoutMin;
 
-    // Session save delay
-    private Integer sessionSaveDelay;
-
     // enable MBean statistics
     private boolean enableStatistics;
 
@@ -252,14 +249,6 @@ public class KhanSessionConfig {
         this.sessionTimeoutMin = sessionTimeoutMin;
     }
 
-    public Integer getSessionSaveDelay() {
-        return sessionSaveDelay;
-    }
-
-    public void setSessionSaveDelay(Integer sessionSaveDelay) {
-        this.sessionSaveDelay = sessionSaveDelay;
-    }
-
     /**
      * is secure
      * @return
@@ -331,7 +320,6 @@ public class KhanSessionConfig {
         sb.append(", allowDuplicateLogin=").append(allowDuplicateLogin);
         sb.append(", logoutUrl='").append(logoutUrl).append('\'');
         sb.append(", sessionTimeoutMin=").append(sessionTimeoutMin);
-        sb.append(", sessionSaveDelay=").append(sessionSaveDelay);
         sb.append(", enableStatistics=").append(enableStatistics);
         sb.append(", enableMemoryStatistics=").append(enableMemoryStatistics);
         sb.append(", enableImmediateSave=").append(enableImmediateSave);

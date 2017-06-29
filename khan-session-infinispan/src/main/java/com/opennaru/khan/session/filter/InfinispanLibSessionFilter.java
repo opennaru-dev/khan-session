@@ -87,12 +87,18 @@ public class InfinispanLibSessionFilter extends KhanSessionFilter implements Fil
 
             sessionStore = new SessionStoreImpl(sessionCache);
             sessionManager.setSessionStore(sessionStore);
+
+            haveToSaveForce = true;
+
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }
 
         System.out.println("KHAN [session manager] Infinispan Library mode filter initialized.");
         System.out.println(InfinispanLibVersion.getInstance().getVersion());
+
+        log.info("KHAN [session manager] Infinispan Library mode filter initialized.");
+        log.info(InfinispanLibVersion.getInstance().getVersion());
 
     }
 

@@ -75,12 +75,18 @@ public class RedisSessionFilter extends KhanSessionFilter implements Filter {
 
             sessionStore = new SessionStoreImpl(sessionCache);
             sessionManager.setSessionStore(sessionStore);
+
+            haveToSaveForce = true;
+
         } catch (Exception e) {
             throw new IllegalStateException("Failed", e);
         }
 
         System.out.println("KHAN [session manager] Redis filter initialized.");
         System.out.println(RedisVersion.getInstance().getVersion());
+
+        log.info("KHAN [session manager] Redis filter initialized.");
+        log.info(RedisVersion.getInstance().getVersion());
     }
 
 }
