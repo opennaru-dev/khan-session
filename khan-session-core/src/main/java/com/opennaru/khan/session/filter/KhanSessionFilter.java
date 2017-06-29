@@ -419,17 +419,19 @@ public abstract class KhanSessionFilter implements Filter {
                         // doFilter with the request wrapper
 
                         Cookie cookie = getCurrentValidSessionIdCookie(_request);
-                        log.debug(SessionIdThreadStore.get());
                         HttpSession s = _request.getSession(false);
-                        log.debug(s + "");
 
-                        if (log.isDebugEnabled())
+                        if (log.isDebugEnabled()) {
+                            log.debug("httpSession=" + s);
                             log.debug(">>>>> cookie=" + cookie);
+                        }
 
                         String sessionIdValue = null;
 
-                        log.debug("******* new request");
-                        log.debug("*************** SessionIdThreadStore.get()=" + SessionIdThreadStore.get());
+                        if (log.isDebugEnabled() ) {
+                            log.debug("******* new request");
+                            log.debug("*************** SessionIdThreadStore.get()=" + SessionIdThreadStore.get());
+                        }
 
                         if (SessionIdThreadStore.get() != null) {
                             sessionIdValue = SessionIdThreadStore.get();
