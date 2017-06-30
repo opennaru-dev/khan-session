@@ -570,6 +570,10 @@ public class KhanHttpSession implements HttpSession, Serializable {
             SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet + ", SKIP SAVE");
             needToSave = false;
         }
+        if( numberOfChangeAttribute > 0 ) {
+            needToSave = true;
+        }
+
 
         if( needToSave ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
