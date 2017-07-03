@@ -27,6 +27,7 @@ import com.opennaru.khan.session.store.SessionStore;
 import com.opennaru.khan.session.util.StackTraceUtil;
 import com.opennaru.khan.session.util.StringUtils;
 import com.opennaru.khan.session.util.SysOutUtil;
+import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +35,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * KHAN [session manager]에서 관리하는 Session Object
@@ -116,6 +115,8 @@ public class KhanHttpSession implements HttpSession, Serializable {
 
     private KhanSessionConfig config = null;
 
+    public static Map<String, Boolean> localSaveDelayMap = null;
+
     /**
      * Constructor
      *
@@ -170,11 +171,13 @@ public class KhanHttpSession implements HttpSession, Serializable {
             log.debug("KhanHttpSession.attributes=" + attributes);
         }
 
-        //session.setAttribute("khansid", khanSessionId);
-        //KhanSessionManager.getInstance().addSessionId(khanSessionId);
-        //sessionManager.addSessionId(khanSessionId);
-
         config = KhanSessionFilter.getKhanSessionConfig();
+
+        if( localSaveDelayMap == null && config.getSessionSaveDelay() > 0 ) {
+            localSaveDelayMap = ExpiringMap.builder()
+                    .expiration(config.getSessionSaveDelay(), TimeUnit.SECONDS)
+                    .build();
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("New KhanHttpSession is created. (khanSessionId: " + sessionId + ", attributes: " + attributes + ")");
@@ -572,8 +575,19 @@ public class KhanHttpSession implements HttpSession, Serializable {
         }
         if( numberOfChangeAttribute > 0 ) {
             needToSave = true;
+            if( localSaveDelayMap != null ) {
+                localSaveDelayMap.put(config.getNamespace() + "___" + this.getId(), true);
+            }
+        } else if( numberOfChangeAttribute == 0 ) {
+            if( localSaveDelayMap != null ) {
+                if (localSaveDelayMap.get(config.getNamespace() + "___" + this.getId()) != null) {
+                    needToSave = false;
+                } else {
+                    localSaveDelayMap.put(config.getNamespace() + "___" + this.getId(), true);
+                    needToSave = true;
+                }
+            }
         }
-
 
         if( needToSave ) {
             ConcurrentHashMap<Object, Object> valueMap = toMap();
@@ -589,6 +603,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
                 log.debug("** saveAttributesToStore **");
             }
         } else {
+            SysOutUtil.println("SKIP PUT STORE numberOfChangeAttribute = 0");
             if( log.isDebugEnabled() ) {
                 log.debug("** skip saveAttributesToStore ** ");
             }

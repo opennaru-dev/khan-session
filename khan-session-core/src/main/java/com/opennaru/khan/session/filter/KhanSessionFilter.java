@@ -196,6 +196,20 @@ public abstract class KhanSessionFilter implements Filter {
             }
         }
 
+        // session save delay
+        String sessionSaveDelay = getConfigValue(config, Constants.SESSION_SAVE_DELAY);
+        if( StringUtils.isNullOrEmpty(sessionSaveDelay) ) {
+            khanSessionConfig.setSessionSaveDelay(0);
+        } else {
+            try {
+                khanSessionConfig.setSessionSaveDelay(Integer.valueOf(sessionSaveDelay));
+            } catch (NumberFormatException e) {
+                khanSessionConfig.setSessionSaveDelay(0);
+                log.error("sessionSaveDelay value is invalid number format : " + sessionSaveDelay);
+                log.error("use default value(0 seconds - disable)");
+            }
+        }
+
         // use authenticator
         khanSessionConfig.setUseAuthenticator(getConfigValue(config, Constants.USE_AUTHENTICATOR) != null
                 && getConfigValue(config, Constants.USE_AUTHENTICATOR).equals("true"));
