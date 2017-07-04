@@ -111,8 +111,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
     private int numberOfChangeAttribute = 0;
     private int numberOfGetAttribute = 0;
 
-    private int numberOfNotNullGet = 0;
-
     private KhanSessionConfig config = null;
 
     public static Map<String, Boolean> localSaveDelayMap = null;
@@ -284,10 +282,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
         } else {
             value = null;
             SysOutUtil.println("getAttribute key: ", name, " isNotValid");
-        }
-
-        if( value != null ) {
-            numberOfNotNullGet++;
         }
 
         if (log.isDebugEnabled()) {
@@ -553,7 +547,7 @@ public class KhanHttpSession implements HttpSession, Serializable {
      * Save Attributes to SessionStore
      */
     private void saveAttributesToStore() {
-        SysOutUtil.printSaveStore(toMap(), numberOfChangeAttribute, numberOfGetAttribute, numberOfNotNullGet);
+        SysOutUtil.printSaveStore(toMap(), numberOfChangeAttribute, numberOfGetAttribute);
 
         boolean needToSave = true;
 
@@ -568,11 +562,6 @@ public class KhanHttpSession implements HttpSession, Serializable {
             log.debug("numberOfChangeAttribute=" + this.numberOfChangeAttribute);
         }
 
-        SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet);
-        if( numberOfNotNullGet == 0 ) {
-            SysOutUtil.println("NUMBER OF NOT NULL GET=" + numberOfNotNullGet + ", SKIP SAVE");
-            needToSave = false;
-        }
         if( numberOfChangeAttribute > 0 ) {
             needToSave = true;
             if( localSaveDelayMap != null ) {
